@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content%}
+<br>
+<div class="container">
+    <div class="row">
+        <!-- Left Column for Keywords (Accordion) -->
+        <div class="col-md-4">
+            <h4 class="mb-2">Keywords</h4>
+            <div class="accordion scrollable-accordion" id="keywordsAccordion">
+                <!-- Dynamically listing 10 accordion items for keywords -->
+                {% for i in range %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{ i }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ i }}" aria-expanded="false" aria-controls="collapse{{ i }}">
+                            Keyword {{ i }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ i }}" class="accordion-collapse collapse" aria-labelledby="heading{{ i }}" data-bs-parent="#keywordsAccordion">
+                        <div class="accordion-body">
+                            <!-- Example keywords for each item, can be dynamically generated -->
+                            <span class="badge bg-secondary badge-keyword">food</span>
+                            <span class="badge bg-secondary badge-keyword">water</span>
+                            <span class="badge bg-secondary badge-keyword">energy</span>
+                            <span class="badge bg-secondary badge-keyword">body</span>
+                            <span class="badge bg-secondary badge-keyword">man</span>
+                            <span class="badge bg-secondary badge-keyword">woman</span>
+                            <span class="badge bg-secondary badge-keyword">button</span>
+                            <span class="badge bg-secondary badge-keyword">files</span>
+                            <span class="badge bg-secondary badge-keyword">load</span>
+                            <span class="badge bg-secondary badge-keyword">activity</span>
+                            <span class="badge bg-secondary badge-keyword">right</span>
+                            <span class="badge bg-secondary badge-keyword">wrong</span>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        
+        <!-- Right Column for Text Table -->
+        <div class="col-md-8" style="height: auto; overflow-y: auto;">
+            <h4 class="mb-2">Texts</h4>
+            <div class="table-responsive" style="height: 90%;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Text Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>This is a detailed description of item 1.</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>This is a detailed description of item 2.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>This is a detailed description of item 3.</td>
+                        </tr>
+                       
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}
