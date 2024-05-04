@@ -1,13 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container lg my-5">
     <div class="row">
-        <div class="col">
-            Left Side
+        <div class="col my-3">
+            <h3>Text</h3>
+            <div class="card m-2 p-3 ">
+                {{document}}
+            </div>
+            <h5>Explanation</h5>
+            <div>
+                <div class="card  m-2 p-3">
+                    {{explanation}}
+                </div>
+            </div>
         </div>
-        <div class="col">
-            right Side
+        <div class="col my-3">
+            <h5>Label</h5>
+            <div class="p-2 m-2">
+                {{label}}
+            </div>
+            <br>
+            <h5>Suggested Labels</h5>
+
+            <div class=" button-container ">
+                {% for n in range%}
+            <button type="button"  class="btn btn-secondary btn-sm p-2 m-2">suggested label {{n}} </button>
+                {% endfor %}
+
+            </div>
+            <br>
+            <div>
+                <input class="p-2 m-2" style="width: 50%;" type="text" placeholder="Enter label">
+                <input class="btn btn-success btn-sm p-2 m-2" style="width: 20%;" type="submit">
+            </div>
+            <div>
+                <button class="btn btn-danger btn-sm p-2 m-2 gap-3" style="width: 40%;" type="submit" >STOP</button>
+            </div>
         </div>
+
+        
     </div>
 </div>
 {% endblock %}

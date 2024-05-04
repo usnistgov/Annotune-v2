@@ -44,7 +44,40 @@ def label (request):
         "document": documenttext,
         "label":label,
         "explanation":explanation,
-        "number": number
+        "number": number,
+        "range":range(10)
         }
 
-    return render(request, "label.html", data)
+    return render(request, "label.html", context=data)
+
+def label2(request):
+
+    text = """A major French union warned of possible strikes, including at hospitals, during 
+    the Paris Olympics, when a massive influx of people is in the French capital. Speaking to France 
+    Info media on Thursday, the general secretary of the CGT said the union will give a notice of 
+    strike in public services during the Games, which are held in July-August. The Paralympics take 
+    place in August-September. Paris' tourism office predicts up to 15.9 million people could visit 
+    the Paris region during July-September. “We want the government to take immediate action to ensure 
+    the success of the Games,” Sophie Binet said. “For this to happen, our warnings must be heeded and 
+    the Games must be prepared from a social point of view. We've been saying the same thing for months 
+    now, and no one cares. It's getting very tiresome."""
+
+    recommended_labels = ["first label", "second label", "third label"]
+
+    keywords = {
+        "cluster1": ["major", "words", "union", "words", "words", "warned", "words", "during"],
+        "cluster2": ["people", "massive", "words2", "influx", "words2", "capital", "words2", "will", "words2"],
+        "cluster3": ["want", "point", "view", "cares", "same", "words3", "saying", "words3", "visit"],
+        "cluster4": ["major", "words", "union", "words", "words", "warned", "words", "during"],
+        "cluster5": ["people", "massive", "words2", "influx", "words2", "capital", "words2", "will", "words2"],
+        "cluster6": ["want", "point", "view", "cares", "same", "words3", "saying", "words3", "visit"]
+
+    }
+
+    data = {
+        "text":text,
+        "recommended_labels": recommended_labels,
+        "keywords": keywords
+    }
+
+    return render(request, "label2.html", context=data)

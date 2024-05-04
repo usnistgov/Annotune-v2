@@ -1,13 +1,3 @@
-.container {
-    max-height: 800px; /* Example height */
-    overflow: hidden;
-}
-
-
-.container {
-    max-height: 800px; /* Example height */
-    overflow: hidden;
-}
 .card-scrollable {
     max-height: 600px; /* Slightly less than the container for aesthetic spacing */
     overflow-y: auto; /* Enable vertical scrolling */

@@ -9,4 +9,5 @@ urlpatterns = [
     path("load-files", views.load_files, name="load-files"),
     path("documents", views.list_documents, name="documents"),
     path("label", views.label, name="label"),
+    path("label2", views.label2, name="label2"),
 ]
