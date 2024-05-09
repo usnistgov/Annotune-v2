@@ -2,132 +2,39 @@
 {% block content %}
 <br>
 <div class="container">
-    <div class="row">
+    <div class="row"> 
         <!-- File input and uploaded files section -->
         <div class="col-md-6">
-            <p>Please load your file to begin:</p>
-            <input type="file" class="form-control mb-3">
-            <button class="btn btn-primary mb-3">Upload Files</button> <!-- Button to upload selected files -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary mb-3">Upload File</button>
+            </form><!-- Button to upload selected files -->
             <h5 class="card-title">Uploaded Files</h5>
             <!-- Card for dynamically listed files with scrolling -->
-            <div class="card " style="height: 50%; overflow-y: auto;" >
+            <div class="card card-scrollable" style="height: 50%" >
                 
                 <div class="card-body">
                     
                     <div class="row g-3">
                         <!-- Loop to display 10 files -->
+                        {% for file in uploaded_files %}
                         <div class="col-md-6 col-lg-4" title="PDF File">
                             <div class="file-man-box">
                                 <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
                                 <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
+                                    {% load static%}
+                                    <img src=   "{% static 'images/microsoft-excel-icon.png' %}" alt="Excel Icon">
                                 </div>
                                 <a href="#" class="file-download"><i class="fa fa-download"></i></a>
                                 <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
+                                    <h6 class="mb-0 text-overflow">{{ file.file_name }}</h6>
+                                    <small>{{ file.size }} bytes</small>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-4" title="PDF File">
-                            <div class="file-man-box">
-                                <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
-                                <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
-                                </div>
-                                <a href="#" class="file-download"><i class="fa fa-download"></i></a>
-                                <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4" title="PDF File">
-                            <div class="file-man-box">
-                                <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
-                                <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
-                                </div>
-                                <a href="#" class="file-download"><i class="fa fa-download"></i></a>
-                                <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4" title="PDF File">
-                            <div class="file-man-box">
-                                <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
-                                <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
-                                </div>
-                                <a href="#" class="file-download"><i class="fa fa-download"></i></a>
-                                <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4" title="PDF File">
-                            <div class="file-man-box">
-                                <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
-                                <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
-                                </div>
-                                <a href="#" class="file-download"><i class="fa fa-download"></i></a>
-                                <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4" title="PDF File">
-                            <div class="file-man-box">
-                                <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
-                                <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
-                                </div>
-                                <a href="#" class="file-download"><i class="fa fa-download"></i></a>
-                                <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4" title="PDF File">
-                            <div class="file-man-box">
-                                <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
-                                <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
-                                </div>
-                                <a href="#" class="file-download"><i class="fa fa-download"></i></a>
-                                <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4" title="PDF File">
-                            <div class="file-man-box">
-                                <a href="" class="file-close"><i class="fa fa-times-circle"></i></a>
-                                <div class="file-img-box">
-                                    <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="PDF Icon">
-                                </div>
-                                <a href="#" class="file-download"><i class="fa fa-download"></i></a>
-                                <div class="file-man-title">
-                                    <h6 class="mb-0 text-overflow">file1.pdf</h6>
-                                    <small>500 kb</small>
-                                </div>
-                            </div>
-                        </div>
-                     
-                     
-                     
-                        
-                        
-                        
-                        
                         <!-- Additional file entries -->
+                        {% endfor %}
                     </div>
                 </div>
             </div>

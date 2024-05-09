@@ -1,17 +1,64 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.contrib.auth import login
+from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
+from .forms import CustomAuthenticationForm
+from .forms import FileUploadForm
+from .models import UploadedFile, JSONEntry, CSVRow
+import json
+import csv
+from io import StringIO
 
-# Create your views here.
-def login(request):
-    return  render (request, "login.html")
+class CustomLoginView(LoginView):
+    form_class = CustomAuthenticationForm
+    template_name = 'login.html'
+    redirect_authenticated_user = True  # Redirect users who are already logged in
 
+    def get_success_url(self):
+        return reverse('homepage') 
+ 
 def sign_up(request):
-    return  render (request, "sign-up.html")
-
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log the user in immediately after registration
+            return redirect(reverse('homepage'))  # Redirect to a home page or dashboard
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'sign-up.html', {'form': form})
+    
+@login_required(login_url="")
 def homepage(request):
+    
     return render(request, "homepage.html")
 
+# @login_required(login_url="") 
 def load_files(request):
-    return render(request, "load_files.html")
+    form = FileUploadForm()
+    uploaded_files = UploadedFile.objects.all()  # Retrieve all uploaded files from the database
+    for a in uploaded_files:
+        print(a)
+
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = form.cleaned_data['uploaded_file']
+            file_record = UploadedFile(
+                file_name=uploaded_file.name,
+                file_type=uploaded_file.content_type,
+                size=uploaded_file.size
+            )
+            file_record.save()
+            return redirect('load-files')  # Refresh to display the new file
+
+    return render(request, 'load_files.html', {
+        'form': form,
+        'uploaded_files': uploaded_files
+    })
+    
 
 def list_documents(request):
     return render(request, "documents.html", {"range":range(10)})
