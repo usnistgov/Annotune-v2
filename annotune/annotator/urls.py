@@ -1,19 +1,19 @@
 from django.urls import path
-from .views import CustomLoginView
 from django.conf.urls.static import static
-from django.conf import settings
 from . import views
 
+
+
 urlpatterns = [ 
-    path("", CustomLoginView.as_view(), name="login"),
+    path("", views.login, name="login"),
     path("register", views.sign_up, name="sign-up"),
     path("homepage", views.homepage, name="homepage"),
-    path("load-files", views.load_files, name="load-files"),
     path("documents", views.list_documents, name="documents"),
     path("label", views.label, name="label"),
-    path("label2", views.label2, name="label2"),
+    # path("label2", views.label2, name="label2"),
+    path('skip/', views.skip_document, name='skip_document'),
+    path('submit/<str:document_id>/<str:label>/', views.submit_data, name='submit_data'),
+    
+
 ]
 
-# # Append static files serving URL pattern (only in development)
-# if settings.DEBUG:
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

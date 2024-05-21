@@ -23,11 +23,39 @@
          <div class="main">
             <div class="col-md-6 col-sm-12">
                <div class="login-form">
-                  <form method="post">
-                     {% csrf_token %}
-                     {{ form.as_p }}
-                     <button type="submit" class="btn btn-primary">Register</button>
-                 </form>
+                  <div class="container">
+                     <h2>Signup Form</h2>
+                     <form method="post">
+                         {% csrf_token %}
+                         <div class="form-group">
+                             <label for="id_first_name">First Name:</label>
+                             <input type="text" id="id_first_name" name="first_name" class="form-control" required>
+                         </div>
+                         <div class="form-group">
+                             <label for="id_last_name">Last Name:</label>
+                             <input type="text" id="id_last_name" name="last_name" class="form-control" required>
+                         </div>
+                         <div class="form-group">
+                             <label for="id_email">Email:</label>
+                             <input type="email" id="id_email" name="email" class="form-control" required>
+                         </div>
+
+                         
+        
+                         <div class="form-group">
+                           <label for="password">Password:</label>
+                           <input name="password" type="password" placeholder="Password" id="password" required>
+                       </div>
+
+                       <!-- <div class="form-group">
+                        <label for="password">Confirm Password:</label>
+                        <input type="password" placeholder="Confirm Password" id="confirm_password" required>
+                    </div> -->
+                       
+                         <button type="submit" class="btn btn-primary">Sign Up</button>
+                         <div class="btn btn-primary"><a href="{% url 'login' %}">login</a></div>
+                        </form>
+                 </div>
                </div>
             </div>
          </div>

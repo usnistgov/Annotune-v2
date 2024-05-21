@@ -231,7 +231,5 @@ footer .form-control {
 }
 .button-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center; /* Center the buttons horizontally */
+    gap: 5px;
 }
