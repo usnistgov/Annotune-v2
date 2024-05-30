@@ -553,3 +553,112 @@ def make_folder(name):
     mode = 0o666
     path = os.path.join(parent_dir, name)
     os.mkdir(path, mode)
+
+
+def get_document_data(url, user_id, document_id, all_texts, old_label=None):
+    import requests
+    import random
+
+    get_document_information =url + "get_document_information"
+    response = requests.post(get_document_information, json={ "document_id": document_id,
+                                                        "user_id":user_id
+                                                         }).json()
+    print(response)
+    documenttext = all_texts["text"][str(document_id)]
+
+    original_labels = response["llm_labels"]
+    most_confident = original_labels[0]
+    labels = random.shuffle(original_labels)
+
+
+    explanation = response["description"]
+    confidence = str(response["confident"]).lower()
+    
+    auto="true"
+    data = {
+        "document": documenttext,
+        "labels":labels,
+        "explanation":explanation,
+        "user_id":user_id,
+        "document_id":document_id,
+        "confidence":confidence,
+        "old_label": old_label,
+        "most_confident":most_confident,
+        "auto": auto
+        }
+    
+
+    return data
+
+import json
+
+
+
+
+def append_to_json_file(email, label, document_id, times):
+    import os
+    file_path="/Users/danielstephens/Desktop/Annotune-v2/annotune/annotator/static/users.json"
+    try:
+    # Ensure the file exists
+        if not os.path.exists(file_path):
+            with open(file_path, 'w') as file:
+                json.dump([], file)  # Initialize the file with an empty list
+
+        # Read the existing data
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+
+        labe = {
+            "labels":label,
+            "time": times,
+            "document_id": document_id
+        }
+
+        
+
+        
+
+        # Append the new data
+        existing_data[email]["label"].append(label)
+        existing_data[email]["document_id"].append(document_id)
+        existing_data[email]["labels"][document_id]=labe
+
+        # Write the updated data back to the file
+        with open(file_path, 'w') as file:
+            json.dump(existing_data, file, indent=4)
+
+    except Exception as e:
+        print(f"An error occurred while appending to the JSON file: {e}")
+
+
+def flatten_extend(matrix):
+    flat_list = []
+    for row in matrix:
+         flat_list.extend(row)
+    return flat_list
+
+
+def truncated_data(topics, all_texts ):
+    clusters = {}
+    selected = []
+    
+    selected_topics = list(topics["cluster"].keys())[:20]
+    for t in selected_topics:
+        clusters[t]=topics["cluster"][t][:20]
+        selected.append(topics["cluster"][t][:20])
+
+    selects = flatten_extend(selected)
+
+    keywords={}
+    for a in selected_topics:
+        keywords[a] = topics["keywords"][a][:20]
+
+    all_text= {}
+    for b in selects:
+        try:
+            all_text[b]=all_texts["text"][str(b)]
+        except:
+            continue
+    recommended = list(all_text.keys())[0]
+    return all_text, keywords, recommended, clusters
+    

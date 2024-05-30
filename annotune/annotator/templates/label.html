@@ -1,49 +1,74 @@
 {% extends "base.html" %}
+{% block extra_head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/label.css' %}">
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container-lg my-5">
     <div class="row">
+        <!-- Navigation Icons -->
+        <div class="col-12 d-flex justify-content-between mb-3">
+            <a href="#" id="previousButton" class="btn btn-outline-secondary btn-lg nav-icon">
+                <i class="fas fa-arrow-left"></i> Previous
+            </a>
+            <div>
+                
+                <a href="#" id="nextButton" class="btn btn-outline-secondary btn-lg nav-icon">
+                    Next <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
         <!-- Text and Explanation Section -->
-        <div class="col my-3">
-            <h3>Text</h3> 
-            <h3 id="document_id">{{ document_id }}</h3>
-            <div id="documentText" class="card m-2 p-3" style="min-height: 40vh;">
+        <div class="col-md-6 my-3 text-section" style="min-height: 50vh;">
+            <h3 class="section-title">Text</h3>
+            <h5 id="document_id" class="document-id" >{{ document_id }}</h5>
+            <div id="documentText" class="card document-card" style="height: 100%; overflow-y: scroll;">
                 {{ document }}
             </div>
-            <div id="confidence">{{confidence}}</div>
         </div>
         
         <!-- Labels Section -->
-        <div class="col my-3">
-            <h5>LLM Suggested Labels</h5>
-            <div class="button-container" id="suggestedLabels">
-                <form method="post">
+        <div class="col-md-6 my-3 labels-section d-flex flex-column" style="min-height:59vh;">
+            <h5 class="section-title">Please choose one of the label suggestions or add your own label in the box below</h5>
+            <br>
+            <div id="suggestedLabels" class="button-container d-flex flex-wrap justify-content-center mb-4">
+                <form method="post" class="w-100">
                     {% csrf_token %}
                     {% for label in labels %}
-                    <button id="{{ label }}" type="button" class="btn btn-secondary btn-sm p-2 m-2 suggested-label-btn">{{ label }}</button>
+                    <button id="{{ label }}" type="button" class="btn btn-label suggested-label-btn m-1">{{ label }}</button>
                     {% endfor %}
                 </form>
             </div>
-            <br>
 
-            <h5 class="mt-4">Manual Label</h5>
-            <div class="mt-4">
-                <form method="post">
+            <!-- <h3 class="section-title mt-4">Selected Label</h3> -->
+            <div class="mt-2" id="manualLabelDiv">
+                <form method="post" class="d-flex align-items-center">
                     {% csrf_token %}
-                    <input id="manualLabelInput" class="p-2 m-2" style="width: 50%;" type="text" placeholder="Enter label">
-                    <input id="manualLabelSubmit" class="btn btn-success m-2" style="width: 20%;" type="button" value="Submit">
-                    <button type="submit" class="btn btn-danger btn-sm p-2 m-2">Skip</button>
+                    <input id="manualLabelInput" class="form-control label-input me-2" type="text" placeholder="Enter label">
+                    <button id="manualLabelSubmit" class="btn btn-success submit-btn" type="button">Submit</button>
                 </form>
             </div>
 
-            <br>
-
-            <button id="toggleExplanationBtn" class="btn btn-primary btn-sm p-2 m-2">Show Explanation</button>
-            <div id="explanationDiv" class="card m-2 p-3" style="display: none;">
+            <!-- <button id="toggleExplanationBtn" class="btn btn-secondary toggle-btn mt-4 mx-auto">Show Explanation</button>
+            <div id="explanationDiv" class="card explanation-card mt-2" style="display: none;">
                 {{ explanation }}
-            </div>
+            </div> -->
+            <div id="most_confident">{{most_confident}}</div>
+            <div id="auto">{{auto}}</div>
             <div id="user_id" hidden>{{ user_id }}</div>
+            <div id="confidence">{{ confidence }}</div>
         </div>
     </div>
 </div>
+
+{% load static %}
+
+<script src="{% static 'javascript/label.js' %}"></script>
+
+
 {% endblock %}

@@ -2,7 +2,203 @@
     "danystevo@gmail.com": {
         "first_name": "Daniel",
         "last_name": "Stephens",
+        "user_id": 0,
         "email": "danystevo@gmail.com",
-        "password": "zubcez-3ruxzi-wiDvut"
+        "password": "STpass23",
+        "start_time": "27/05/24 20:43:50",
+        "date": "27/05/24",
+        "document_id": [
+            5201,
+            5202,
+            12527,
+            7650,
+            7479,
+            613,
+            14050,
+            7472,
+            6955,
+            5159,
+            940,
+            7315,
+            251,
+            701,
+            14599,
+            11497,
+            6534,
+            4553,
+            3643,
+            5654,
+            2927,
+            5558,
+            6645,
+            6816,
+            9436,
+            6816,
+            14689,
+            1819
+        ],
+        "label": [
+            "environment",
+            "identity",
+            "space exploration",
+            "animal conservation",
+            "green energy initiatives",
+            "international trade agreements",
+            "environment",
+            "wildlife conservation",
+            "art history",
+            "justice",
+            "culinary arts",
+            "space exploration",
+            "immigration law",
+            "healthcare",
+            "space exploration",
+            "environment",
+            "environment",
+            "environment",
+            "financial regulations",
+            "space exploration",
+            "housing",
+            "immigration reform",
+            "cybersecurity legislation",
+            "summer camp activities",
+            "environment",
+            "government",
+            "employment",
+            "cosmetic industry regulations"
+        ],
+        "labels": {
+            "5201": "environment",
+            "5202": {
+                "labels": "identity",
+                "time": "22:32:00",
+                "document_id": 5202
+            },
+            "12527": {
+                "labels": "space exploration",
+                "time": "22:32:10",
+                "document_id": 12527
+            },
+            "7650": {
+                "labels": "animal conservation",
+                "time": "22:32:20",
+                "document_id": 7650
+            },
+            "7479": {
+                "labels": "green energy initiatives",
+                "time": "22:32:28",
+                "document_id": 7479
+            },
+            "613": {
+                "labels": "international trade agreements",
+                "time": "22:32:40",
+                "document_id": 613
+            },
+            "14050": {
+                "labels": "environment",
+                "time": "22:53:26",
+                "document_id": 14050
+            },
+            "7472": {
+                "labels": "wildlife conservation",
+                "time": "22:53:39",
+                "document_id": 7472
+            },
+            "6955": {
+                "labels": "art history",
+                "time": "22:54:00",
+                "document_id": 6955
+            },
+            "5159": {
+                "labels": "justice",
+                "time": "22:54:24",
+                "document_id": 5159
+            },
+            "940": {
+                "labels": "culinary arts",
+                "time": "23:00:04",
+                "document_id": 940
+            },
+            "7315": {
+                "labels": "space exploration",
+                "time": "23:00:11",
+                "document_id": 7315
+            },
+            "251": {
+                "labels": "immigration law",
+                "time": "23:00:51",
+                "document_id": 251
+            },
+            "701": {
+                "labels": "healthcare",
+                "time": "23:00:55",
+                "document_id": 701
+            },
+            "14599": {
+                "labels": "space exploration",
+                "time": "23:00:59",
+                "document_id": 14599
+            },
+            "11497": {
+                "labels": "environment",
+                "time": "23:01:33",
+                "document_id": 11497
+            },
+            "6534": {
+                "labels": "environment",
+                "time": "01:01:46",
+                "document_id": 6534
+            },
+            "4553": {
+                "labels": "environment",
+                "time": "15:30:11",
+                "document_id": 4553
+            },
+            "3643": {
+                "labels": "financial regulations",
+                "time": "15:31:11",
+                "document_id": 3643
+            },
+            "5654": {
+                "labels": "space exploration",
+                "time": "15:53:26",
+                "document_id": 5654
+            },
+            "2927": {
+                "labels": "housing",
+                "time": "15:55:29",
+                "document_id": 2927
+            },
+            "5558": {
+                "labels": "immigration reform",
+                "time": "28/05/24 16:04:13",
+                "document_id": 5558
+            },
+            "6645": {
+                "labels": "cybersecurity legislation",
+                "time": "28/05/24 16:08:09",
+                "document_id": 6645
+            },
+            "6816": {
+                "labels": "government",
+                "time": "28/05/24 17:27:41",
+                "document_id": 6816
+            },
+            "9436": {
+                "labels": "environment",
+                "time": "28/05/24 17:12:39",
+                "document_id": 9436
+            },
+            "14689": {
+                "labels": "employment",
+                "time": "28/05/24 17:28:34",
+                "document_id": 14689
+            },
+            "1819": {
+                "labels": "cosmetic industry regulations",
+                "time": "28/05/24 17:36:07",
+                "document_id": 1819
+            }
+        }
     }
 }
