@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 console.log('Success:', data);
                 updatePage(data);
-                fadeOutIn(document.body);
+                // fadeOutIn(document.body);
                 manualLabelInput.value = "";
             })
             .catch(error => console.error('Error:', error));
@@ -108,10 +108,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function updatePage(data) {
         document.getElementById('document_id').textContent = data.document_id;
         document.getElementById('documentText').textContent = data.document;
-        document.getElementById('explanationDiv').textContent = data.explanation;
+        document.getElementById('most_confident').textContent = data.most_confident;
 
         const suggestedLabelsContainer = document.getElementById('suggestedLabels');
         suggestedLabelsContainer.innerHTML = '';
+        console.log(data.labels)
         data.labels.forEach(label => {
             const button = document.createElement('button');
             button.id = label;
@@ -177,12 +178,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }});
 
-    let countdown = 10;
-    let countdownTimer;
-
-
-    if (auto=="true"){
-        
-    }
 
 });

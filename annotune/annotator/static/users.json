@@ -35,7 +35,21 @@
             9436,
             6816,
             14689,
-            1819
+            1819,
+            11330,
+            10793,
+            11330,
+            703,
+            703,
+            13939,
+            12793,
+            12793,
+            12793,
+            12793,
+            809,
+            12793,
+            12793,
+            2487
         ],
         "label": [
             "environment",
@@ -65,7 +79,21 @@
             "environment",
             "government",
             "employment",
-            "cosmetic industry regulations"
+            "cosmetic industry regulations",
+            "identity",
+            "identity",
+            "cooking recipes",
+            "business management",
+            "space exploration",
+            "manual",
+            "space exploration",
+            "bad label 1",
+            "fraud",
+            "identity",
+            "military history",
+            "fraud",
+            "identity",
+            "environment"
         ],
         "labels": {
             "5201": "environment",
@@ -198,6 +226,41 @@
                 "labels": "cosmetic industry regulations",
                 "time": "28/05/24 17:36:07",
                 "document_id": 1819
+            },
+            "11330": {
+                "labels": "cooking recipes",
+                "time": "30/05/24 15:12:17",
+                "document_id": 11330
+            },
+            "10793": {
+                "labels": "identity",
+                "time": "30/05/24 15:11:55",
+                "document_id": 10793
+            },
+            "703": {
+                "labels": "space exploration",
+                "time": "30/05/24 15:13:33",
+                "document_id": 703
+            },
+            "13939": {
+                "labels": "manual",
+                "time": "30/05/24 15:41:36",
+                "document_id": 13939
+            },
+            "12793": {
+                "labels": "identity",
+                "time": "30/05/24 16:15:27",
+                "document_id": 12793
+            },
+            "809": {
+                "labels": "military history",
+                "time": "30/05/24 16:13:06",
+                "document_id": 809
+            },
+            "2487": {
+                "labels": "environment",
+                "time": "30/05/24 16:15:34",
+                "document_id": 2487
             }
         }
     }

@@ -5,14 +5,15 @@ from .utils import *
 from django.http import JsonResponse
 from collections import OrderedDict
 import datetime
-import random
 from django.contrib.auth import logout
+import random
+from django.contrib import messages
 
-
-all_texts = json.load(open("/Users/danielstephens/Desktop/Annotune-v2/annotune/annotator/bills_preprocessed.json"))
+ 
+all_texts = json.load(open("/Users/danielstephens/Desktop/Annotune-v2/bills_preprocessed.json"))
 url =  "http://127.0.0.1:1234/"
-
-
+ 
+ 
 def sign_up(request):
     email=None
      
@@ -123,15 +124,15 @@ def label (request,user_id, document_id):
 
     original_labels = response["llm_labels"]
     most_confident = original_labels[0]
-    
     labels = random.sample(original_labels, len(original_labels))
+    print(labels)
 
     explanation = response["description"]
 
     confidence = str(response["confident"]).lower()
-    auto="true"
-
     
+
+    print(request.session["document_ids"])
     data = {
         "document": documenttext,
         "labels":labels,
@@ -140,8 +141,7 @@ def label (request,user_id, document_id):
         "document_id":document_id,
         "confidence" :confidence,
         "time":request.session["start_time"],
-        "most_confident":most_confident,
-        "auto":auto
+        "most_confident":most_confident
         }
 
     return render(request, "label.html", context=data)

@@ -568,7 +568,7 @@ def get_document_data(url, user_id, document_id, all_texts, old_label=None):
 
     original_labels = response["llm_labels"]
     most_confident = original_labels[0]
-    labels = random.shuffle(original_labels)
+    labels = random.sample(original_labels, len(original_labels))
 
 
     explanation = response["description"]
