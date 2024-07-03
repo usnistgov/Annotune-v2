@@ -555,7 +555,7 @@ def make_folder(name):
     os.mkdir(path, mode)
 
 
-def get_document_data(url, user_id, document_id, all_texts, old_label=None):
+def get_document_data(url, user_id, document_id, all_texts, old_label=None, all_old_labels=None):
     import requests
     import random
 
@@ -563,7 +563,7 @@ def get_document_data(url, user_id, document_id, all_texts, old_label=None):
     response = requests.post(get_document_information, json={ "document_id": document_id,
                                                         "user_id":user_id
                                                          }).json()
-    print(response)
+    # print(response)
     documenttext = all_texts["text"][str(document_id)]
 
     original_labels = response["llm_labels"]
@@ -573,6 +573,14 @@ def get_document_data(url, user_id, document_id, all_texts, old_label=None):
 
     explanation = response["description"]
     confidence = str(response["confident"]).lower()
+    #Take it off
+###################################
+    conf =random.randint(1, 1000)
+    if conf%2 ==0:
+        confidence="true"
+    else:
+        confidence="false"
+##################################
     
     auto="true"
     data = {
@@ -584,7 +592,8 @@ def get_document_data(url, user_id, document_id, all_texts, old_label=None):
         "confidence":confidence,
         "old_label": old_label,
         "most_confident":most_confident,
-        "auto": auto
+        "auto": auto,
+        
         }
     
 
@@ -661,4 +670,19 @@ def truncated_data(topics, all_texts ):
             continue
     recommended = list(all_text.keys())[0]
     return all_text, keywords, recommended, clusters
+
+
+def sort_labeled(all_texts, all_labeled):
+    filteredTexts = {}
+    for text in  all_labeled:
+        filteredTexts[str(text)] = all_texts['text'][str(text)]
+    return filteredTexts
+
+
+def sort_labeled_with_label(all_texts, all_labeled):
+    filteredTexts = {}
+    for text in  all_labeled:
+        filteredTexts[str(text)] = all_texts['text'][str(text)]
+
+    return filteredTexts
     

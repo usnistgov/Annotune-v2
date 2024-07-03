@@ -1,23 +1,52 @@
 {% extends "base.html" %}
+{% block extra_head %}
+{% load static %}
+<style>
+
+    #timer {
+        font-size: 2rem;
+        /* font-weight: bold; */
+    }
+    .timer-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 5px;
+    
+    }
+
+</style>
+{% endblock%}
+
+
+
+
 
 
 {% block content %}
-<div class="mains-div">
+<div class="mains-div" style="height: 100%;">
     <div class="container">
-        <div class="main-text text-center">
-            <h1>Annotune</h1>
-            <br>
-            <div class="about">
+        <div class="main-text text-center m-3">
+            <!-- <div class="timer-container">
+                <div id="timer" style="float: right;"></div>
+            </div> -->
+            <div style="display: flex; justify-content: space-between; padding-left: 43%">
+                <h1 style="float:left; ;">Annotune</h1>
+                <div id="pageName" hidden>homepage</div>
+                <h4 class="mb-2" style="float: right;" id="timer"></h4>
+            </div>
+            <div class="container m-3">
                 Annotune, short for Annotation, Text Understanding and Navigation Engine, leverages advanced topic modeling techniques to enhance document annotation.
                 By quickly analyzing and grouping documents into clusters and keywords, Annotune provides a deeper understanding of the context, significantly
                 accelerating the annotation process.
             </div>
             <br>
             <br>
-            <div class="row row-cols-1 row-cols-md-3 g-4"> <!-- Cards section -->
+            <div class="row row-cols-1 row-cols-md-2 g-4"> <!-- Cards section -->
                 <!-- Card for Enhanced Speed -->
                 <div class="col">
-                    <div class="card h-100 text-white bg-dark">
+                    <div class="card h-200 text-white bg-dark">
                         <div class="card-body">
                             <h5 class="card-title">Enhanced Speed</h5>
                             <p class="card-text">Reduce the time spent on document review by quickly identifying key themes and topics.</p>
@@ -75,10 +104,12 @@
                     </div>
                 </div>
             </div>
+            <div id="pageName" hidden>homePage</div>
             <!-- Get Started Button -->
             <div class="mt-4">
                 
-                <a href="{% url 'documents' user_id  %}" class="btn btn-success btn-lg">Get Started</a>
+                <!-- <a href="" class="btn btn-success btn-lg">Get Started</a> -->
+                <a href="{% url 'documents' user_id %}" class="btn btn-success btn-lg">Get Started</a>
             </div>
         </div>
     </div>

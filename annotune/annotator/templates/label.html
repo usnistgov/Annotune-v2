@@ -2,42 +2,271 @@
 {% block extra_head %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/label.css' %}">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .label-input-group {
+            margin-bottom: 10px;
+        }
+        #buttonContainer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        #manualLabelSubmit {
+            float: right;
+        }
+   
 
+        .label-input-group {
+            margin-bottom: 10px;
+        }
+        #buttonContainer {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #manualLabelSubmit {
+            display: block;
+            margin-top: 20px;
+        }
+    .explanation-container {
+        position: relative;
+    }
+
+    #explanationDiv {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 300px;
+        background-color: white;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        padding: 15px;
+    }
+
+    #toggleExplanationBtn:hover + #explanationDiv,
+    #explanationDiv:hover {
+        display: block;
+        background-color: blanchedalmond;
+    }
+
+    .document-id {
+        margin-right: 20px;
+    }
+
+    .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .loader {
+            width: 250px;
+            height: 250px;
+            border: 24px groove rgb(186, 194, 201);
+            border-radius: 50%;
+            animation: spin 15s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        .arrow1 {
+        animation: slide1 1s ease-in-out infinite;
+        margin-left: 9px;
+        }
+        @keyframes slide1 {
+        0%,
+        100% {
+            transform: translate(0, 0);
+        }
+
+        50% {
+            transform: translate(0, 10px);
+        }
+        }
+
+        .label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .label-container h4 {
+            margin: 0;
+        }
+        #redArrow, #labelEnter, #greenArrow, #submitEnter {
+            display: none;
+        }
+        @keyframes arrowBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .arrow {
+            animation: arrowBounce 1s infinite;
+        }
+        .highlight {
+            animation: highlightPulse 1.5s infinite;
+        }
+        @keyframes highlightPulse {
+            0% {
+                box-shadow: 0 0 10px #ff0000;
+            }
+            50% {
+                box-shadow: 0 0 20px #ff0000;
+            }
+            100% {
+                box-shadow: 0 0 10px #ff0000;
+            }
+        }
+        .highlight-green {
+            animation: highlightPulseGreen 1.5s infinite;
+        }
+        @keyframes highlightPulseGreen {
+            0% {
+                box-shadow: 0 0 10px #00ff00;
+            }
+            50% {
+                box-shadow: 0 0 20px #00ff00;
+            }
+            100% {
+                box-shadow: 0 0 10px #00ff00;
+            }
+        }
+        .confidence{
+            margin: 2%;
+            font-size: larger;
+        }
+
+        
+
+        
+
+</style>
 {% endblock %}
 
 {% block content %}
+
+<div class="loader-overlay" id="loaderOverlay">
+    <div class="loader">
+        <div>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <div>
+                                    <div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container-lg my-5">
     <div class="row">
         <!-- Navigation Icons -->
         <div class="col-12 d-flex justify-content-between mb-3">
-            <a href="#" id="previousButton" class="btn btn-outline-secondary btn-lg nav-icon">
-                <i class="fas fa-arrow-left"></i> Previous
-            </a>
-            <div>
+            <div style="display: flex; align-items: center;">
+                <h4 class="mb-2" id="timer"></h4>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <a href="{% url 'display' user_id %}" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
+                    <i class="fas fa-arrow-left"></i> View-by-labels
+                </a> 
+                <a href="{% url 'documents' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">
+                    <i class="fas fa-arrow-left"></i> View-by-topics
+
+                </a> 
                 
-                <a href="#" id="nextButton" class="btn btn-outline-secondary btn-lg nav-icon">
-                    Next <i class="fas fa-arrow-right"></i>
-                </a>
             </div>
         </div>
     </div>
+
+    <div id="alert" class="alert alert-success" role="alert"></div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+    </svg>
+    <div class="alert alert-success align-items-center" id="myalert" style="display: none;">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill"></use>
+        </svg>
+        <div>
+            The label was submitted successfully.
+        </div>
+    </div>
+    
     <div class="row mt-3">
         <!-- Text and Explanation Section -->
-        <div class="col-md-6 my-3 text-section" style="min-height: 50vh;">
-            <h3 class="section-title">Text</h3>
-            <h5 id="document_id" class="document-id" >{{ document_id }}</h5>
-            <div id="documentText" class="card document-card" style="height: 100%; overflow-y: scroll;">
+        <div class="col-md-6 my-3 text-section">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: inline-flex; align-items: center;">
+                    <h5 class="document-id">Text:</h5>
+                    <h5 id="document_id" class="document-id" style="padding-left: 10%;">{{ document_id }}</h5>
+                    {{recommended_doc_id}}
+                </div>
+                <div class="explanation-container" style="display: inline-block; margin-left: auto;">
+                    <button id="toggleExplanationBtn" class="btn btn-secondary toggle-btn mx-auto">Show Explanation</button>
+                    <div id="explanationDiv" class="card explanation-card mt-2 p-3">
+                        {{ explanation }}
+                    </div>
+                    <br>
+                </div>
+            </div>
+            
+            <div id="documentText" class="card document-card" style="overflow-y: auto; min-height:30vh; max-height: 60vh;">
                 {{ document }}
             </div>
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="#" id="previousButton" class="btn btn-outline-secondary btn-lg w-100">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="#" id="nextButton" class="btn btn-outline-secondary btn-lg w-100">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            
         </div>
         
         <!-- Labels Section -->
-        <div class="col-md-6 my-3 labels-section d-flex flex-column" style="min-height:59vh;">
+        <div class="col-md-6 my-3 labels-section d-flex flex-column" style="height:70vh; overflow-y: scroll;">
             <h5 class="section-title">Please choose one of the label suggestions or add your own label in the box below</h5>
             <br>
-            <div id="suggestedLabels" class="button-container d-flex flex-wrap justify-content-center mb-4">
-                <form method="post" class="w-100">
+            
+            <div id="suggestedLabels" class= "d-flex flex-wrap justify-content-center mb-4">
+                <form method="post">
                     {% csrf_token %}
                     {% for label in labels %}
                     <button id="{{ label }}" type="button" class="btn btn-label suggested-label-btn m-1">{{ label }}</button>
@@ -45,30 +274,145 @@
                 </form>
             </div>
 
-            <!-- <h3 class="section-title mt-4">Selected Label</h3> -->
             <div class="mt-2" id="manualLabelDiv">
-                <form method="post" class="d-flex align-items-center">
-                    {% csrf_token %}
-                    <input id="manualLabelInput" class="form-control label-input me-2" type="text" placeholder="Enter label">
-                    <button id="manualLabelSubmit" class="btn btn-success submit-btn" type="button">Submit</button>
+                <div class="container mt-4">
+                    <div id="inputContainer" class="mb-3">
+                        <div class="input-group mb-3 label-input-group">
+                            <input id="manualLabelInput" class="form-control label-input me-2" list="labelOptions" type="text" placeholder="Enter or select label">
+                            <datalist id="labelOptions">
+                                {% for old_label in all_old_labels %}
+                                <option value="{{ old_label }}"></option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                    </div>
+                    <div id="buttonContainer">
+                        <div class="action-buttons">
+                            <button id="addInput" class="btn btn-primary" type="button">+</button>
+                            <button id="removeInput" class="btn btn-danger" type="button">-</button>
+                        </div>
+                        
+                        <button id="manualLabelSubmit" class="btn btn-success submit-btn" type="button">Submit</button>
+                    </div>
+                </div>
                 </form>
+                <div>
+                    {% load static %}
+                    <img id="redArrow" class="arrow" src="{% static 'images/red_arrow.png' %}" alt="Red Arrow" width="80" height="150" style="margin-left: 30%;">
+                    <img id="greenArrow" class="arrow" src="{% static 'images/green_arrow.jpeg' %}" alt="Green Arrow" width="80" height="120" style="float: right; margin-right: 5%; margin-top: 10px;">
+                </div>
+                <div class="">
+                    <h4 id="labelEnter" style="margin-left: 25%;">Enter a label</h4>
+                    <h4 id="submitEnter" style="margin-left: 75%">Submit label</h4>
+                </div>
+                <!-- <div id="trueConfidence" class="confidence">The model recommends X as the most relevant label. Please submit the label X or choose from the existing labels or create your own label</div> -->
+                <!-- <div id="falseConfidence" class="confidence">The model needs your help on choosing from the label suggestions, the existing labels or you can create your own label</div> -->
+                <div id="confText" class="confidence"></div>
             </div>
 
-            <!-- <button id="toggleExplanationBtn" class="btn btn-secondary toggle-btn mt-4 mx-auto">Show Explanation</button>
-            <div id="explanationDiv" class="card explanation-card mt-2" style="display: none;">
-                {{ explanation }}
-            </div> -->
-            <div id="most_confident">{{most_confident}}</div>
-            <div id="auto">{{auto}}</div>
+            <div id="most_confident" hidden>{{most_confident}}</div>
+            <div id="auto" hidden>{{auto}}</div>
             <div id="user_id" hidden>{{ user_id }}</div>
-            <div id="confidence">{{ confidence }}</div>
+            <div id="confidence" hidden>{{ confidence }}</div>
+            <div id="pageName" hidden>Label</div>
+            <div id="pageStartTime" hidden> {{time}}</div>
         </div>
     </div>
 </div>
 
 {% load static %}
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'javascript/label.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const auto = '{{ auto|lower }}' === 'true';
+        const timer = document.getElementById('timer');
+        const pageStartTime = new Date(document.getElementById('pageStartTime').textContent.trim());
+      
+        let hoverStartTime;
+        let totalHoverTime = 0;
+
+        const explanationDiv = document.getElementById('toggleExplanationBtn');
+
+        // Function to start the hover timer
+        function startHoverTimer() {
+            hoverStartTime = new Date();
+        }
+
+        // Function to stop the hover timer and calculate the time
+        function stopHoverTimer() {
+            if (hoverStartTime) {
+                const hoverEndTime = new Date();
+                const hoverDuration = hoverEndTime - hoverStartTime; // Time in milliseconds
+                totalHoverTime += hoverDuration; // Accumulate hover time if needed
+                console.log(`Hover duration: ${hoverDuration} ms`);
+                sendDataToServer(totalHoverTime)
+            }
+            hoverStartTime = null;
+        }
+
+        // Add event listeners for mouse enter and leave
+        explanationDiv.addEventListener('mouseenter', startHoverTimer);
+        explanationDiv.addEventListener('mouseleave', stopHoverTimer);
+        
+        function sendDataToServer(duration) {
+            fetch(`/log-hover-duration/${document_id.textContent}/${totalHoverTime}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if needed
+                },
+                body: JSON.stringify({ hoverDuration: duration })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Hover duration logged:', data))
+            .catch(error => console.error('Error logging hover duration:', error));
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.getElementById('addInput').addEventListener('click', function () {
+            var newInputGroup = document.createElement('div');
+            newInputGroup.className = 'input-group mb-3 label-input-group';
+
+            var newInput = document.createElement('input');
+            newInput.className = 'form-control label-input me-2';
+            newInput.type = 'text';
+            newInput.placeholder = 'Enter or select label';
+            newInput.setAttribute('list', 'labelOptions');
+
+            newInputGroup.appendChild(newInput);
+
+            document.getElementById('inputContainer').appendChild(newInputGroup);
+        });
+
+        // Function to remove the last input field
+        document.getElementById('removeInput').addEventListener('click', function () {
+            var inputContainer = document.getElementById('inputContainer');
+            if (inputContainer.children.length > 1) {
+                inputContainer.removeChild(inputContainer.lastChild);
+            }
+        });
+            
+    });
+</script>
 
 {% endblock %}

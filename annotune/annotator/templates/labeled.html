@@ -4,6 +4,19 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/document.css' %}">
 <style>
+
+    #timer {
+        font-size: 2rem;
+        /* font-weight: bold; */
+    }
+    .timer-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 5px;
+    
+    }
     .loader-overlay {
             position: fixed;
             top: 0;
@@ -31,7 +44,9 @@
             height: 100%;
             margin: 0;
         }
+
 </style>
+
 {% endblock %}
 
 {% block content %}
@@ -56,44 +71,53 @@
     </div>
 </div>
 <br>
-<div class="container-fluids">
+
+<div class="container-fluids"  style="margin-left: 3%;">
     <div class="col-12 d-flex justify-content-between mb-3">
-        
+        <div class="d-flex">
+            <h5>Labeled Documents </h5>
+        </div>
+        <div class="timer-container">
+            <div id="timer"></div>
+            <!-- <div id="timers" hidden>{{start_time}}</div> -->
+        </div>
     
         <div id="pageStartTime" hidden>{{pageStart}}</div>
-        <div id="pageName" hidden>Documents</div>
+        <div id="pageName" hidden>labeled</div>
 
         
     
-        
+        <div class="float-end">
+            <a href="{% url 'documents' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
+                View-by-topics <i class="fas fa-arrow-right"></i>
+            </a>
+         
+
+            <div id="selectedLabel"></div>
+
+        </div>
     
     </div>
-    <div class="row">
+    <div class="row" >
         <!-- Left Column for Keywords (Accordion) -->
         <div class="col-md-4">
-            <h4 class="mb-2">Keywords</h4>
+            <h4 class="mb-2">Labels</h4>
             <div class="accordion scrollable-accordion" id="keywordsAccordion" style="max-height: calc(100vh - 120px); overflow-y: auto;">
-                {% for id, keyword_lists in keywords.items %}
-                <div class="accordion-item" data-id="{{ id }}">
-                    <h2 class="accordion-header" id="heading{{ id }}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ id }}" aria-expanded="false" aria-controls="collapse{{ id }}">
-                            Keyword {{ id }}
+                {% for label, id_lists in labels.items %}
+                <div class="accordion-item" data-id="{{ label }}">
+                    <h2 class="accordion-header" id="heading{{ label }}">
+                        <button class="accordion-button collapsed" type="button"  data-bs-target="#collapse{{ label }}" aria-expanded="false" aria-controls="collapse{{ label }}">
+                            {{ label }}
                         </button>
                     </h2>
-                    <div id="collapse{{ id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ id }}" data-bs-parent="#keywordsAccordion">
+                    <div id="collapse{{ label }}" class="accordion-collapse collapse" aria-labelledby="heading{{ label }}" data-bs-parent="#keywordsAccordion">
                         <div class="accordion-body">
-                            {% for word in keyword_lists %}
-                            <span class="badge bg-secondary badge-keyword">{{ word }}</span>
-                            {% endfor %}
                             <div id="text_keys" style="display: none;">
-                                {% for cluster_id, cluster in clusters.items %}
-                                    {% if cluster_id == id %}
-                                        {% for clust in cluster %}
-                                            <div class="topic_ids"> 
-                                                <span>{{ clust }}</span> 
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
+                                {% for id in id_lists %}
+                                    <div class="topic_ids"> 
+                                        <span>{{ id }}</span>
+                                    </div>
+                                        
                                 {% endfor %}
                             </div>
                         </div>
@@ -104,21 +128,9 @@
         </div>
 
         <!-- Right Column for Text Table -->
-        <div class="col-md-8">
-            <div style="display: flex; justify-content: space-between;">
-                <h4 class="mb-2">Texts</h4>
-                <h4 class="mb-2" style="float: right;" id="timer"></h4>
-                <div class="float-end">
-                    <a href="{% url 'display' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
-                        View-by-Labels <i class="fas fa-arrow-right"></i>
-                    </a>
-        
-                    <div id="selectedLabel"></div>
-        
-                </div>
-            </div>
-            
-            <div class="table-responsive" style="width: 95%;">
+        <div class="col-md-8" style="min-height: 70vh;">
+            <h4 class="mb-2">Texts</h4>
+            <div class="table-responsive" style="width: 95%; min-height: 70%;">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -130,7 +142,7 @@
                         {% for doc_id, text in all_texts.items %}
                         <tr data-id="{{ doc_id }}">
                             <td>{{ doc_id }}</td>
-                            <td id="textLink" class="text-truncate"><a href="{% url 'label' user_id doc_id %}" class="text-link">{{text }}</a> </td>
+                            <td class="text-truncate"><a href="{% url 'label' user_id doc_id  %}" class="text-link">{{text }}</a> </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -181,6 +193,7 @@
 
                 if (topicIds.includes(recommendedDocId)) {
                     const button = item.querySelector('.accordion-button');
+                    
                     recommendedAccordionItem = item;
                     button.click();  // Automatically click the accordion button
                     filterTable(topicIds);
@@ -203,10 +216,13 @@
                 const accordionItem = this.closest('.accordion-item');
                 const topicIdsDivs = accordionItem.querySelectorAll('.topic_ids span');
                 const topicIds = Array.from(topicIdsDivs).map(span => span.textContent.trim());
+                const selectedLabel = document.getElementById("selectedLabel")
+                var label = this.textContent.trim()
+                selectedLabel.textContent = label
+                console.log('Clicked label:', this.textContent.trim());
                 filterTable(topicIds);
             });
         });
-
         function hideLoader() {
             const loaderOverlay = document.getElementById('loaderOverlay');
             loaderOverlay.style.display = 'none';
@@ -238,6 +254,7 @@
     }
 
     addTextTruncateListeners();
+
     });
 </script>
 

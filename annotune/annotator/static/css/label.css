@@ -39,8 +39,8 @@ body {
 }
 
 .btn-label {
-    background-color: #6c757d;
-    color: white;
+    background-color: #b1d6f7;
+    color: rgb(222, 234, 246);
     border: none;
     padding: 10px 20px;
     margin: 5px;
@@ -51,7 +51,7 @@ body {
 }
 
 .btn-label:hover {
-    background-color: #5a6268;
+    background-color: #ccddea;
 }
 
 .label-input {
@@ -153,7 +153,7 @@ body {
     flex-grow: 1;
 }
 
-.btn-label {
+/* .btn-label {
     background-color: #007bff;
     color: white;
     border: none;
@@ -163,11 +163,11 @@ body {
     transition: background-color 0.3s ease;
     font-size: 0.9em;
     display: inline-block;
-}
+} */
 
-.btn-label:hover {
+/* .btn-label:hover {
     background-color: #0056b3;
-}
+} */
 
 .label-input {
     display: inline-block;
@@ -209,3 +209,45 @@ body {
     max-width: 45%;
     margin: 5px;
 }
+
+#alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: none;
+}
+
+#alert.show {
+    display: block;
+    transition: all 0.3s ease-in-out;
+
+}
+.explanation-container {
+            position: relative;
+            display: inline-block;
+        }
+    
+#explanationDiv {
+display: none;
+position: absolute;
+top: 100%;
+left: -200%; /* Adjust to center the div under the button */
+z-index: 1;
+width: 400px; /* Increase the width for better readability */
+background-color: rgb(226, 250, 190);
+border: 1px solid #381f1f;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+border-radius: 5px;
+padding: 20px;
+}
+
+.explanation-container:hover #explanationDiv {
+    display: block;
+}
+.explanation-container:hover ~ #documentText {
+    background-color: rgba(128, 128, 128, 0.3); /* Grey out the documentText div */
+    pointer-events: none; /* Disable interactions with the documentText div */
+}
+
