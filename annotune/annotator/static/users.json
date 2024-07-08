@@ -15,7 +15,10 @@
             5202,
             8396,
             6824,
-            6534
+            6534,
+            5654,
+            11356,
+            11951
         ],
         "label": [
             "use",
@@ -27,7 +30,10 @@
             "miss",
             "three",
             "newspaper",
-            "represent"
+            "represent",
+            "street",
+            "notices",
+            "audiencefff"
         ],
         "labels": {
             "5201": {
@@ -64,6 +70,21 @@
                 "labels": "represent",
                 "time": "01/07/24 17:35:37",
                 "document_id": 6534
+            },
+            "5654": {
+                "labels": "street",
+                "time": "08/07/24 17:09:09",
+                "document_id": 5654
+            },
+            "11356": {
+                "labels": "notices",
+                "time": "08/07/24 17:09:36",
+                "document_id": 11356
+            },
+            "11951": {
+                "labels": "audiencefff",
+                "time": "08/07/24 17:11:06",
+                "document_id": 11951
             }
         },
         "start_time": "01/07/24 12:23:24",
@@ -184,6 +205,30 @@
             {
                 "page": "Label",
                 "time": "01/07/24 13:35:29"
+            },
+            {
+                "page": "homepage",
+                "time": "08/07/24 13:08:57"
+            },
+            {
+                "page": "Documents",
+                "time": "08/07/24 13:08:59"
+            },
+            {
+                "page": "Label",
+                "time": "08/07/24 13:09:03"
+            },
+            {
+                "page": "homepage",
+                "time": "08/07/24 13:13:03"
+            },
+            {
+                "page": "Documents",
+                "time": "08/07/24 13:13:04"
+            },
+            {
+                "page": "Label",
+                "time": "08/07/24 13:13:15"
             }
         ],
         "hoverTimes": [
@@ -262,6 +307,22 @@
             {
                 "document_id": 4905,
                 "hover_time": 32
+            },
+            {
+                "document_id": 11951,
+                "hover_time": 13
+            },
+            {
+                "document_id": 11951,
+                "hover_time": 30
+            },
+            {
+                "document_id": 6645,
+                "hover_time": 444
+            },
+            {
+                "document_id": 6645,
+                "hover_time": 475
             }
         ]
     }
