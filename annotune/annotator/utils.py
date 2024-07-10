@@ -593,6 +593,7 @@ def get_document_data(url, user_id, document_id, all_texts, old_label=None, all_
         "old_label": old_label,
         "most_confident":most_confident,
         "auto": auto,
+        "all_old_labels" : all_old_labels
         
         }
     

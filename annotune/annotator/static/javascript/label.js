@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextButton = document.getElementById('nextButton');
     const alertDiv = document.getElementById('myalert');
     const loaderOverlay = document.getElementById('loaderOverlay');
+    const datalistElement = document.getElementById('labelOptions');
 
     let documentsData = [];
     let currentIndex = -1;
@@ -92,8 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('documentText').textContent = data.document;
         document.getElementById('most_confident').textContent = data.most_confident;
         document.getElementById('explanationDiv').textContent = data.explanation;
+        
         confidence.textContent = data.confidence;
         manualLabelInput.value = "";
+        const newOptions = data.all_old_labels;
+        console.log(newOptions)
+        // Clear existing options
+        datalistElement.innerHTML = '';
+
+        // Add new options
+        newOptions.forEach(optionValue => {
+            const newOption = document.createElement('option');
+            newOption.value = optionValue;
+            datalistElement.appendChild(newOption);
+        });
+
 
         ['redArrow', 'labelEnter', 'greenArrow', 'submitEnter'].forEach(id => {
             const element = document.getElementById(id);
@@ -247,33 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('input', toggleSubmitButton);
     document.addEventListener('click', toggleSubmitButton);
 
-    // function disableSubmitIfEmpty() {
-    //     // Select all input elements with the class "input-group mb-3 label-input-group"
-    //     let inputs = document.querySelectorAll('.input-group.mb-3.label-input-group input');
-    //     // Select the submit button
-    //     let submitButton = document.getElementById("manualLabelSubmit");
-    //     // Initialize a flag to check if all inputs have values
-    //     let allFilled = true;
-    //     // Iterate through each input element and check its value
-    //     inputs.forEach(input => {
-    //         if (input.value.trim() === '') {
-    //             allFilled = false;
-    //         }
-    //     });
-    //     // Disable or enable the submit button based on the input values
-    //     submitButton.disabled = !allFilled;
-    // }
-    
-    // // Call the function to set the initial state of the submit button
-    // disableSubmitIfEmpty();
-    
-    // // Add event listeners to the input elements to call the function on input changes
-    // document.querySelectorAll('.input-group.mb-3.label-input-group input').forEach(input => {
-    //     input.addEventListener('input', disableSubmitIfEmpty);
-    //     input.addEventListener('change', disableSubmitIfEmpty);
-    //     input.addEventListener('blur', disableSubmitIfEmpty);
-    //     input.addEventListener('focus', disableSubmitIfEmpty);
-    // });
+
     
 
             

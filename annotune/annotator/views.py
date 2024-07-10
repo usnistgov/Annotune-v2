@@ -9,12 +9,15 @@ from django.contrib.auth import logout
 import random
 from pytz import timezone
 eastern = timezone('US/Eastern')
+import environ
+
+env = environ.Env()
 
 
 
  
-all_texts = json.load(open("/Users/danielstephens/Desktop/Annotune-v2/bills_preprocessed.json"))
-url =  "http://127.0.0.1:1234/"
+all_texts = json.load(open("./annotator/bills_preprocessed.json"))
+url =  env("URL")
  
  
 def sign_up(request):
@@ -54,14 +57,13 @@ def sign_up(request):
             with open("./annotator/static/users.json", "w") as user_file:
                 json.dump(information, user_file, indent=4)
 
-            request.session["email"] = email
-            request.session["user_id"] = user_id
-            request.session["labels"] = []
-            request.session["document_ids"]= []
-            request.session["start_time"] = information[email]["start_time"],
+            request.session["email"] = information[email]["email"]
+            request.session["user_id"] = information[email]["user_id"]
+            request.session["labels"] = information[email]["label"],
+            request.session["document_ids"]= information[email]["document_id"]
+            request.session["start_time"]= information[email]["start_time"]
 
-            # print(request.session["start_time"])
-            return render(request, "homepage.html", {"user_id": request.session["user_id"], "start_time": request.session["start_time"]})
+            return redirect("homepage", user_id=information[email]["user_id"] )
 
         return redirect("login", {"time":datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S")})
             
@@ -113,11 +115,10 @@ def list_documents(request, user_id):
     a, b, c, d = truncated_data(topics, all_texts)
 
     print(type(request.session["user_id"]))
-    
-    
   
 
     return render(request, "documents.html", {"all_texts": a, "clusters": d, "keywords":b, "recommended_doc_id" :c, "user_id":request.session["user_id"], "start_time":request.session["start_time"]})
+
 
 def label (request,user_id, document_id):
     user_id = request.session["user_id"]
@@ -198,7 +199,14 @@ def submit_data(request, document_id, label):
     print(time)
 
 
+
     append_to_json_file(request.session["email"], label, document_id, time )
+
+    with open('./annotator/static/users.json', "r") as user_file:
+        name_string = user_file.read()
+        information = json.loads(name_string)
+
+    past_labels = list(set(information[request.session["email"]]["label"]))
 
     request.session["document_ids"].append(document_id)
     request.session["labels"].append(label)
@@ -206,7 +214,8 @@ def submit_data(request, document_id, label):
     user_id=request.session["user_id"]
     response_time = str(time)
     submit_document = url + "recommend_document"
-
+    
+    print(past_labels)
     data_to_submit = {
             "document_id": document_id,
             "label": label,
@@ -221,10 +230,10 @@ def submit_data(request, document_id, label):
 
 
     # return redirect("fetch-data", user_id=user_id, document_id=document_id)
-    all_old_labels = sorted(list(set(request.session["labels"][0])))
+    all_old_labels = sorted(list(past_labels))
 
     
-    data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts, old_label=label )
+    data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts, old_label=label, all_old_labels=all_old_labels)
 
 
     return JsonResponse(data)
