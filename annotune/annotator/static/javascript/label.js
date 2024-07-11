@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sendData() {
         const documentId = document.getElementById('document_id').textContent.trim();
-        var label =getInputValue()
+        var label =getInputValue();
+        console.log(label)
         removeInputs();
 
         const dataToSend = JSON.stringify({
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confidence.textContent = data.confidence;
         manualLabelInput.value = "";
         const newOptions = data.all_old_labels;
-        console.log(newOptions)
+        // console.log(newOptions)
         // Clear existing options
         datalistElement.innerHTML = '';
 
@@ -235,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Iterate through each input element and get its value
         inputs.forEach(input => {
             texts.push(input.value);
-            final_label +="\n"+input.value;
+            final_label +="divideHere"+input.value;
         });
         // Log the collected text values
         // console.log(texts);

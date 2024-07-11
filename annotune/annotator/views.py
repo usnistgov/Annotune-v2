@@ -195,8 +195,8 @@ def skip_document(request):
 
 
 def submit_data(request, document_id, label):
-    time=datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")
-    print(time)
+    time = datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")
+    # print(time)
 
 
 
@@ -214,11 +214,13 @@ def submit_data(request, document_id, label):
     user_id=request.session["user_id"]
     response_time = str(time)
     submit_document = url + "recommend_document"
+    # print(label.split("divideHere"))
+    finalLabel = "\n".join(word for word in label.split("divideHere") if word!="")
     
-    print(past_labels)
+    print(finalLabel)
     data_to_submit = {
             "document_id": document_id,
-            "label": label,
+            "label": finalLabel,
             "user_id": user_id,
             "response_time": response_time,
             "description": "no description",
@@ -240,7 +242,15 @@ def submit_data(request, document_id, label):
 
 
 def fetch_data(request, user_id, document_id):
-    data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts)
+    with open('./annotator/static/users.json', "r") as user_file:
+        name_string = user_file.read()
+        information = json.loads(name_string)
+
+    past_labels = list(set(information[request.session["email"]]["label"]))
+    all_old_labels = sorted(list(past_labels))
+
+
+    data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts, all_old_labels=all_old_labels)
     return JsonResponse(data)
 
 def skip_document(request):

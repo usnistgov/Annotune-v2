@@ -33,7 +33,20 @@
             11497,
             12054,
             5378,
-            15
+            15,
+            6645,
+            4765,
+            13955,
+            10604,
+            6645,
+            6645,
+            10389,
+            7533,
+            6645,
+            6645,
+            13475,
+            15,
+            6506
         ],
         "label": [
             "he",
@@ -63,7 +76,20 @@
             "eye",
             "ground",
             "notice",
-            "structure"
+            "structure",
+            "lead",
+            "guy",
+            "claim",
+            "commonimagecommon",
+            "earlyracestock",
+            "divideHerepickdivideHerelivedivideHereserious",
+            "divideHereeachdivideHerelivedivideHereguy",
+            "divideHerebydivideHeremoredivideHerenaturedivideHerepolice",
+            "divideHerepresidentdivideHerecertainlydivideHeresocial",
+            "divideHerepoliticsdivideHerenumberdivideHerethis",
+            "divideHereentiredivideHerehedivideHerelive",
+            "divideHereappeardivideHeredivideHereearlyracestock",
+            "divideHeremouthdivideHeredivideHereground"
         ],
         "labels": {
             "5201": {
@@ -152,9 +178,49 @@
                 "document_id": 5378
             },
             "15": {
-                "labels": "structure",
-                "time": "10/07/24 03:15:43",
+                "labels": "divideHereappeardivideHeredivideHereearlyracestock",
+                "time": "11/07/24 01:58:38",
                 "document_id": 15
+            },
+            "6645": {
+                "labels": "divideHerepoliticsdivideHerenumberdivideHerethis",
+                "time": "11/07/24 01:42:58",
+                "document_id": 6645
+            },
+            "4765": {
+                "labels": "guy",
+                "time": "11/07/24 01:26:12",
+                "document_id": 4765
+            },
+            "13955": {
+                "labels": "claim",
+                "time": "11/07/24 01:26:29",
+                "document_id": 13955
+            },
+            "10604": {
+                "labels": "commonimagecommon",
+                "time": "11/07/24 01:29:11",
+                "document_id": 10604
+            },
+            "10389": {
+                "labels": "divideHereeachdivideHerelivedivideHereguy",
+                "time": "11/07/24 01:36:56",
+                "document_id": 10389
+            },
+            "7533": {
+                "labels": "divideHerebydivideHeremoredivideHerenaturedivideHerepolice",
+                "time": "11/07/24 01:37:53",
+                "document_id": 7533
+            },
+            "13475": {
+                "labels": "divideHereentiredivideHerehedivideHerelive",
+                "time": "11/07/24 01:43:43",
+                "document_id": 13475
+            },
+            "6506": {
+                "labels": "divideHeremouthdivideHeredivideHereground",
+                "time": "11/07/24 01:59:00",
+                "document_id": 6506
             }
         },
         "start_time": "09/07/24 18:03:28",
@@ -299,6 +365,42 @@
             {
                 "page": "Documents",
                 "time": "09/07/24 23:54:16"
+            },
+            {
+                "page": "Documents",
+                "time": "09/07/24 23:56:33"
+            },
+            {
+                "page": "Label",
+                "time": "09/07/24 23:57:39"
+            },
+            {
+                "page": "Label",
+                "time": "10/07/24 21:23:52"
+            },
+            {
+                "page": "Label",
+                "time": "10/07/24 21:33:38"
+            },
+            {
+                "page": "Label",
+                "time": "10/07/24 21:35:18"
+            },
+            {
+                "page": "Label",
+                "time": "10/07/24 21:42:10"
+            },
+            {
+                "page": "Label",
+                "time": "10/07/24 21:42:50"
+            },
+            {
+                "page": "Label",
+                "time": "10/07/24 21:46:02"
+            },
+            {
+                "page": "Label",
+                "time": "10/07/24 21:54:45"
             }
         ],
         "hoverTimes": [
@@ -381,6 +483,54 @@
             {
                 "document_id": 5202,
                 "hover_time": 6
+            },
+            {
+                "document_id": 6645,
+                "hover_time": 6
+            },
+            {
+                "document_id": 10604,
+                "hover_time": 8
+            },
+            {
+                "document_id": 10604,
+                "hover_time": 15
+            },
+            {
+                "document_id": 10604,
+                "hover_time": 23
+            },
+            {
+                "document_id": 6645,
+                "hover_time": 17
+            },
+            {
+                "document_id": 6645,
+                "hover_time": 60
+            },
+            {
+                "document_id": 6645,
+                "hover_time": 72
+            },
+            {
+                "document_id": 6645,
+                "hover_time": 14
+            },
+            {
+                "document_id": 3591,
+                "hover_time": 1139
+            },
+            {
+                "document_id": 208,
+                "hover_time": 13
+            },
+            {
+                "document_id": 208,
+                "hover_time": 169
+            },
+            {
+                "document_id": 15,
+                "hover_time": 87
             }
         ]
     }
