@@ -16,7 +16,7 @@ env = environ.Env()
 
 
  
-all_texts = json.load(open("./annotator/bills_preprocessed.json"))
+all_texts = json.load(open(env("DATAPATH")))
 url =  env("URL")
  
  
@@ -24,7 +24,7 @@ def sign_up(request):
     email=None
      
     if request.method == 'POST':
-        with open('./annotator/static/users.json', "r") as user_file:
+        with open(env("USERS_PATH"), "r") as user_file:
             name_string = user_file.read()
             information = json.loads(name_string)
 
@@ -54,7 +54,7 @@ def sign_up(request):
                                 }
             information[email]=user_information
 
-            with open("./annotator/static/users.json", "w") as user_file:
+            with open(env("USERS_PATH"), "w") as user_file:
                 json.dump(information, user_file, indent=4)
 
             request.session["email"] = information[email]["email"]
@@ -75,7 +75,7 @@ def login(request):
     if request.method == 'POST':
 
         email = request.POST['email']
-        with open('./annotator/static/users.json', "r") as user_file:
+        with open(env('USERS_PATH'), "r") as user_file:
             name_string = user_file.read()
             information = json.loads(name_string)
 
@@ -131,7 +131,7 @@ def label (request,user_id, document_id):
     # print(response.keys())
     documenttext = all_texts["text"][str(document_id)]
 
-    with open('./annotator/static/users.json', "r") as user_file:
+    with open(env("USERS_PATH"), "r") as user_file:
         name_string = user_file.read()
         information = json.loads(name_string)
 
@@ -202,7 +202,7 @@ def submit_data(request, document_id, label):
 
     append_to_json_file(request.session["email"], label, document_id, time )
 
-    with open('./annotator/static/users.json', "r") as user_file:
+    with open(env("USERS_PATH"), "r") as user_file:
         name_string = user_file.read()
         information = json.loads(name_string)
 
@@ -242,7 +242,7 @@ def submit_data(request, document_id, label):
 
 
 def fetch_data(request, user_id, document_id):
-    with open('./annotator/static/users.json', "r") as user_file:
+    with open(env("USERS_PATH"), "r") as user_file:
         name_string = user_file.read()
         information = json.loads(name_string)
 
@@ -284,7 +284,7 @@ def get_all_documents(request ):
     
 
 def logout_view(request):
-    with open('./annotator/static/users.json', "r") as user_file:
+    with open(env("USERS_PATH"), "r") as user_file:
         name_string = user_file.read()
         information = json.loads(name_string)
     information[request.session["email"]]["logoutTime"] = datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")
@@ -335,12 +335,12 @@ def append_time(request, pageName):
          "time": datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S")
     }
 
-    with open('./annotator/static/users.json', "r") as user_file:
+    with open(env("USERS_PATH"), "r") as user_file:
         name_string = user_file.read()
         information = json.loads(name_string)
     information[request.session["email"]]["pageTimes"].append(data)
 
-    with open("./annotator/static/users.json", "w") as user_file:
+    with open(env("USERS_PATH"), "w") as user_file:
                 json.dump(information, user_file, indent=4)
 
     data = {
@@ -409,7 +409,7 @@ def log_hover(request, document_id, hover_time):
     information[request.session["email"]]["hoverTimes"].append({"document_id": document_id, 
                                                                 "hover_time": hover_time})
     
-    with open("./annotator/static/users.json", "w") as user_file:
+    with open(env("USERS_PATH"), "w") as user_file:
                 json.dump(information, user_file, indent=4)
 
     return JsonResponse({

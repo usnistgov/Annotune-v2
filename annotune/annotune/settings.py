@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-@-qo_5m50rs^5_cw#@bjix)$2%fzb1hg4hd!slarqa_9vhsx9-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # AUTH_USER_MODEL = 'annotator.CustomUser'
 
@@ -122,9 +122,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/Users/danielstephens/Desktop/Annotune-v2/annotune/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = "/Users/danielstephens/Desktop/Annotune-v2/annotune/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

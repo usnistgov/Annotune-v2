@@ -2,6 +2,9 @@ import re, numpy as np, pandas as pd
 import pickle
 from xml.dom import minidom
 import os
+import environ
+
+env = environ.Env()
 
 def read_data(path):
     """
@@ -607,7 +610,7 @@ import json
 
 def append_to_json_file(email, label, document_id, times):
     import os
-    file_path="/Users/danielstephens/Desktop/Annotune-v2/annotune/annotator/static/users.json"
+    file_path=env("USERS_PATH")
     try:
     # Ensure the file exists
         if not os.path.exists(file_path):

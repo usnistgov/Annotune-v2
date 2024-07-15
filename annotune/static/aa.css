@@ -1,0 +1,81 @@
+
+footer {
+    padding-top: 50px;
+    background-color: #292c2f;
+    color: #bbb;
+  }
+  
+  footer a {
+    color: #999;
+    text-decoration:none;
+  }
+  
+  footer a:hover, footer a:focus {
+    color: #aaa;
+    text-decoration:none;
+    border-bottom:1px dotted #999;
+  }
+  
+  footer .form-control {
+      background-color: #1f2022;
+      box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.1);
+      border: none;
+      resize: none;
+      color: #d1d2d2;
+      padding: 0.7em 1em;
+  } 
+  
+  html{
+      background-color: #292c2f;
+      margin: 0%;
+      display: flex;
+  }
+
+
+
+
+
+
+span{
+    font-size:15px;
+}
+a{
+  text-decoration:none; 
+  color: #0062cc;
+  border-bottom:2px solid #0062cc;
+}
+.box{
+    padding:60px 0px;
+}
+
+.box-part{
+    background:#FFF;
+    border-radius:0;
+    padding:60px 10px;
+    margin:30px 0px;
+}
+.text{
+    margin:20px 0px;
+}
+
+.fa{
+     color:#4183D7;
+}
+.card-height {
+    min-height: 100%; /* Ensuring minimum height */
+}
+
+.mains-div{
+    /* background-color: red; */
+    padding: 20px 200px 40px 200px;
+    margin: 10px;
+    height: fit-content;
+    
+}
+.about{
+    
+    height: max-content;
+    padding: 10px;
+    font-style: oblique;
+    font-size: large;
+}

@@ -1,0 +1,8 @@
+.card-scrollable {
+    max-height: 600px; /* Slightly less than the container for aesthetic spacing */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+.file-img-box img {
+    width: 50%; /* Reduce size of icons */
+    height: auto; /* Maintain aspect ratio */
+}
