@@ -5,35 +5,32 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
     .label-input-group {
-            margin-bottom: 10px;
-        }
-        #buttonContainer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        #manualLabelSubmit {
-            float: right;
-        }
-   
-
-        .label-input-group {
-            margin-bottom: 10px;
-        }
-        #buttonContainer {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        #manualLabelSubmit {
-            display: block;
-            margin-top: 20px;
-        }
+        margin-bottom: 10px;
+    }
+    #buttonContainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    #manualLabelSubmit {
+        float: right;
+    }
+    .label-input-group {
+        margin-bottom: 10px;
+    }
+    #buttonContainer {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    #manualLabelSubmit {
+        display: block;
+        margin-top: 20px;
+    }
     .explanation-container {
         position: relative;
     }
-
     #explanationDiv {
         display: none;
         position: absolute;
@@ -46,119 +43,112 @@
         border-radius: 5px;
         padding: 15px;
     }
-
     #toggleExplanationBtn:hover + #explanationDiv,
     #explanationDiv:hover {
         display: block;
         background-color: blanchedalmond;
     }
-
     .document-id {
         margin-right: 20px;
     }
-
     .loader-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        .loader {
-            width: 250px;
-            height: 250px;
-            border: 24px groove rgb(186, 194, 201);
-            border-radius: 50%;
-            animation: spin 15s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-        .arrow1 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    .loader {
+        width: 250px;
+        height: 250px;
+        border: 24px groove rgb(186, 194, 201);
+        border-radius: 50%;
+        animation: spin 15s linear infinite;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    .arrow1 {
         animation: slide1 1s ease-in-out infinite;
         margin-left: 9px;
-        }
-        @keyframes slide1 {
-        0%,
-        100% {
+    }
+    @keyframes slide1 {
+        0%, 100% {
             transform: translate(0, 0);
         }
-
         50% {
             transform: translate(0, 10px);
         }
+    }
+    .label-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .label-container h4 {
+        margin: 0;
+    }
+    #redArrow, #labelEnter, #greenArrow, #submitEnter {
+        display: none;
+    }
+    @keyframes arrowBounce {
+        0%, 100% {
+            transform: translateY(0);
         }
-
-        .label-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
+        50% {
+            transform: translateY(-10px);
         }
-        .label-container h4 {
-            margin: 0;
+    }
+    .arrow {
+        animation: arrowBounce 1s infinite;
+    }
+    .highlight {
+        animation: highlightPulse 1.5s infinite;
+    }
+    @keyframes highlightPulse {
+        0% {
+            box-shadow: 0 0 10px #ff0000;
         }
-        #redArrow, #labelEnter, #greenArrow, #submitEnter {
-            display: none;
+        50% {
+            box-shadow: 0 0 20px #ff0000;
         }
-        @keyframes arrowBounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+        100% {
+            box-shadow: 0 0 10px #ff0000;
         }
-        .arrow {
-            animation: arrowBounce 1s infinite;
+    }
+    .highlight-green {
+        animation: highlightPulseGreen 1.5s infinite;
+    }
+    @keyframes highlightPulseGreen {
+        0% {
+            box-shadow: 0 0 10px #00ff00;
         }
-        .highlight {
-            animation: highlightPulse 1.5s infinite;
+        50% {
+            box-shadow: 0 0 20px #00ff00;
         }
-        @keyframes highlightPulse {
-            0% {
-                box-shadow: 0 0 10px #ff0000;
-            }
-            50% {
-                box-shadow: 0 0 20px #ff0000;
-            }
-            100% {
-                box-shadow: 0 0 10px #ff0000;
-            }
+        100% {
+            box-shadow: 0 0 10px #00ff00;
         }
-        .highlight-green {
-            animation: highlightPulseGreen 1.5s infinite;
-        }
-        @keyframes highlightPulseGreen {
-            0% {
-                box-shadow: 0 0 10px #00ff00;
-            }
-            50% {
-                box-shadow: 0 0 20px #00ff00;
-            }
-            100% {
-                box-shadow: 0 0 10px #00ff00;
-            }
-        }
-        .confidence{
-            margin: 2%;
-            font-size: larger;
-        }
-
-        
-
-        
-
+    }
+    .confidence {
+        margin: 2%;
+        font-size: larger;
+    }
+    #textarea-container {
+        display: none;
+        margin-top: 10px;
+    }
 </style>
 {% endblock %}
 
@@ -195,12 +185,10 @@
             <div style="display: flex; justify-content: space-between;">
                 <a href="{% url 'display' user_id %}" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
                     <i class="fas fa-arrow-left"></i> View-by-labels
-                </a> 
+                </a>
                 <a href="{% url 'documents' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">
                     <i class="fas fa-arrow-left"></i> View-by-topics
-
-                </a> 
-                
+                </a>
             </div>
         </div>
     </div>
@@ -220,7 +208,7 @@
             The label was submitted successfully.
         </div>
     </div>
-    
+
     <div class="row mt-3">
         <!-- Text and Explanation Section -->
         <div class="col-md-6 my-3 text-section">
@@ -238,7 +226,7 @@
                     <br>
                 </div>
             </div>
-            
+
             <div id="documentText" class="card document-card" style="overflow-y: auto; min-height:30vh; max-height: 60vh;">
                 {{ document }}
             </div>
@@ -256,16 +244,14 @@
                     </div>
                 </div>
             </div>
-
-            
         </div>
-        
+
         <!-- Labels Section -->
         <div class="col-md-6 my-3 labels-section d-flex flex-column" style="height:70vh; overflow-y: scroll;">
             <h5 class="section-title">Please choose one of the label suggestions or add your own label in the box below</h5>
             <br>
-            
-            <div id="suggestedLabels" class= "d-flex flex-wrap justify-content-center mb-4">
+
+            <div id="suggestedLabels" class="d-flex flex-wrap justify-content-center mb-4">
                 <form method="post">
                     {% csrf_token %}
                     {% for label in labels %}
@@ -291,15 +277,20 @@
                             <button id="addInput" class="btn btn-primary" type="button">+</button>
                             <button id="removeInput" class="btn btn-danger" type="button">-</button>
                         </div>
-                        
+
+                        <div id="description" class="btn btn-info" type="button">Description</div>
+
                         <button id="manualLabelSubmit" class="btn btn-success submit-btn" type="button">Submit</button>
+                    </div>
+                    <div id="textarea-container" class="mt-3">
+                        <textarea id="textArea" class="form-control" rows="4" placeholder="Enter your description here..."></textarea>
                     </div>
                 </div>
                 </form>
                 <div>
                     {% load static %}
                     <img id="redArrow" class="arrow" src="{% static 'images/redTriangle.jpg' %}" alt="Red Arrow" style="margin-left: 30%; width: 40%; height: 40%;">
-                    <img id="greenArrow" class="arrow" src="{% static 'images/submit.png' %}" alt="Green Arrow" style="margin-left: 30%;  width: 40%; height: 40%;" >
+                    <img id="greenArrow" class="arrow" src="{% static 'images/submit.png' %}" alt="Green Arrow" style="margin-left: 30%; width: 40%; height: 40%;">
                 </div>
                 <div class="">
                     <h4 id="labelEnter" style="margin-left: 40%;">Enter a label</h4>
@@ -313,7 +304,7 @@
             <div id="user_id" hidden>{{ user_id }}</div>
             <div id="confidence" hidden>{{ confidence }}</div>
             <div id="pageName" hidden>Label</div>
-            <div id="pageStartTime" hidden> {{time}}</div>
+            <div id="pageStartTime" hidden>{{time}}</div>
         </div>
     </div>
 </div>
@@ -325,13 +316,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const auto = '{{ auto|lower }}' === 'true';
         const timer = document.getElementById('timer');
         const pageStartTime = new Date(document.getElementById('pageStartTime').textContent.trim());
-      
+
         let hoverStartTime;
         let totalHoverTime = 0;
 
@@ -357,7 +347,7 @@
         // Add event listeners for mouse enter and leave
         explanationDiv.addEventListener('mouseenter', startHoverTimer);
         explanationDiv.addEventListener('mouseleave', stopHoverTimer);
-        
+
         function sendDataToServer(duration) {
             fetch(`/log-hover-duration/${document_id.textContent}/${totalHoverTime}/`, {
                 method: 'POST',
@@ -409,7 +399,10 @@
                 inputContainer.removeChild(inputContainer.lastChild);
             }
         });
-            
+
+        $("#description").click(function(){
+            $("#textarea-container").toggle();
+        });
     });
 </script>
 

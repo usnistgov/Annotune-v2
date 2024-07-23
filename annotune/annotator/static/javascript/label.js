@@ -31,19 +31,23 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendData() {
         const documentId = document.getElementById('document_id').textContent.trim();
         var label =getInputValue();
-        console.log(label)
+        // console.log(label[0])
+        var descriptionData = document.getElementById("textArea").value;
+        console.log(descriptionData)
         removeInputs();
 
         const dataToSend = JSON.stringify({
             document_id: documentId,
             label: label,
+            description : descriptionData, 
             user_id: userId,
             response_time: new Date().toISOString()
         });
+        // console.log(dataToSend);
 
         showLoader();
 
-        fetch(`/submit/${documentId}/${label}/`, {
+        fetch(`/submit/${documentId}/${label[0]}/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 console.log('Success:', data);
                 updatePage(data);
-                showAlert(`${data.old_label.toUpperCase()} was submitted successfully`);
+                // console.log(data)
+                showAlert(`${data.old_label[0].toUpperCase()} was submitted successfully`);
                 hideLoader();
             })
             .catch(error => console.error('Error:', error));
@@ -121,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const suggestedLabelsContainer = document.getElementById('suggestedLabels');
         suggestedLabelsContainer.innerHTML = '';
+        // document.getElementById("textarea-container").click()
 
 
         data.labels.forEach(label => {
@@ -134,8 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addSuggestedLabelListeners();
         toggleSubmitButton();
+
         // Attach the function to the document's click and input events
-        
+        $("#textarea-container").hide();
+        // Optionally clear the text area
+        $("#textarea-container textarea").val('');
     }
 
     previousButton.addEventListener('click', event => {
@@ -231,12 +240,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let inputs = document.querySelectorAll('.input-group.mb-3.label-input-group input');
         // Initialize an array to store the text values
         let texts = [];
-        let final_label = ""
+        let final_label = []
 
         // Iterate through each input element and get its value
         inputs.forEach(input => {
             texts.push(input.value);
-            final_label +="divideHere"+input.value;
+            final_label.push(input.value);
         });
         // Log the collected text values
         // console.log(texts);

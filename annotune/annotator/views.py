@@ -107,12 +107,14 @@ def list_documents(request, user_id):
     topics = requests.post(get_topic_list, json={
                             "user_id": request.session["user_id"]
                             }).json()
+    print(topics.keys())
 
     # recommended = int(topics["document_id"])
 
     # keywords = topics["keywords"]
 
     a, b, c, d = truncated_data(topics, all_texts)
+    # print(b)
 
     print(type(request.session["user_id"]))
   
@@ -121,7 +123,7 @@ def list_documents(request, user_id):
 
 
 def label (request,user_id, document_id):
-    user_id = request.session["user_id"]
+    user_id = user_id
     
 
     get_document_information = url + "get_document_information"
@@ -196,49 +198,64 @@ def skip_document(request):
 
 def submit_data(request, document_id, label):
     time = datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")
-    # print(time)
+
+    if request.method == 'POST':
+            
+        try:
+            data = json.loads(request.body)
+            # print(data)
+            
+            label = data["label"]
+            description = data["description"]
+            document_id = int(data["document_id"])
+            response_time = str(data["response_time"])
+            user_id = request.session["user_id"]
+
+            request.session["document_ids"].append(document_id)
+            request.session["labels"].append(label[0])
+
+            append_to_json_file(request.session["email"], label[0], document_id, time )
 
 
+            with open(env("USERS_PATH"), "r") as user_file:
+                name_string = user_file.read()
+                information = json.loads(name_string)
 
-    append_to_json_file(request.session["email"], label, document_id, time )
+            past_labels = list(set(information[request.session["email"]]["label"]))
 
-    with open(env("USERS_PATH"), "r") as user_file:
-        name_string = user_file.read()
-        information = json.loads(name_string)
+            
+            submit_document = url + "recommend_document"
+ 
+            finalLabel = "\n".join(word for word in label)
+            
+            print(finalLabel)
 
-    past_labels = list(set(information[request.session["email"]]["label"]))
+            data_to_submit = {
+                    "document_id": document_id,
+                    "label": finalLabel,
+                    "user_id": user_id,
+                    "response_time": response_time,
+                    "description": description,
+            }
 
-    request.session["document_ids"].append(document_id)
-    request.session["labels"].append(label)
-    document_id = document_id
-    user_id=request.session["user_id"]
-    response_time = str(time)
-    submit_document = url + "recommend_document"
-    # print(label.split("divideHere"))
-    finalLabel = "\n".join(word for word in label.split("divideHere") if word!="")
-    
-    print(finalLabel)
-    data_to_submit = {
-            "document_id": document_id,
-            "label": finalLabel,
-            "user_id": user_id,
-            "response_time": response_time,
-            "description": "no description",
-    }
+            response = requests.post(submit_document, json=data_to_submit).json()
+            document_id = response["document_id"]
 
-    # print(data_to_submit)
-    response = requests.post(submit_document, json=data_to_submit).json()
-    document_id = response["document_id"]
+            all_old_labels = sorted(list(past_labels))
 
 
-    # return redirect("fetch-data", user_id=user_id, document_id=document_id)
-    all_old_labels = sorted(list(past_labels))
+            
+            data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts, old_label=label, all_old_labels=all_old_labels)
 
-    
-    data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts, old_label=label, all_old_labels=all_old_labels)
+            return JsonResponse(data, status=200)
 
 
-    return JsonResponse(data)
+        except:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
 
 
 def fetch_data(request, user_id, document_id):
@@ -293,24 +310,65 @@ def logout_view(request):
     logout(request)
     return redirect('login')  
 
-def display (request, user_id):
+# def display (request, user_id):
+#     response = requests.post(url+"/display", json={
+#     "user_id":request.session["user_id"]}).json()
+#     # print(response)
+#     # print(1234)
+
+#     all_items = []
+#     all_labelled_data = {}
+
+
+
+#     for id, items in response.items():
+#         all_items.append(flatten_extend(items))
+#         all_labelled_data[id] = flatten_extend(items)
+#     labeled_texts = flatten_extend(all_items)
+    
+#     all_text = sort_labeled(all_texts, labeled_texts)
+
+
+#     remainingDocuments = [x for x in list(all_texts['text'].keys()) if x not in labeled_texts]
+#     document_id = random.choice(remainingDocuments)
+
+#     # print(all_text)
+
+#     data = {
+#         "all_texts":all_text,
+#         "labels":all_labelled_data,
+#         "user_id": request.session["user_id"],
+#         "start_time": request.session["start_time"],
+#         "document_id":document_id,
+#     }
+
+#     # return render(request, 'labeled.html', context=data)
+
+#     return render(request, "labeled.html", context=data)
+
+def display(request, user_id):
+
     response = requests.post(url+"/display", json={
     "user_id":request.session["user_id"]}).json()
-    print(response)
 
     all_items = []
     all_labelled_data = {}
 
+
+
     for id, items in response.items():
         all_items.append(flatten_extend(items))
-        all_labelled_data[id] = flatten_extend(items)
+
+        all_labelled_data[id] = {"documents":flatten_extend(items),
+                                 "description": "this is a description"}
     labeled_texts = flatten_extend(all_items)
-    
     all_text = sort_labeled(all_texts, labeled_texts)
-    print(all_text)
+
 
     remainingDocuments = [x for x in list(all_texts['text'].keys()) if x not in labeled_texts]
     document_id = random.choice(remainingDocuments)
+
+    # print(all_text)
 
     data = {
         "all_texts":all_text,
@@ -322,13 +380,16 @@ def display (request, user_id):
 
     # return render(request, 'labeled.html', context=data)
 
-    
-
-
     return render(request, "labeled.html", context=data)
 
 
+
+
 def append_time(request, pageName):
+    response = requests.post(url+"/display", json={
+    "user_id":request.session["user_id"]}).json()
+
+
 
     data = {
          "page":pageName,
@@ -368,11 +429,11 @@ def relabel(request, document_id, given_label):
 
 #Take it off
 ###################################
-    conf =random.randint(1, 1000)
-    if conf%2 ==0:
-        confidence="true"
-    else:
-        confidence="false"
+    # conf =random.randint(1, 1000)
+    # if conf%2 ==0:
+    #     confidence="true"
+    # else:
+    #     confidence="false"
 ##################################
         
     old_labels = request.session["labels"]
@@ -403,7 +464,7 @@ def relabel(request, document_id, given_label):
     return render(request, "label.html", context=data)
 
 def log_hover(request, document_id, hover_time):
-    with open('./annotator/static/users.json', "r") as user_file:
+    with open(env("USERS_PATH"), "r") as user_file:
         name_string = user_file.read()
         information = json.loads(name_string)
     information[request.session["email"]]["hoverTimes"].append({"document_id": document_id, 

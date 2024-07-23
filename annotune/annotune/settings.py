@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 env = environ.Env(
-    # set casting, default value
+    # set casting, default valuegoog
     DEBUG=(bool, False)
 )
 
@@ -17,6 +17,10 @@ env = environ.Env(
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_URL = '/Users/danielstephens/Desktop/Annotune-v2/annotune/static/'
+
+STATIC_ROOT =  env.list('STATIC_ROOT')
 
 
 # Quick-start development settings - unsuitable for production
@@ -122,9 +126,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/Users/danielstephens/Desktop/Annotune-v2/annotune/static/'
 
-STATIC_ROOT = "/Users/danielstephens/Desktop/Annotune-v2/annotune/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
