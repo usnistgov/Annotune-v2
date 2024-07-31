@@ -101,17 +101,13 @@ def homepage(request, user_id):
     return render(request, "homepage.html", {"user_id": request.session["user_id"], "start_time":request.session["start_time"]})
 
 def list_documents(request, user_id):
+    request.session["isManual"]=False
 
     get_topic_list = url + "//get_topic_list" 
         
     topics = requests.post(get_topic_list, json={
                             "user_id": request.session["user_id"]
                             }).json()
-    print(topics.keys())
-
-    # recommended = int(topics["document_id"])
-
-    # keywords = topics["keywords"]
 
     a, b, c, d = truncated_data(topics, all_texts)
     # print(b)
@@ -149,18 +145,18 @@ def label (request,user_id, document_id):
     explanation = response["description"]
 
     confidence = str(response["confident"]).lower()
+    confidence = "true"
 
+#     #Take it off
+# ###################################
+#     conf =random.randint(1, 1000)
+#     if conf%2 ==0:
+#         confidence="true"
+#     else:
+#         confidence="false"
+# ################################## 
 
-    #Take it off
-###################################
-    conf =random.randint(1, 1000)
-    if conf%2 ==0:
-        confidence="true"
-    else:
-        confidence="false"
-################################## 
-
-    print(past_labels)
+#     print(past_labels)
     
     # old_labels = request.session["labels"]
     # if len(old_labels)==0:
@@ -209,6 +205,7 @@ def submit_data(request, document_id, label):
             description = data["description"]
             document_id = int(data["document_id"])
             response_time = str(data["response_time"])
+            manualStatus = str(data["manualStatus"])
             user_id = request.session["user_id"]
 
             request.session["document_ids"].append(document_id)
@@ -223,29 +220,50 @@ def submit_data(request, document_id, label):
 
             past_labels = list(set(information[request.session["email"]]["label"]))
 
-            
-            submit_document = url + "recommend_document"
- 
-            finalLabel = "\n".join(word for word in label)
-            
-            print(finalLabel)
+            if request.session["isManual"]==False:
 
-            data_to_submit = {
+                submit_document = url + "recommend_document"
+
+                finalLabel = "\n".join(word for word in label)
+            
+            
+
+                data_to_submit = {
                     "document_id": document_id,
                     "label": finalLabel,
                     "user_id": user_id,
                     "response_time": response_time,
                     "description": description,
-            }
+                }
 
-            response = requests.post(submit_document, json=data_to_submit).json()
-            document_id = response["document_id"]
+                response = requests.post(submit_document, json=data_to_submit).json()
+                document_id = response["document_id"]
 
-            all_old_labels = sorted(list(past_labels))
-
+            else:
+                labeledDocuments = information[request.session["email"]]["document_id"]
+                remainingDocuments = [x for x in list(all_texts['text'].keys()) if int(x) not in labeledDocuments]
+                print(type(labeledDocuments[0]))
+                print(type(list(all_texts.keys())[0]))
+                if document_id not in remainingDocuments:
+                    document_id = random.choice(remainingDocuments)
 
             
-            data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts, old_label=label, all_old_labels=all_old_labels)
+            all_old_labels = sorted(list(past_labels))
+            print(label)
+
+            if manualStatus == "true":
+
+                text = all_texts["text"][str(document_id)]
+                print(text)
+                data = {
+                    "all_old_labels": all_old_labels,
+                    "document":text,
+                    "document_id": document_id,
+                    "old_label": label[0]
+                    
+                }
+            else:
+                data = get_document_data(url=url, user_id=user_id, document_id=document_id, all_texts=all_texts, old_label=label, all_old_labels=all_old_labels)
 
             return JsonResponse(data, status=200)
 
@@ -435,7 +453,9 @@ def relabel(request, document_id, given_label):
     # else:
     #     confidence="false"
 ##################################
-        
+    
+    confidence="true"
+    
     old_labels = request.session["labels"]
     if len(old_labels)==0:
         all_old_labels = []
@@ -478,5 +498,28 @@ def log_hover(request, document_id, hover_time):
         "msg": "SUCCESS"
     })
 
+def manualDocumentsList(request, user_id):
+    request.session["isManual"]=True
+    return render(request, "manualText.html", context={"all_texts":all_texts["text"], "user_id": user_id, "startTime": request.session["start_time"]})
 
+def manualLabel(request, user_id, document_id):
+    text = all_texts["text"][str(document_id)]
+    with open(env("USERS_PATH"), "r") as user_file:
+        name_string = user_file.read()
+        information = json.loads(name_string)
+
+    past_labels = list(set(information[request.session["email"]]["label"]))
+
+
+    data = {
+        "document": text,
+        "user_id":user_id,
+        "document_id":document_id,
+        "time":request.session["start_time"],
+        "all_old_labels": past_labels,
+        "start_time":request.session["start_time"]
+        
+        }
+    print(text)
+    return render(request, "manualLabel.html", context=data)
 

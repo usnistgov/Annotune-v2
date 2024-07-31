@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/document.css' %}">
+<style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluids">
+    <div class="col-12 d-flex justify-content-between mb-3">
+        
+    
+        <div id="pageStartTime" hidden>{{pageStart}}</div>
+        <div id="pageName" hidden>ManualDocuments</div>
+        <div id="isManual" hidden>true</div>
+        <div id="pageName" hidden>manualDocumentsList</div>
+        
+
+        
+    
+        
+    
+    </div>
+
+        <div class="col-md-12">
+            <div style="display: flex; justify-content: space-between;">
+                <h4 class="mb-2">Texts</h4>
+                <h4 class="mb-2" style="float: right;" id="timer"></h4>
+                <!-- <div class="float-end">
+                    <a href="" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
+                        View-by-Labels <i class="fas fa-arrow-right"></i>
+                    </a>
+        
+                    <div id="selectedLabel"></div>
+        
+                </div> -->
+            </div>
+            
+            <div class="table-responsive" style="width: 95%;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Text Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="text-table-body">
+                        {% for doc_id, text in all_texts.items %}
+                        <tr data-id="{{ doc_id }}">
+                            <td>{{ doc_id }}</td>
+                            <td id="textLink" class="text-truncate"><a href="{% url 'manualLabel' user_id doc_id %}" class="text-link">{{text }}</a> </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

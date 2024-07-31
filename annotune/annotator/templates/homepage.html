@@ -2,10 +2,8 @@
 {% block extra_head %}
 {% load static %}
 <style>
-
     #timer {
         font-size: 2rem;
-        /* font-weight: bold; */
     }
     .timer-container {
         display: flex;
@@ -13,38 +11,48 @@
         justify-content: center;
         flex-direction: column;
         padding: 5px;
-    
     }
-
+    .mains-div {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .main-text {
+        text-align: center;
+    }
+    .main-text h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    .main-text p {
+        font-size: 1.2rem;
+    }
+    .main-text .btn {
+        margin-top: 1rem;
+    }
+    .card {
+        min-height: 150px;
+    }
 </style>
-{% endblock%}
-
-
-
-
-
+{% endblock %}
 
 {% block content %}
-<div class="mains-div" style="height: 100%;">
+<div class="mains-div">
     <div class="container">
         <div class="main-text text-center m-3">
-            <!-- <div class="timer-container">
-                <div id="timer" style="float: right;"></div>
-            </div> -->
-            <div style="display: flex; justify-content: space-between; padding-left: 43%">
-                <h1 style="float:left; ;">Annotune</h1>
-                <div id="pageName" hidden>homepage</div>
-                <h4 class="mb-2" style="float: right;" id="timer"></h4>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>Annotune</h1>
+                <h4 id="timer" class="mb-2"></h4>
             </div>
             <div class="container m-3">
-                Annotune, short for Annotation, Text Understanding and Navigation Engine, leverages advanced topic modeling techniques to enhance document annotation.
-                By quickly analyzing and grouping documents into clusters and keywords, Annotune provides a deeper understanding of the context, significantly
-                accelerating the annotation process.
+                <p>
+                    Annotune, short for Annotation, Text Understanding and Navigation Engine, leverages advanced topic modeling techniques to enhance document annotation.
+                    By quickly analyzing and grouping documents into clusters and keywords, Annotune provides a deeper understanding of the context, significantly
+                    accelerating the annotation process.
+                </p>
             </div>
-            <br>
-            <br>
-            <div class="row row-cols-1 row-cols-md-2 g-4"> <!-- Cards section -->
-                <!-- Card for Enhanced Speed -->
+            <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col">
                     <div class="card h-200 text-white bg-dark">
                         <div class="card-body">
@@ -53,8 +61,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Card for Improved Accuracy -->
                 <div class="col">
                     <div class="card h-100 text-white bg-dark">
                         <div class="card-body">
@@ -63,8 +69,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Card for User-Friendly Interface -->
                 <div class="col">
                     <div class="card h-100 text-white bg-dark">
                         <div class="card-body">
@@ -73,8 +77,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Card for Scalability -->
                 <div class="col">
                     <div class="card h-100 text-white bg-dark">
                         <div class="card-body">
@@ -83,8 +85,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Card for Integration Capabilities -->
                 <div class="col">
                     <div class="card h-100 text-white bg-dark">
                         <div class="card-body">
@@ -93,8 +93,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Additional Card (same as the previous) -->
                 <div class="col">
                     <div class="card h-100 text-white bg-dark">
                         <div class="card-body">
@@ -104,16 +102,13 @@
                     </div>
                 </div>
             </div>
-            <div id="pageName" hidden>homePage</div>
-            <!-- Get Started Button -->
             <div class="mt-4">
-                
-                <!-- <a href="" class="btn btn-success btn-lg">Get Started</a> -->
-                <a href="{% url 'documents' user_id %}" class="btn btn-success btn-lg">Get Started</a>
+                <a href="{% url 'documents' user_id %}" class="btn btn-success btn-lg">LLM Aided</a>
+                <a href="{% url 'manualList' user_id %}" class="btn btn-primary btn-lg">Manual</a>
             </div>
+            <div hidden id="pageName">Homepage</div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

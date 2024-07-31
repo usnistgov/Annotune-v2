@@ -154,47 +154,6 @@
 
 {% block content %}
 
-<div class="loader-overlay" id="loaderOverlay">
-    <div class="loader">
-        <div>
-            <div>
-                <div>
-                    <div>
-                        <div>
-                            <div>
-                                <div>
-                                    <div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for Low Confidence -->
-<div class="modal fade" id="lowConfidenceModal" tabindex="-1" aria-labelledby="lowConfidenceModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="lowConfidenceModalLabel">Alert</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <img class="arrow" src="{% static 'images/redTriangle.jpg' %}" alt="Red Arrow" style="margin-left: 30%; width: 40%; height: 40%;">
-                <p id="confText" class="confidence">The model needs your help on choosing from the label suggestions, the existing labels, or you can create your own label.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="container-lg my-5">
     <div class="row">
@@ -204,11 +163,11 @@
                 <h4 class="mb-2" id="timer"></h4>
             </div>
             <div style="display: flex; justify-content: space-between;">
-                <a href="{% url 'display' user_id %}" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
-                    <i class="fas fa-arrow-left"></i> View-by-labels
+                <a href="" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
+                    <i class="fas fa-arrow-left"></i> Labeled-Docs
                 </a>
-                <a href="{% url 'documents' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">
-                    <i class="fas fa-arrow-left"></i> View-by-topics
+                <a href="{% url 'manualList' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">
+                    <i class="fas fa-arrow-left"></i> Remaining-Docs
                 </a>
             </div>
         </div>
@@ -237,14 +196,7 @@
                 <div style="display: inline-flex; align-items: center;">
                     <h5 class="document-id">Text:</h5>
                     <h5 id="document_id" class="document-id" style="padding-left: 10%;">{{ document_id }}</h5>
-                    {{recommended_doc_id}}
-                </div>
-                <div class="explanation-container" style="display: inline-block; margin-left: auto;">
-                    <button id="toggleExplanationBtn" class="btn btn-secondary toggle-btn mx-auto">Summary</button>
-                    <div id="explanationDiv" class="card explanation-card mt-2 p-3">
-                        {{ explanation }}
-                    </div>
-                    <br>
+                    <!-- {recommended_doc_id}} -->
                 </div>
             </div>
 
@@ -269,18 +221,8 @@
 
         <!-- Labels Section -->
         <div class="col-md-6 my-3 labels-section d-flex flex-column" style="height:70vh; overflow-y: scroll;">
-            <span id="confidenceText" class="section-title"></span>
+            <span id="confidenceText" class="section-title">Kindly provide a suitable label for this text</span>
             
-            <div id="suggestedLabels" class="container">
-                <form method="post" class="row">
-                    {% csrf_token %}
-                    {% for label in labels %}
-                    <div class="col-4 mb-3">
-                        <button id="{{ label }}" type="button" class="btn w-100" style="background-color: rgb(232, 232, 232);">{{ label }}</button>
-                    </div>
-                    {% endfor %}
-                </form>
-            </div>
             
 
             <div class="mt-2" id="manualLabelDiv">
@@ -319,21 +261,17 @@
                     <h4 id="submitEnter" style="margin-left: 40%">Submit label</h4>
                 </div> -->
                 <div id="confText" class="confidence"></div>
+                <div id="pageName" hidden>manualLabel</div>
+                <div id="pageStartTime" hidden>{{time}}</div>
+                <div id="user_id" hidden>{{ user_id }}</div>
+                <div id="isManual" hidden>true</div>
             </div>
-
-            <div id="most_confident" hidden>{{most_confident}}</div>
-            <div id="auto" hidden>{{auto}}</div>
-            <div id="user_id" hidden>{{ user_id }}</div>
-            <div id="confidence" hidden>{{ confidence }}</div>
-            <div id="pageName" hidden>Label</div>
-            <div id="pageStartTime" hidden>{{time}}</div>
-        </div>
     </div>
 </div>
 
 {% load static %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'javascript/label.js' %}"></script>
+<script src="{% static 'javascript/manualLabel.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -343,46 +281,6 @@
         const auto = '{{ auto|lower }}' === 'true';
         const timer = document.getElementById('timer');
         const pageStartTime = new Date(document.getElementById('pageStartTime').textContent.trim());
-
-        let hoverStartTime;
-        let totalHoverTime = 0;
-
-        const explanationDiv = document.getElementById('toggleExplanationBtn');
-
-        // Function to start the hover timer
-        function startHoverTimer() {
-            hoverStartTime = new Date();
-        }
-
-        // Function to stop the hover timer and calculate the time
-        function stopHoverTimer() {
-            if (hoverStartTime) {
-                const hoverEndTime = new Date();
-                const hoverDuration = hoverEndTime - hoverStartTime; // Time in milliseconds
-                totalHoverTime += hoverDuration; // Accumulate hover time if needed
-                console.log(`Hover duration: ${hoverDuration} ms`);
-                sendDataToServer(totalHoverTime)
-            }
-            hoverStartTime = null;
-        }
-
-        // Add event listeners for mouse enter and leave
-        explanationDiv.addEventListener('mouseenter', startHoverTimer);
-        explanationDiv.addEventListener('mouseleave', stopHoverTimer);
-
-        function sendDataToServer(duration) {
-            fetch(`/log-hover-duration/${document_id.textContent}/${totalHoverTime}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if needed
-                },
-                body: JSON.stringify({ hoverDuration: duration })
-            })
-            .then(response => response.json())
-            .then(data => console.log('Hover duration logged:', data))
-            .catch(error => console.error('Error logging hover duration:', error));
-        }
 
         function getCookie(name) {
             let cookieValue = null;
@@ -428,5 +326,6 @@
     });
 
 </script>
+
 
 {% endblock %}

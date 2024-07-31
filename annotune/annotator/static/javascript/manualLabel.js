@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const confidence = document.getElementById('confidence');
     const manualLabelInput = document.getElementById('manualLabelInput');
     const manualLabelSubmit = document.getElementById('manualLabelSubmit');
     const userId = document.getElementById('user_id').textContent.trim();
@@ -7,8 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const previousButton = document.getElementById('previousButton');
     const nextButton = document.getElementById('nextButton');
     const alertDiv = document.getElementById('myalert');
-    const loaderOverlay = document.getElementById('loaderOverlay');
     const datalistElement = document.getElementById('labelOptions');
+    const manualStatus = document.getElementById("isManual").textContent;
 
     let documentsData = [];
     let currentIndex = -1;
@@ -16,17 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('User ID:', userId);
     console.log('Domain:', domain);
 
-    function addSuggestedLabelListeners() {
-        const suggestedLabelsDiv = document.getElementById('suggestedLabels');
-        suggestedLabelsDiv.querySelectorAll('button').forEach(button => {
-            button.addEventListener('click', () => {
-                manualLabelInput.value = button.textContent.trim();
-            });
-        });
-    }
-    
-
-    addSuggestedLabelListeners();
 
     function sendData() {
         const documentId = document.getElementById('document_id').textContent.trim();
@@ -40,10 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
             label: label,
             description: descriptionData,
             user_id: userId,
+            manualStatus:manualStatus,
             response_time: new Date().toISOString()
         });
 
-        showLoader();
 
         fetch(`/submit/${documentId}/${label[0]}/`, {
             method: "POST",
@@ -55,10 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
+                // console.log('Success:', data);
                 updatePage(data);
-                showAlert(`${data.old_label[0].toUpperCase()} was submitted successfully`);
-                hideLoader();
+                showAlert(`${data.old_label.toUpperCase()} was submitted successfully`);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -94,19 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePage(data) {
         document.getElementById('document_id').textContent = data.document_id;
         document.getElementById('documentText').textContent = data.document;
-        document.getElementById('most_confident').textContent = data.most_confident;
-        document.getElementById('explanationDiv').textContent = data.explanation;
-        
-        confidence.textContent = data.confidence;
         manualLabelInput.value = "";
         const newOptions = data.all_old_labels;
         datalistElement.innerHTML = '';
 
-        newOptions.forEach(optionValue => {
-            const newOption = document.createElement('option');
-            newOption.value = optionValue;
-            datalistElement.appendChild(newOption);
-        });
+
 
         ['redArrow', 'labelEnter', 'greenArrow', 'submitEnter'].forEach(id => {
             const element = document.getElementById(id);
@@ -115,45 +94,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         manualLabelSubmit.classList.remove('highlight-green');
         manualLabelInput.classList.remove('highlight');
-        confidenceDetector(data.confidence, data.most_confident);
-
-        const suggestedLabelsContainer = document.getElementById('suggestedLabels');
-        suggestedLabelsContainer.innerHTML = '';
-
-        // Create a form element with a row class
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.className = 'row';
+       
 
         // Add CSRF token
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
         csrfToken.name = 'csrfmiddlewaretoken';
         csrfToken.value = '{{ csrf_token }}'; // Adjust this line to dynamically set the CSRF token if needed
-        form.appendChild(csrfToken);
-
-        // Add label buttons
-        data.labels.forEach(label => {
-            const buttonContainer = document.createElement('div');
-            buttonContainer.className = 'col-4 mb-3';
-
-            const button = document.createElement('button');
-            button.id = label;
-            button.type = 'button';
-            button.className = 'btn w-100';
-            button.style.backgroundColor = 'rgb(232, 232, 232)';
-            button.textContent = label;
-
-            buttonContainer.appendChild(button);
-            form.appendChild(buttonContainer);
-        });
-
-        // Append form to the suggested labels container
-        suggestedLabelsContainer.appendChild(form);
 
         
 
-        addSuggestedLabelListeners();
         toggleSubmitButton();
 
         $("#textarea-container").hide();
@@ -175,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error fetching documents data:', error));
     });
-
+ 
     nextButton.addEventListener('click', event => {
         event.preventDefault();
 
@@ -208,34 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-    function hideLoader() {
-        loaderOverlay.style.display = 'none';
-    }
 
-    function showLoader() {
-        loaderOverlay.style.display = 'flex';
-        window.addEventListener('load', hideLoader);
-    }
-
-    hideLoader();
-
-    function confidenceDetector(confidence, mostConf) {
-        if (confidence === "true") {
-            document.getElementById('greenArrow').style.display = 'block';
-            // document.getElementById('submitEnter').style.display = 'block';
-            manualLabelSubmit.classList.add('highlight-green');
-            manualLabelInput.value = mostConf;
-            // document.getElementById("confText").textContent = `The model recommends ${mostConf} as the most relevant label. Please submit the label ${mostConf} or choose from the existing labels or create your own label`;
-            document.getElementById("confidenceText").textContent=`The model recommends ${mostConf} as the most relevant label. Please submit the label ${mostConf} or choose from the existing labels or create your own label`;
-        } else {
-            $('#lowConfidenceModal').modal('show');
-            manualLabelInput.classList.add('highlight');
-            document.getElementById("confidenceText").textContent = 'The model needs your help on choosing from the label suggestions, the existing labels, or you can create your own label';
-        
-        }
-    }
-
-    confidenceDetector(confidence.textContent, document.getElementById('most_confident').textContent);
 
     function removeInputs() {
         var inputContainer = document.getElementById('inputContainer');

@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [ 
     path("", views.login, name="login"),
-    path("skip_document/", views.skip_document),
+    path("skip_document/", views.skip_document, name='skip_document'),
     path("register/", views.sign_up, name="sign-up"),
     path("homepage/<int:user_id>/", views.homepage, name="homepage"),
     path("documents/<int:user_id>/", views.list_documents, name="documents"),
@@ -18,7 +18,8 @@ urlpatterns = [
     path("append_time/<str:pageName>/", views.append_time, name="append"),
     path("labeled/<int:user_id>", views.display, name="display"),
     path("relabel/<int:document_id>/<str:given_label>/", views.relabel, name="relabel"),
-    path("log-hover-duration/<int:document_id>/<int:hover_time>/", views.log_hover)
-
+    path("log-hover-duration/<int:document_id>/<int:hover_time>/", views.log_hover),
+    path("manualList/<int:user_id>/", views.manualDocumentsList, name="manualList"),
+    path("manualLabel/<int:user_id>/<int:document_id>/", views.manualLabel, name="manualLabel")
 ]
  

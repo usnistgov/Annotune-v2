@@ -3,10 +3,12 @@ from django.urls import reverse
 from unittest.mock import patch, mock_open
 import json
 import datetime
-from django.utils.timezone import make_aware
-from collections import OrderedDict
-import environ
 from django.conf import settings
+from django.test import LiveServerTestCase
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import requests
+import json
+import environ
 
 env = environ.Env()
 
@@ -43,64 +45,23 @@ class ViewTests(TestCase):
     def tearDown(self):
         self.patcher.stop()
 
-    # def test_sign_up_view(self):
-    #     response = self.client.post(reverse('sign-up'), {
-    #         'first_name': 'Test',
-    #         'last_name': 'User',
-    #         'email': 'testuser2@gmail.com',
-    #         'password': '12345'
-    #     })
-    #     self.assertEqual(response.status_code, 302)  # Redirect to homepage
+    def test_sign_up_view(self):
+        response = self.client.post(reverse('sign-up'), {
+            'first_name': 'Test',
+            'last_name': 'User',
+            'email': 'testuser2@gmail.com',
+            'password': '12345'
+        })
+        self.assertEqual(response.status_code, 302)  # Redirect to homepage
 
-    # def test_login_view(self):
-    #     response = self.client.post(reverse('login'), {
-    #         'email': 'danystevo@gmail.com',
-    #         'password': '12345'
-    #     })
-    #     self.assertEqual(response.status_code, 302)  # Redirect to homepage
+    def test_login_view(self):
+        response = self.client.post(reverse('login'), {
+            'email': 'danystevo@gmail.com',
+            'password': '12345'
+        })
+        self.assertEqual(response.status_code, 302)  # Redirect to homepage
 
-    # def test_homepage_view(self):
-    #     with patch('django.contrib.sessions.backends.db.SessionStore') as MockSession:
-    #         session = MockSession()
-    #         session["user_id"] = self.user_data["user_id"]
-    #         session["email"] = self.user_data["email"]
-    #         session["start_time"] = self.user_data["start_time"]
-    #         session.save()
-    #         self.client.cookies[settings.SESSION_COOKIE_NAME] = session.session_key
-
-    #         response = self.client.get(reverse('homepage', args=[self.user_data["user_id"]]))
-    #         self.assertEqual(response.status_code, 200)
-
-
-    # @patch('requests.post')
-    # def test_list_documents_view(self, mock_post):
-    #     # Mock the external API call
-    #     mock_response = {
-    #         "document_id": self.test_document_id,
-    #         "keywords": {"1": ["keyword1"], "2": ["keyword2"]},
-    #         "cluster": {"1": [1, 2, 3], "2": [4, 5, 6]}
-    #     }
-    #     mock_post.return_value.json.return_value = mock_response
-
-    #     # Ensure the session is correctly set up
-    #     session = self.client.session
-    #     session["user_id"] = self.user_data["user_id"]
-    #     session["email"] = self.user_data["email"]
-    #     session["start_time"] = self.user_data["start_time"]
-    #     session.save()
-
-    #     # Make the GET request
-    #     response = self.client.get(reverse('documents', args=[self.user_data["user_id"]]))
-
-
-    #     # Check the response status code
-    #     self.assertEqual(response.status_code, 200)
-
-    #     # Check if the keywords and topics are in the response content
-    #     self.assertContains(response, "1")
-    #     self.assertContains(response, "2")
-
-    def test_label_view(self):
+    def test_homepage_view(self):
         with patch('django.contrib.sessions.backends.db.SessionStore') as MockSession:
             session = MockSession()
             session["user_id"] = self.user_data["user_id"]
@@ -109,53 +70,38 @@ class ViewTests(TestCase):
             session.save()
             self.client.cookies[settings.SESSION_COOKIE_NAME] = session.session_key
 
-            response = self.client.get(reverse('label', args=[self.user_data["user_id"], self.test_document_id]))
+            response = self.client.get(reverse('homepage', args=[self.user_data["user_id"]]))
             self.assertEqual(response.status_code, 200)
+            
+    def perform_request(self, user_id, document_id):
+        # Make a request to the label view
+        url = self.live_server_url + reverse('label', args=[user_id, document_id])
+        session = requests.Session()
+        session.cookies.set('sessionid', self.client.cookies['sessionid'])
 
-    # def test_skip_document_view(self):
-    #     response = self.client.post(reverse('skip_document'), {'current_doc_id': self.test_document_id})
-    #     self.assertEqual(response.status_code, 200)
+        response = session.get(url)
+        return response
 
-    # def test_submit_data_view(self):
-    #     response = self.client.post(reverse('submit_data', args=[self.test_document_id, self.test_label]))
-    #     self.assertEqual(response.status_code, 200)
+    def test_load_label_view(self):
+        user_id = self.user_data["user_id"]
+        document_id = self.test_document_id
 
-    # def test_fetch_data_view(self):
-    #     response = self.client.get(reverse('fetch_data', args=[self.user_data["user_id"], self.test_document_id]))
-    #     self.assertEqual(response.status_code, 200)
+        # Set up session cookies
+        self.client.post(reverse('login'), {
+            'email': 'danystevo@gmail.com',
+            'password': '12345'
+        })
 
-    # def test_logout_view(self):
-    #     with patch('django.contrib.sessions.backends.db.SessionStore') as MockSession:
-    #         session = MockSession()
-    #         session["user_id"] = self.user_data["user_id"]
-    #         session["email"] = self.user_data["email"]
-    #         session["start_time"] = self.user_data["start_time"]
-    #         session.save()
-    #         self.client.cookies[settings.SESSION_COOKIE_NAME] = session.session_key
+        # Define number of concurrent requests
+        num_requests = 50
 
-    #         response = self.client.get(reverse('logout'))
-    #         self.assertEqual(response.status_code, 302)  # Redirect to login
+        with ThreadPoolExecutor(max_workers=num_requests) as executor:
+            future_to_request = {executor.submit(self.perform_request, user_id, document_id): i for i in range(num_requests)}
 
-    # def test_append_time_view(self):
-    #     response = self.client.post(reverse('append_time', args=['test_page']))
-    #     self.assertEqual(response.status_code, 200)
+            for future in as_completed(future_to_request):
+                try:
+                    response = future.result()
+                    self.assertEqual(response.status_code, 200)
+                except Exception as exc:
+                    print(f'Generated an exception: {exc}')
 
-    # def test_display_view(self):
-    #     with patch('django.contrib.sessions.backends.db.SessionStore') as MockSession:
-    #         session = MockSession()
-    #         session["user_id"] = self.user_data["user_id"]
-    #         session["email"] = self.user_data["email"]
-    #         session["start_time"] = self.user_data["start_time"]
-    #         session.save()
-    #         self.client.cookies[settings.SESSION_COOKIE_NAME] = session.session_key
-
-    #         response = self.client.get(reverse('display', args=[self.user_data["user_id"]]))
-    #         self.assertEqual(response.status_code, 200)
-
-    # def test_relabel_view(self):
-    #     response = self.client.get(reverse('relabel', args=[self.test_document_id, self.test_label]))
-    #     self.assertEqual(response.status_code, 200)
-
-    # def test_log_hover_view(self):
-    #     response = self.client.post(reverse('log_hover', args=[self.test_document_id, self.test_hover_time]))
-    #     self.assertEqual(response.status_code, 200)
