@@ -1,0 +1,138 @@
+{
+    "danystevo@gmail.com": {
+        "first_name": "Daniel",
+        "last_name": "Stephens",
+        "user_id": 0,
+        "email": "danystevo@gmail.com",
+        "password": "STpass23",
+        "document_id": [
+            0,
+            12679,
+            4014,
+            1,
+            1
+        ],
+        "label": [
+            "west",
+            "dan",
+            "west",
+            "west",
+            "run"
+        ],
+        "labels": {
+            "0": {
+                "labels": "west",
+                "time": "29/07/24 12:40:53",
+                "document_id": 0
+            },
+            "12679": {
+                "labels": "dan",
+                "time": "29/07/24 12:41:03",
+                "document_id": 12679
+            },
+            "4014": {
+                "labels": "west",
+                "time": "29/07/24 12:41:46",
+                "document_id": 4014
+            },
+            "1": {
+                "labels": "run",
+                "time": "29/07/24 15:13:13",
+                "document_id": 1
+            }
+        },
+        "start_time": "29/07/24 08:40:35",
+        "date": "29/07/24",
+        "pageTimes": [
+            {
+                "page": "Homepage",
+                "time": "29/07/24 08:40:35"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 08:40:46"
+            },
+            {
+                "page": "Homepage",
+                "time": "29/07/24 08:41:52"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 08:41:58"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 10:57:16"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 12:42:10"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 12:42:11"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 12:43:50"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 12:44:17"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 12:49:06"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 12:50:19"
+            },
+            {
+                "page": "ManualDocuments",
+                "time": "29/07/24 12:50:50"
+            },
+            {
+                "page": "ManualDocuments",
+                "time": "29/07/24 12:53:20"
+            },
+            {
+                "page": "Homepage",
+                "time": "29/07/24 13:05:51"
+            },
+            {
+                "page": "ManualDocuments",
+                "time": "29/07/24 13:06:18"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 13:06:28"
+            },
+            {
+                "page": "ManualDocuments",
+                "time": "29/07/24 13:08:26"
+            },
+            {
+                "page": "manualLabel",
+                "time": "29/07/24 13:08:30"
+            },
+            {
+                "page": "Homepage",
+                "time": "31/07/24 12:56:22"
+            },
+            {
+                "page": "manualLabel",
+                "time": "31/07/24 12:56:28"
+            },
+            {
+                "page": "manualLabel",
+                "time": "31/07/24 12:56:35"
+            },
+            {
+                "page": "Homepage",
+                "time": "31/07/24 12:56:40"
+            }
+        ],
+        "hoverTimes": []
+    }
+}

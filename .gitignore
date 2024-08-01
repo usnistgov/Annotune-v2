@@ -1,2 +1,3 @@
 project
-annotune/annotator/__pycache__
+bills_preprocessed.json
+annotune/.env

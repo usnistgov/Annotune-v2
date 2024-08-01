@@ -14,18 +14,17 @@ Annotune is a web application for labeling documents and providing explanations 
 
 ## Features
 
-- Upload and display documents.
 - Receive LLM suggested labels for documents.
 - Manually input and submit labels.
 - View explanations for labeled documents.
 - Skip documents and move to the next recommended document.
-
+- View labeled documents
 ## Technologies Used
 
 - Python
 - Django
 - HTML/CSS (Bootstrap)
-- JavaScript (Fetch API)
+- JavaScript
 
 ## Installation
 
@@ -55,10 +54,22 @@ Annotune is a web application for labeling documents and providing explanations 
     python manage.py migrate
     ```
 
+
 5. **Create a superuser:**
 
     ```bash
     python manage.py createsuperuser
+    ```
+
+7. **Set environment variables:**
+    ``` bash
+    Create a .env file in the root directory and set the environment variables
+    ALLOW_HOST=
+    URL=
+    DATAPATH=
+    USERS_PATH=
+    STATIC_ROOT=
+
     ```
 
 6. **Run the development server:**
