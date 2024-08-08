@@ -3,6 +3,10 @@ import pickle
 from xml.dom import minidom
 import os
 import environ
+import datetime
+from pytz import timezone
+eastern = timezone('US/Eastern')
+
 
 env = environ.Env()
 
@@ -576,16 +580,16 @@ def get_document_data(url, user_id, document_id, all_texts, old_label=None, all_
 
     explanation = response["description"]
     confidence = str(response["confident"]).lower()
-    #Take it off
-###################################
-    conf =random.randint(1, 1000)
-    if conf%2 ==0:
-        confidence="true"
-    else:
-        confidence="false"
-##################################
+#     #Take it off
+# ###################################
+#     conf =random.randint(1, 1000)
+#     if conf%2 ==0:
+#         confidence="true"
+#     else:
+#         confidence="false"
+# ##################################
     
-    auto="true"
+   
     data = {
         "document": documenttext,
         "labels":labels,
@@ -595,9 +599,9 @@ def get_document_data(url, user_id, document_id, all_texts, old_label=None, all_
         "confidence":confidence,
         "old_label": old_label,
         "most_confident":most_confident,
-        "auto": auto,
+        "auto": None,
+        "pageStart": str(datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S")),
         "all_old_labels" : all_old_labels
-        
         }
     
 
@@ -608,7 +612,7 @@ import json
 
 
 
-def append_to_json_file(email, label, document_id, times):
+def append_to_json_file(email, label, document_id, times, pageTime):
     import os
     file_path=env("USERS_PATH")
     try:
@@ -624,7 +628,8 @@ def append_to_json_file(email, label, document_id, times):
         labe = {
             "labels":label,
             "time": times,
-            "document_id": document_id
+            "document_id": document_id,
+            "pageTime":pageTime
         }
 
         

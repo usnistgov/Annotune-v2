@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertDiv = document.getElementById('myalert');
     const datalistElement = document.getElementById('labelOptions');
     const manualStatus = document.getElementById("isManual").textContent;
-
+    const pageStartDiv = document.getElementById('pageStartTime');
+    
     let documentsData = [];
     let currentIndex = -1;
 
@@ -23,13 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(descriptionData)
         removeInputs();
 
+        const now = new Date();
+        let pageStarter = pageStartDiv.innerText;
+        let pageStart = dateConvert(pageStarter);
+        const elapsedPageTime = now - pageStart;
+        const mm = Math.floor(elapsedPageTime / 1000) % 60;
+
+        console.log(mm)
+
         const dataToSend = JSON.stringify({
             document_id: documentId,
             label: label,
             description: descriptionData,
             user_id: userId,
             manualStatus:manualStatus,
-            response_time: new Date().toISOString()
+            response_time: new Date().toISOString(),
+            pageTime: mm
+
         });
 
 
@@ -84,13 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
         manualLabelInput.value = "";
         const newOptions = data.all_old_labels;
         datalistElement.innerHTML = '';
+        console.log(newOptions)
 
-
-
-        ['redArrow', 'labelEnter', 'greenArrow', 'submitEnter'].forEach(id => {
-            const element = document.getElementById(id);
-            if (element) element.style.display = 'none';
+        newOptions.forEach(optionValue => {
+            const newOption = document.createElement('option');
+            newOption.value = optionValue;
+            datalistElement.appendChild(newOption);
         });
+
+
+
+        // ['redArrow', 'labelEnter', 'greenArrow', 'submitEnter'].forEach(id => {
+        //     const element = document.getElementById(id);
+        //     if (element) element.style.display = 'none';
+        // });
 
         manualLabelSubmit.classList.remove('highlight-green');
         manualLabelInput.classList.remove('highlight');

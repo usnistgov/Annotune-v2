@@ -38,11 +38,19 @@
                            <input type="password" placeholder="Password" id="password" required autocomplete="on">
                        </div>
                      <button type="submit" class="btn btn-primary">Login</button>
-                     <div class="btn btn-primary"><a href="{% url 'sign-up' %}">Register</a></div>
+                     <button type="button" class="btn btn-primary" id="register-button">Register</button>
+
+
 
                  </form>
                </div>
             </div>
          </div>
+
+         <script>
+            document.getElementById("register-button").onclick = function() {
+                window.location.href = "{% url 'sign-up' %}";
+            };
+            </script>
     </body>
 </html>

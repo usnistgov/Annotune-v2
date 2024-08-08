@@ -53,11 +53,16 @@
                     </div> -->
                        
                          <button type="submit" class="btn btn-primary">Sign Up</button>
-                         <div class="btn btn-primary"><a href="{% url 'login' %}">login</a></div>
+                         <button type="button" class="btn btn-primary" id="register-button">Login</button>
                         </form>
                  </div>
                </div>
             </div>
          </div>
+         <script>
+            document.getElementById("register-button").onclick = function() {
+                window.location.href = "{% url 'login' %}";
+            };
+            </script>
     </body>
 </html>

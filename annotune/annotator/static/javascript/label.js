@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const alertDiv = document.getElementById('myalert');
     const loaderOverlay = document.getElementById('loaderOverlay');
     const datalistElement = document.getElementById('labelOptions');
+    const manualStatus = document.getElementById("isManual").textContent;
+    const pageStartDiv = document.getElementById('pageStartTime');
+
 
     let documentsData = [];
     let currentIndex = -1;
@@ -34,13 +37,25 @@ document.addEventListener('DOMContentLoaded', () => {
         var descriptionData = document.getElementById("textArea").value;
         console.log(descriptionData)
         removeInputs();
+        const now = new Date();
+        let pageStarter = pageStartDiv.innerText;
+        let pageStart = dateConvert(pageStarter);
+        const elapsedPageTime = now - pageStart;
+        const mm = Math.floor(elapsedPageTime / 1000) % 60;
+
+        console.log(mm)
+
+
 
         const dataToSend = JSON.stringify({
             document_id: documentId,
             label: label,
             description: descriptionData,
             user_id: userId,
-            response_time: new Date().toISOString()
+            response_time: new Date().toISOString(),
+            manualStatus : manualStatus,
+            pageTime: mm
+
         });
 
         showLoader();
@@ -96,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('documentText').textContent = data.document;
         document.getElementById('most_confident').textContent = data.most_confident;
         document.getElementById('explanationDiv').textContent = data.explanation;
-        
+        pageStartDiv.innerText = data.pageStart;
         confidence.textContent = data.confidence;
         manualLabelInput.value = "";
         const newOptions = data.all_old_labels;
