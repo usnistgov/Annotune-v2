@@ -163,7 +163,7 @@
                 <h4 class="mb-2" id="timer"></h4>
             </div>
             <div style="display: flex; justify-content: space-between;">
-                <a href="" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
+                <a href="{% url 'manualLabeledList' user_id %}" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
                     <i class="fas fa-arrow-left"></i> Labeled-Docs
                 </a>
                 <a href="{% url 'manualList' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">

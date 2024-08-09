@@ -341,6 +341,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Read the switchState parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const switchState = urlParams.get('switchState') === 'true';
+
+        console.log('Switch state from URL:', switchState);
+
         const auto = '{{ auto|lower }}' === 'true';
         const timer = document.getElementById('timer');
         const pageStartTime = new Date(document.getElementById('pageStartTime').textContent.trim());

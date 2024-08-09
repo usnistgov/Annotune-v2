@@ -5,32 +5,32 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/document.css' %}">
 <style>
     .loader-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-        .loader {
-            width: 250px;
-            height: 250px;
-            border: 24px groove rgb(186, 194, 201);
-            border-radius: 50%;
-            animation: spin 15s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    .loader {
+        width: 250px;
+        height: 250px;
+        border: 24px groove rgb(186, 194, 201);
+        border-radius: 50%;
+        animation: spin 15s linear infinite;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
 </style>
 {% endblock %}
 
@@ -58,16 +58,13 @@
 <br>
 <div class="container-fluids">
     <div class="col-12 d-flex justify-content-between mb-3">
-        
-    
         <div id="pageStartTime" hidden>{{pageStart}}</div>
         <div id="pageName" hidden>Documents</div>
         <div id="isManual" hidden>false</div>
-
-        
-    
-        
-    
+        <div class="form-check form-switch float-end">
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Recommendations</label>
+        </div>
     </div>
     <div class="row">
         <!-- Left Column for Keywords (Accordion) -->
@@ -113,12 +110,9 @@
                     <a href="{% url 'display' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
                         View-by-Labels <i class="fas fa-arrow-right"></i>
                     </a>
-        
                     <div id="selectedLabel"></div>
-        
                 </div>
             </div>
-            
             <div class="table-responsive" style="width: 95%;">
                 <table class="table table-striped">
                     <thead>
@@ -131,7 +125,7 @@
                         {% for doc_id, text in all_texts.items %}
                         <tr data-id="{{ doc_id }}">
                             <td>{{ doc_id }}</td>
-                            <td id="textLink" class="text-truncate"><a href="{% url 'label' user_id doc_id %}" class="text-link">{{text }}</a> </td>
+                            <td id="textLink" class="text-truncate"><a href="{% url 'label' user_id doc_id %}" class="text-link">{{ text }}</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -149,7 +143,21 @@
         const recommendedDocId = '{{ recommended_doc_id }}';
         const accordionItems = document.querySelectorAll('.accordion-item');
         const accordionContainer = document.getElementById('keywordsAccordion');
-        let recommendedAccordionItem;
+        let switchState = false;
+
+        document.getElementById('flexSwitchCheckDefault').addEventListener('change', function() {
+            switchState = this.checked;
+            console.log('Switch state: ', switchState);
+
+            const recommendedRow = document.querySelector(`tr[data-id='${recommendedDocId}']`);
+            if (recommendedRow) {
+                if (switchState) {
+                    recommendedRow.style.backgroundColor = ''; // Reset to default
+                } else {
+                    recommendedRow.style.backgroundColor = '#ffffcc'; // Highlight
+                }
+            }
+        });
 
         function filterTable(topicIds) {
             const tableRows = document.querySelectorAll('table tbody tr');
@@ -160,7 +168,9 @@
                 const docId = row.querySelector('td:first-child').textContent.trim();
                 if (docId === recommendedDocId) {
                     recommendedRow = row;
-                    row.style.backgroundColor = '#ffffcc';  // Highlight the recommended document
+                    if (!switchState) {
+                        row.style.backgroundColor = '#ffffcc';  // Highlight the recommended document
+                    }
                 }
                 if (topicIds.includes(docId)) {
                     row.style.display = '';
@@ -216,29 +226,34 @@
         function showLoader() {
             const loaderOverlay = document.getElementById('loaderOverlay');
             loaderOverlay.style.display = 'flex';
-            
-
+        }
 
         // Automatically hide the loader once the page is fully loaded
         window.addEventListener('load', hideLoader);
-    }
 
-    // Call showLoader function to display the loader
-    hideLoader();
+        // Call showLoader function to display the loader
+        hideLoader();
 
-    function handleTextTruncateClick(event) {
-        showLoader()
-        console.log('Item clicked:', event.target.textContent);
-    }
+        function handleTextTruncateClick(event) {
+            showLoader();
 
-    function addTextTruncateListeners() {
-        const textTruncateElements = document.querySelectorAll('.text-truncate');
-        textTruncateElements.forEach(element => {
-            element.addEventListener('click', handleTextTruncateClick);
-        });
-    }
+            const link = event.target.closest('a');
+            if (link) {
+                const href = link.getAttribute('href');
+                link.setAttribute('href', `${href}?switchState=${switchState}`);
+            }
 
-    addTextTruncateListeners();
+            console.log('Item clicked:', event.target.textContent);
+        }
+
+        function addTextTruncateListeners() {
+            const textTruncateElements = document.querySelectorAll('.text-truncate a');
+            textTruncateElements.forEach(element => {
+                element.addEventListener('click', handleTextTruncateClick);
+            });
+        }
+
+        addTextTruncateListeners();
     });
 </script>
 

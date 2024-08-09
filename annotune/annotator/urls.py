@@ -20,6 +20,7 @@ urlpatterns = [
     path("relabel/<int:document_id>/<str:given_label>/", views.relabel, name="relabel"),
     path("log-hover-duration/<int:document_id>/<int:hover_time>/", views.log_hover),
     path("manualList/<int:user_id>/", views.manualDocumentsList, name="manualList"),
-    path("manualLabel/<int:user_id>/<int:document_id>/", views.manualLabel, name="manualLabel")
+    path("manualLabel/<int:user_id>/<int:document_id>/", views.manualLabel, name="manualLabel"),
+    path("manualLabeledList/<int:user_id>/", views.manualLabeledList, name="manualLabeledList")
 ]
  

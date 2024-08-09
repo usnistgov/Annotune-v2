@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const datalistElement = document.getElementById('labelOptions');
     const manualStatus = document.getElementById("isManual").textContent;
     const pageStartDiv = document.getElementById('pageStartTime');
-    
+
     let documentsData = [];
     let currentIndex = -1;
 
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const elapsedPageTime = now - pageStart;
         const mm = Math.floor(elapsedPageTime / 1000) % 60;
 
-        console.log(mm)
+        // console.log(mm)
 
         const dataToSend = JSON.stringify({
             document_id: documentId,

@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const manualStatus = document.getElementById("isManual").textContent;
     const pageStartDiv = document.getElementById('pageStartTime');
 
+    const urlParams = new URLSearchParams(window.location.search);
+        const switchState = urlParams.get('switchState') === 'true';
+
+        console.log('Switch state from URL:', switchState);
 
     let documentsData = [];
     let currentIndex = -1;
@@ -130,7 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         manualLabelSubmit.classList.remove('highlight-green');
         manualLabelInput.classList.remove('highlight');
-        confidenceDetector(data.confidence, data.most_confident);
+        if (switchState == false){
+            confidenceDetector(data.confidence, data.most_confident);
+        }
+        
 
         const suggestedLabelsContainer = document.getElementById('suggestedLabels');
         suggestedLabelsContainer.innerHTML = '';
@@ -249,9 +256,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         }
     }
+    if (switchState == false){
+        confidenceDetector(confidence.textContent, document.getElementById('most_confident').textContent);
+    }
 
-    confidenceDetector(confidence.textContent, document.getElementById('most_confident').textContent);
-
+    
     function removeInputs() {
         var inputContainer = document.getElementById('inputContainer');
         var inputTexts = inputContainer.getElementsByClassName("input-group mb-3 label-input-group");

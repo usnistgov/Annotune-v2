@@ -240,9 +240,12 @@ def submit_data(request, document_id, label):
             document_id = response["document_id"]
 
         else:
-            labeledDocuments = information[request.session["email"]]["document_id"]
+            labeledDocuments = list(set(information[request.session["email"]]["document_id"]))
             remainingDocuments = [x for x in list(all_texts['text'].keys()) if int(x) not in labeledDocuments]
             
+            
+
+           
             if document_id not in remainingDocuments:
                 document_id = random.choice(remainingDocuments)
 
@@ -317,6 +320,7 @@ def get_all_documents(request ):
     data = {"document_ids": request.session["document_ids"][::-1],
             "labels": request.session["labels"][0][::-1]}
     print(data["document_ids"])
+
     return JsonResponse(data)
     
 
@@ -371,30 +375,53 @@ def display(request, user_id):
     response = requests.post(url+"/display", json={
     "user_id":request.session["user_id"]}).json()
 
-    print(response.keys())
+    response = { "label1": {
+                    "documents" : [1, 2, 3, 4, 5, 6, 7],
+                    "description" : "This is the description"
+                },
+                "label2": {
+                "documents" : [11, 21, 31, 41, 51, 61, 71],
+                "description" : "This is the description"
+            }
+        }
 
-    all_items = []
-    all_labelled_data = {}
+    # print(response.keys())
 
-
+    all_items1 = []
 
     for id, items in response.items():
-        all_items.append(flatten_extend(items))
+        all_items1.append(items["documents"])
 
-        all_labelled_data[id] = {"documents":flatten_extend(items),
-                                 "description": "this is a description"}
-    labeled_texts = flatten_extend(all_items)
-    all_text = sort_labeled(all_texts, labeled_texts)
+    labeled_texts1 = flatten_extend(all_items1)
+
+    all_text1 = sort_labeled(all_texts, labeled_texts1)
+
+    # all_items = []
+    # all_labelled_data = {}
 
 
-    remainingDocuments = [x for x in list(all_texts['text'].keys()) if x not in labeled_texts]
+
+
+
+    # for id, items in response.items():
+    #     all_items.append(flatten_extend(items))
+
+    #     all_labelled_data[id] = {"documents":flatten_extend(items),
+    #                              "description": "this is a description"}
+    # labeled_texts = flatten_extend(all_items)
+    # all_text = sort_labeled(all_texts, labeled_texts)
+
+
+    remainingDocuments = [x for x in list(all_texts['text'].keys()) if x not in labeled_texts1]
     document_id = random.choice(remainingDocuments)
 
-    print(all_labelled_data)
+    # print(all_text[""]) 
+    # print(all_labelled_data.keys())
+
 
     data = {
-        "all_texts":all_text,
-        "labels":all_labelled_data,
+        "all_texts":all_text1,
+        "labels": response,
         "user_id": request.session["user_id"],
         "start_time": request.session["start_time"],
         "document_id":document_id,
@@ -458,7 +485,7 @@ def relabel(request, document_id, given_label):
     #     confidence="false"
 ##################################
     
-    confidence="true"
+    # confidence="true"
     
     old_labels = request.session["labels"]
     if len(old_labels)==0:
@@ -509,11 +536,42 @@ def manualDocumentsList(request, user_id):
         name_string = user_file.read()
         information = json.loads(name_string)
 
-    past_labels = list(set(information[request.session["email"]]["label"]))
+    labeledDocuments = list(set(information[request.session["email"]]["document_id"]))
+    # remainingDocuments = [x for x in list(all_texts['text'].keys()) if int(x) not in labeledDocuments]
+    remaining_texts = all_texts["text"]
+    
+    remaining_texts = {k: v for k, v in remaining_texts.items() if int(k) not in labeledDocuments}
+
+    return render(request, "manualText.html", context={"all_texts":remaining_texts, "user_id": user_id, "start_time": str(request.session["start_time"])})
+
+
+def manualLabeledList(request, user_id):
+    request.session["isManual"]=True
+
+    with open(env("USERS_PATH"), "r") as user_file:
+        name_string = user_file.read()
+        information = json.loads(name_string)
+
+    all_labelled_data = get_all_labeled(request.session["email"])
+    aaaa = list(set(information[request.session["email"]]["document_id"]))
+
+    all_text  = sort_labeled(all_texts, aaaa)
+    # print(all_labelled_data)
+    
+    data = {
+        "all_texts":all_text,
+        "labels":all_labelled_data,
+        "user_id": request.session["user_id"],
+        "start_time": request.session["start_time"],
+    }
+
+    return render(request, 'manualLabeledList.html', context=data)
 
 
 
-    return render(request, "manualText.html", context={"all_texts":all_texts["text"], "user_id": user_id, "start_time": str(request.session["start_time"])})
+    # return render(request, "manualLabeledList.html", context={"all_texts":remaining_texts, "user_id": user_id, "start_time": str(request.session["start_time"])})
+
+
 
 def manualLabel(request, user_id, document_id):
     text = all_texts["text"][str(document_id)]

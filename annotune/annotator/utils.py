@@ -694,4 +694,17 @@ def sort_labeled_with_label(all_texts, all_labeled):
         filteredTexts[str(text)] = all_texts['text'][str(text)]
 
     return filteredTexts
+
+
+def get_all_labeled(email):
+    user_json = json.load(open(env("USERS_PATH")))
+    first_label = {}
+    for a, b in user_json[email]["labels"].items():
+        first_label[(b['labels']).strip()]=[]
+
+    for a, b in user_json[email]["labels"].items():
+        first_label[(b['labels']).strip()].append(a)  
+        
+
+    return first_label
     
