@@ -375,15 +375,15 @@ def display(request, user_id):
     response = requests.post(url+"/display", json={
     "user_id":request.session["user_id"]}).json()
 
-    response = { "label1": {
-                    "documents" : [1, 2, 3, 4, 5, 6, 7],
-                    "description" : "This is the description"
-                },
-                "label2": {
-                "documents" : [11, 21, 31, 41, 51, 61, 71],
-                "description" : "This is the description"
-            }
-        }
+    # response = { "label1": {
+    #                 "documents" : [1, 2, 3, 4, 5, 6, 7],
+    #                 "description" : "This is the description"
+    #             },
+    #             "label2": {
+    #             "documents" : [11, 21, 31, 41, 51, 61, 71],
+    #             "description" : "This is the description"
+    #         }
+    #     }
 
     # print(response.keys())
 
