@@ -112,7 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePage(data) {
         document.getElementById('document_id').textContent = data.document_id;
-        document.getElementById('documentText').textContent = data.document;
+
+        let texttt = "this is the <br> the updated <p> text we move "
+        // document.getElementById('documentText').textContent = data.document;
+        document.getElementById('documentText').innerHTML = data.document;
         document.getElementById('most_confident').textContent = data.most_confident;
         document.getElementById('explanationDiv').textContent = data.explanation;
         pageStartDiv.innerText = data.pageStart;
@@ -260,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         confidenceDetector(confidence.textContent, document.getElementById('most_confident').textContent);
     }
 
-    
+
     function removeInputs() {
         var inputContainer = document.getElementById('inputContainer');
         var inputTexts = inputContainer.getElementsByClassName("input-group mb-3 label-input-group");

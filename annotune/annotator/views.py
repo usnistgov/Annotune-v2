@@ -264,7 +264,7 @@ def submit_data(request, document_id, label):
 
         
         all_old_labels = sorted(list(past_labels))
-        print("allllllllll", all_old_labels)
+        # print("allllllllll", all_old_labels)
         
 
         if manualStatus == "true":

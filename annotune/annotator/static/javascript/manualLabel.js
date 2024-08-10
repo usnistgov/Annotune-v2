@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePage(data) {
         document.getElementById('document_id').textContent = data.document_id;
-        document.getElementById('documentText').textContent = data.document;
+        document.getElementById('documentText').innerHTML = data.document;
         manualLabelInput.value = "";
         const newOptions = data.all_old_labels;
         datalistElement.innerHTML = '';
