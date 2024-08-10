@@ -166,6 +166,19 @@ def label (request,user_id, document_id):
     #     all_old_labels = sorted(list(set(request.session["labels"][0])))
     # print(request.session["labels"])
     # all_old_labels = []
+
+    # documenttext = """teacher: All right. I heard lots of - wait. Let me stop the music. I heard lots of, "
+    #                 That's the way it is." My question is, what is the relationship between this circle and this circle, and this circle?
+    #                 Why? How? What is it? What is the relationship between all of them? Because this circle is really big, right, compared to this one.
+    #                 Student C, tell me what you got.
+    #                 <br>
+    #                 <br>
+    #                 student: It's always 3.14 because the circumference divided by the diameter equals pi.
+    #                 <br><br>
+    #                 teacher: The circumference divided by the diameter is always going to be pi. It doesn't matter how big or how small your circle is.
+    #                 You can take any circle, measure the circumference, stretch it across the diameter, and it's always going to be 3.14. Student A?"""
+
+
     data = {
         "document": documenttext,
         "labels":labels,
@@ -334,56 +347,21 @@ def logout_view(request):
     logout(request)
     return redirect('login')  
 
-# def display (request, user_id):
-#     response = requests.post(url+"/display", json={
-#     "user_id":request.session["user_id"]}).json()
-#     # print(response)
-#     # print(1234)
-
-#     all_items = []
-#     all_labelled_data = {}
-
-
-
-#     for id, items in response.items():
-#         all_items.append(flatten_extend(items))
-#         all_labelled_data[id] = flatten_extend(items)
-#     labeled_texts = flatten_extend(all_items)
-    
-#     all_text = sort_labeled(all_texts, labeled_texts)
-
-
-#     remainingDocuments = [x for x in list(all_texts['text'].keys()) if x not in labeled_texts]
-#     document_id = random.choice(remainingDocuments)
-
-#     # print(all_text)
-
-#     data = {
-#         "all_texts":all_text,
-#         "labels":all_labelled_data,
-#         "user_id": request.session["user_id"],
-#         "start_time": request.session["start_time"],
-#         "document_id":document_id,
-#     }
-
-#     # return render(request, 'labeled.html', context=data)
-
-#     return render(request, "labeled.html", context=data)
 
 def display(request, user_id):
 
-    response = requests.post(url+"/display", json={
-    "user_id":request.session["user_id"]}).json()
+    # response = requests.post(url+"/display", json={
+    # "user_id":request.session["user_id"]}).json()
 
-    # response = { "label1": {
-    #                 "documents" : [1, 2, 3, 4, 5, 6, 7],
-    #                 "description" : "This is the description"
-    #             },
-    #             "label2": {
-    #             "documents" : [11, 21, 31, 41, 51, 61, 71],
-    #             "description" : "This is the description"
-    #         }
-    #     }
+    response = { "label1": {
+                    "documents" : [1, 2, 3, 4, 5, 6, 7],
+                    "description" : "This is the description"
+                },
+                "label2": {
+                "documents" : [11, 21, 31, 41, 51, 61, 71],
+                "description" : "This is the description"
+            }
+        }
 
     # print(response.keys())
 
