@@ -10,6 +10,9 @@ import random
 from pytz import timezone
 eastern = timezone('US/Eastern')
 import environ
+from collections import defaultdict
+
+
 
 env = environ.Env()
 
@@ -50,7 +53,9 @@ def sign_up(request):
                                 "start_time": time,
                                 "date": datetime.datetime.now(eastern).strftime("%d/%m/%y"),
                                 "pageTimes": [],
-                                "hoverTimes":[]
+                                "hoverTimes":[],
+                                "pretest":[],
+                                "postTest":[]
                                 }
             information[email]=user_information
 
@@ -63,7 +68,7 @@ def sign_up(request):
             request.session["document_ids"]= information[email]["document_id"]
             request.session["start_time"]= information[email]["start_time"]
 
-            return redirect("homepage", user_id=information[email]["user_id"] )
+            return redirect("pretext", user_id=information[email]["user_id"] )
 
         return redirect("login", {"time":datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S")})
             
@@ -89,7 +94,7 @@ def login(request):
             request.session["document_ids"]= information[email]["document_id"]
             request.session["start_time"]= information[email]["start_time"]
 
-            return redirect("homepage", user_id=information[email]["user_id"] )
+            return redirect("pretext", user_id=information[email]["user_id"] )
 
 
          
@@ -100,7 +105,7 @@ def homepage(request, user_id):
     print(request.session["start_time"])
     return render(request, "homepage.html", {"user_id": request.session["user_id"], "start_time":request.session["start_time"]})
 
-def list_documents(request, user_id):
+def list_documents(request, user_id, recommendation):
     request.session["isManual"]=False
 
     get_topic_list = url + "//get_topic_list" 
@@ -115,10 +120,10 @@ def list_documents(request, user_id):
     print(type(request.session["user_id"]))
   
 
-    return render(request, "documents.html", {"all_texts": a, "clusters": d, "keywords":b, "recommended_doc_id" :c, "user_id":request.session["user_id"], "start_time":request.session["start_time"]})
+    return render(request, "documents.html", {"all_texts": a, "clusters": d, "keywords":b, "recommended_doc_id" :c, "user_id":request.session["user_id"], "start_time":request.session["start_time"], "recommendation": recommendation})
 
 
-def label (request,user_id, document_id):
+def label (request,user_id, document_id, recommendation):
     user_id = user_id
     
 
@@ -190,7 +195,8 @@ def label (request,user_id, document_id):
         "most_confident":most_confident,
         "all_old_labels": past_labels,
         "auto":None,
-        "start_time":request.session["start_time"]
+        "start_time":request.session["start_time"],
+        "recommendation": recommendation
         
         }
 
@@ -574,3 +580,92 @@ def manualLabel(request, user_id, document_id):
 
     return render(request, "manualLabel.html", context=data)
 
+
+def pre_text(request, user_id):
+    # Define the path to the JSON file
+    json_file_path = '/Users/danielstephens/Desktop/Annotune-v2/user_data/try.json'
+
+    if request.method == 'POST':
+        # Get form data
+        question1 = request.POST['question1']
+        question2 = request.POST['question2']
+        # Add other questions if there are more
+
+        # Structure the data as a dictionary
+        user_data = {
+            "responses": {
+                "question1": question1,
+                "question2": question2,
+                # Add other questions if necessary
+            }
+        }
+
+        with open(env("USERS_PATH"), "r") as user_file:
+            name_string = user_file.read()
+            information = json.loads(name_string)
+            information[request.session["email"]]["pretest"]=user_data
+        
+        with open(env("USERS_PATH"), "w") as user_file:
+                json.dump(information, user_file, indent=4)
+        # # Check if the file exists, and if it does, read the existing data
+        # if os.path.exists(json_file_path):
+        #     with open(json_file_path, 'r') as file:
+        #         existing_data = json.load(file)
+        # print(user_data)
+        # else:
+        #     existing_data = {}
+
+        # Update the existing data with the new user's data
+        # existing_data[user_id] = user_data
+
+        # # Write the updated data back to the JSON file
+        # with open(json_file_path, 'w') as file:
+        #     json.dump(existing_data, file, indent=4)
+
+        # Redirect or render a success page if needed
+        return render(request, "homepage.html", context={"user_id": user_id, "start_time": request.session["start_time"]})
+
+    # If the request method is GET, simply render the form
+    return render(request, "questions.html", context={"user_id": user_id})
+
+
+def post_text(request):
+    with open(env("USERS_PATH"), "r") as user_file:
+        name_string = user_file.read()
+        information = json.loads(name_string)
+
+    # print(all_texts)
+
+    data = information[request.session["email"]]["labels"]
+
+        # Preparing data structure for the dashboard
+    dashboard_data = {
+        "labels_counts": defaultdict(int),  # To count occurrences of each label
+        "documents": []  # To hold document details
+    }
+
+    for doc_key, details in data.items():
+        doc_id = details["document_id"]
+        label = details["labels"]
+        text = all_texts["text"].get(str(doc_id), "Text not available")  # Retrieve the text or default to a placeholder
+        
+        # Update label counts for the bar chart
+        dashboard_data["labels_counts"][label] += 1
+        
+        # Add document details for the table
+        dashboard_data["documents"].append({
+            "document_id": doc_id,
+            "labels": label,
+            "text": text
+        })
+
+    # Convert the defaultdict to a regular dict before passing to JSON
+    dashboard_data["labels_counts"] = dict(dashboard_data["labels_counts"])
+
+    # Convert to JSON format to pass to JavaScript
+    dashboard_json = json.dumps(dashboard_data)
+
+    # Print or return the JSON structure (you might pass this to your template)
+    # print(dashboard_json)
+
+    return render(request, "post_test.html", {'dashboard_json': dashboard_json})

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block extra_head %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Review and Response</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Document Review and Response</h1>
+        <p class="text-center">Please answer the questions below.</p>
+        <div style="display: flex; align-items: center;">
+            <h4 class="mb-2" id="timer"></h4>
+        </div>
+        <div id="user_id" hidden>{{ user_id }}</div>
+        <div id="pageStartTime" hidden>{{time}}</div>
+        <div id="pageName" hidden>pretext</div>
+
+        <!-- Document Links -->
+        <!-- <div class="text-center">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#document1Modal">View Document 1</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#document2Modal">View Document 2</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#document3Modal">View Document 3</button>
+        </div> -->
+
+        <!-- Document 1 Modal -->
+        <div class="modal fade" id="document1Modal" tabindex="-1" aria-labelledby="document1ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="document1ModalLabel">Document 1</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Embed or Display Document 1 Content Here -->
+                        <iframe src="path/to/document1.pdf" width="100%" height="500px"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document 2 Modal -->
+        <div class="modal fade" id="document2Modal" tabindex="-1" aria-labelledby="document2ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="document2ModalLabel">Document 2</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Embed or Display Document 2 Content Here -->
+                        <iframe src="path/to/document2.pdf" width="100%" height="500px"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document 3 Modal -->
+        <div class="modal fade" id="document3Modal" tabindex="-1" aria-labelledby="document3ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="document3ModalLabel">Document 3</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Embed or Display Document 3 Content Here -->
+                        <iframe src="path/to/document3.pdf" width="100%" height="500px"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form class="mt-4 p-4 border rounded shadow-sm bg-light" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="question1" class="font-weight-bold">Question 1: What do you think are the key steps (no more than 10) in this planning process?</label>
+                <textarea name="question1" class="form-control" id="question1" rows="4" placeholder="Enter your response..."></textarea>
+            </div>
+            <div class="form-group mt-3">
+                <label for="question2" class="font-weight-bold">Question 2: Do you think there are any differences between planning for resilience and planning for sustainability?</label>
+                <textarea name="question2" class="form-control" id="question2" rows="4" placeholder="Enter your response..."></textarea>
+            </div>
+            <!-- <div class="form-group mt-3">
+                <label for="question3" class="font-weight-bold">Question 3:</label>
+                <textarea class="form-control" id="question3" rows="4" placeholder="Enter your response..."></textarea>
+            </div> -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary" style="width: 150px;">Submit</button>
+            </div>
+        </form>
+        
+        
+    </div>
+
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+{% endblock %}

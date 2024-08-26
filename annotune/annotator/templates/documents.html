@@ -61,10 +61,10 @@
         <div id="pageStartTime" hidden>{{pageStart}}</div>
         <div id="pageName" hidden>Documents</div>
         <div id="isManual" hidden>false</div>
-        <div class="form-check form-switch float-end">
+        <!-- <div class="form-check form-switch float-end">
             <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
             <label class="form-check-label" for="flexSwitchCheckDefault">Recommendations</label>
-        </div>
+        </div> -->
     </div>
     <div class="row">
         <!-- Left Column for Keywords (Accordion) -->
@@ -125,7 +125,7 @@
                         {% for doc_id, text in all_texts.items %}
                         <tr data-id="{{ doc_id }}">
                             <td>{{ doc_id }}</td>
-                            <td id="textLink" class="text-truncate"><a href="{% url 'label' user_id doc_id %}" class="text-link">{{ text }}</a></td>
+                            <td id="textLink" class="text-truncate"><a href="{% url 'label' user_id doc_id recommendation %}" class="text-link">{{ text }}</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -139,26 +139,37 @@
 {% endblock %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+        // Other existing JavaScript code here...
+
+        // Intro.js initialization
+        introJs().setOptions({
+            steps: [
+                {
+                    element: '.col-md-4',
+                    intro: 'This section displays the keywords related to the documents.',
+                    position: 'right'
+                },
+                {
+                    element: '.col-md-8',
+                    intro: 'This section shows the text descriptions. Click on a text link to view more details.',
+                    position: 'left'
+                },
+                {
+                    element: '.loader-overlay',
+                    intro: 'This loader indicates when the system is processing your input.',
+                    position: 'top'
+                }
+            ]
+        }).start();
+
+        // Your existing JavaScript functions and logic can go here
         const recommendedDocId = '{{ recommended_doc_id }}';
         const accordionItems = document.querySelectorAll('.accordion-item');
         const accordionContainer = document.getElementById('keywordsAccordion');
-        let switchState = false;
+        let recommendation = '{{recommendation}}';
 
-        document.getElementById('flexSwitchCheckDefault').addEventListener('change', function() {
-            switchState = this.checked;
-            console.log('Switch state: ', switchState);
-
-            const recommendedRow = document.querySelector(`tr[data-id='${recommendedDocId}']`);
-            if (recommendedRow) {
-                if (switchState) {
-                    recommendedRow.style.backgroundColor = ''; // Reset to default
-                } else {
-                    recommendedRow.style.backgroundColor = '#ffffcc'; // Highlight
-                }
-            }
-        });
-
+        // Your existing filterTable and filterAndHighlight functions
         function filterTable(topicIds) {
             const tableRows = document.querySelectorAll('table tbody tr');
             const tbody = document.getElementById('text-table-body');
@@ -168,7 +179,7 @@
                 const docId = row.querySelector('td:first-child').textContent.trim();
                 if (docId === recommendedDocId) {
                     recommendedRow = row;
-                    if (!switchState) {
+                    if (recommendation=="true") {
                         row.style.backgroundColor = '#ffffcc';  // Highlight the recommended document
                     }
                 }
@@ -179,7 +190,6 @@
                 }
             });
 
-            // Move the recommended document to the top of the table
             if (recommendedRow) {
                 tbody.prepend(recommendedRow);
             }
@@ -193,21 +203,18 @@
                 if (topicIds.includes(recommendedDocId)) {
                     const button = item.querySelector('.accordion-button');
                     recommendedAccordionItem = item;
-                    button.click();  // Automatically click the accordion button
+                    button.click();
                     filterTable(topicIds);
                 }
             });
 
-            // Move the recommended accordion item to the top of the list
             if (recommendedAccordionItem) {
                 accordionContainer.prepend(recommendedAccordionItem);
             }
         }
 
-        // Initial filter and highlight
         filterAndHighlight();
 
-        // Add event listeners for manual clicks
         const accordionButtons = document.querySelectorAll('.accordion-button');
         accordionButtons.forEach(button => {
             button.addEventListener('click', function() {
@@ -225,36 +232,13 @@
 
         function showLoader() {
             const loaderOverlay = document.getElementById('loaderOverlay');
-            loaderOverlay.style.display = 'flex';
+            loaderOverlay.style.display = 'flex'; 
         }
 
-        // Automatically hide the loader once the page is fully loaded
         window.addEventListener('load', hideLoader);
-
-        // Call showLoader function to display the loader
         hideLoader();
-
-        function handleTextTruncateClick(event) {
-            showLoader();
-
-            const link = event.target.closest('a');
-            if (link) {
-                const href = link.getAttribute('href');
-                link.setAttribute('href', `${href}?switchState=${switchState}`);
-            }
-
-            console.log('Item clicked:', event.target.textContent);
-        }
-
-        function addTextTruncateListeners() {
-            const textTruncateElements = document.querySelectorAll('.text-truncate a');
-            textTruncateElements.forEach(element => {
-                element.addEventListener('click', handleTextTruncateClick);
-            });
-        }
-
-        addTextTruncateListeners();
     });
 </script>
+
 
 {% endblock %}

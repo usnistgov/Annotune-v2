@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const manualStatus = document.getElementById("isManual").textContent;
     const pageStartDiv = document.getElementById('pageStartTime');
 
-    const urlParams = new URLSearchParams(window.location.search);
-        const switchState = urlParams.get('switchState') === 'true';
+    // const urlParams = new URLSearchParams(window.location.search);
+    //     const switchState = urlParams.get('switchState') === 'true';
 
-        console.log('Switch state from URL:', switchState);
+    //     console.log('Switch state from URL:', switchState);
 
     let documentsData = [];
     let currentIndex = -1;
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePage(data) {
         document.getElementById('document_id').textContent = data.document_id;
 
-        let texttt = "this is the <br> the updated <p> text we move "
+        // let texttt = "this is the <br> the updated <p> text we move "
         // document.getElementById('documentText').textContent = data.document;
         document.getElementById('documentText').innerHTML = data.document;
         document.getElementById('most_confident').textContent = data.most_confident;
@@ -137,9 +137,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         manualLabelSubmit.classList.remove('highlight-green');
         manualLabelInput.classList.remove('highlight');
-        if (switchState == false){
+        
+        if (recommendation == "true"){
             confidenceDetector(data.confidence, data.most_confident);
         }
+
+        console.log(recommendation)
         
 
         const suggestedLabelsContainer = document.getElementById('suggestedLabels');
@@ -259,9 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         }
     }
-    if (switchState == false){
+    if (recommendation.textContent.toLowerCase() == "true"){
         confidenceDetector(confidence.textContent, document.getElementById('most_confident').textContent);
     }
+
+    console.log(recommendation)
+
 
 
     function removeInputs() {

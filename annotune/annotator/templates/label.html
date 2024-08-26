@@ -3,6 +3,9 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/label.css' %}">
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet">
+<script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+
 <style>
     .label-input-group {
         margin-bottom: 10px;
@@ -207,7 +210,7 @@
                 <a href="{% url 'display' user_id %}" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
                     <i class="fas fa-arrow-left"></i> View-by-labels
                 </a>
-                <a href="{% url 'documents' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">
+                <a href="{% url 'documents' user_id recommendation %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">
                     <i class="fas fa-arrow-left"></i> View-by-topics
                 </a>
             </div>
@@ -328,6 +331,8 @@
             <div id="pageName" hidden>Label</div>
             <div id="pageStartTime" hidden>{{time}}</div>
             <div id="isManual" hidden>false</div>
+            <div id="recommendation" hidden>{{recommendation}}</div>
+
         </div>
     </div>
 </div>
@@ -342,10 +347,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Read the switchState parameter from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const switchState = urlParams.get('switchState') === 'true';
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const switchState = urlParams.get('switchState') === 'true';
 
-        console.log('Switch state from URL:', switchState);
+        // console.log('Switch state from URL:', switchState);
+
+        const recommendation = '{{recommendation|lower}}'
+        // console.log(recommendation.textContent;)
 
         const auto = '{{ auto|lower }}' === 'true';
         const timer = document.getElementById('timer');
@@ -432,6 +440,37 @@
         $("#description").click(function(){
             $("#textarea-container").toggle();
         });
+
+        // Intro.js initialization
+    introJs().setOptions({
+        steps: [
+            {
+                element: '#documentText',
+                intro: 'This is where the document text is displayed.',
+                position: 'right'
+            },
+            {
+                element: '#suggestedLabels',
+                intro: 'Here are the suggested labels. You can choose one or add your own.',
+                position: 'left'
+            },
+            {
+                element: '#manualLabelInput',
+                intro: 'You can manually enter or select a label from here.',
+                position: 'top'
+            },
+            {
+                element: '#manualLabelSubmit',
+                intro: 'Once you are satisfied with your label choice, click here to submit.',
+                position: 'left'
+            },
+            {
+                element: '#toggleExplanationBtn',
+                intro: 'Click here for a summary of the document.',
+                position: 'left'
+            }
+        ]
+    }).start();
     });
 
 </script>
