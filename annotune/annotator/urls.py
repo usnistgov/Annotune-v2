@@ -16,7 +16,7 @@ urlpatterns = [
     path("fetch_data/<int:user_id>/<str:document_id>/", views.fetch_data, name="fetch_data"),
     path('logout/', views.logout_view, name='logout'),
     path("append_time/<str:pageName>/", views.append_time, name="append"),
-    path("labeled/<int:user_id>", views.display, name="display"),
+    path("labeled/<int:user_id>/<str:recommendation>/", views.display, name="display"),
     path("relabel/<int:document_id>/<str:given_label>/", views.relabel, name="relabel"),
     path("log-hover-duration/<int:document_id>/<int:hover_time>/", views.log_hover),
     path("manualList/<int:user_id>/", views.manualDocumentsList, name="manualList"),

@@ -207,7 +207,7 @@
                 <h4 class="mb-2" id="timer"></h4>
             </div>
             <div style="display: flex; justify-content: space-between;">
-                <a href="{% url 'display' user_id %}" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
+                <a href="{% url 'display' user_id recommendation %}" id="display" class="btn btn-outline-secondary btn-lg nav-icon me-2">
                     <i class="fas fa-arrow-left"></i> View-by-labels
                 </a>
                 <a href="{% url 'documents' user_id recommendation %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon me-2">
@@ -346,15 +346,54 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Read the switchState parameter from the URL
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const switchState = urlParams.get('switchState') === 'true';
+        // Function to check if the tutorial has been shown before
+        function hasTutorialBeenShown() {
+            return localStorage.getItem('tutorialShown') === 'true';
+        }
 
-        // console.log('Switch state from URL:', switchState);
+        // Function to mark the tutorial as shown
+        function markTutorialAsShown() {
+            localStorage.setItem('tutorialShown', 'true');
+        }
+
+        // Check if the tutorial has been shown before
+        if (!hasTutorialBeenShown()) {
+            // Intro.js initialization
+            introJs().setOptions({
+                steps: [
+                    {
+                        element: '#documentText',
+                        intro: 'This is where the document text is displayed.',
+                        position: 'right'
+                    },
+                    {
+                        element: '#suggestedLabels',
+                        intro: 'Here are the suggested labels. You can choose one or add your own.',
+                        position: 'left'
+                    },
+                    {
+                        element: '#manualLabelInput',
+                        intro: 'You can manually enter or select a label from here.',
+                        position: 'top'
+                    },
+                    {
+                        element: '#manualLabelSubmit',
+                        intro: 'Once you are satisfied with your label choice, click here to submit.',
+                        position: 'left'
+                    },
+                    {
+                        element: '#toggleExplanationBtn',
+                        intro: 'Click here for a summary of the document.',
+                        position: 'left'
+                    }
+                ]
+            }).oncomplete(function() {
+                // Mark the tutorial as shown after it completes
+                markTutorialAsShown();
+            }).start();
+        }
 
         const recommendation = '{{recommendation|lower}}'
-        // console.log(recommendation.textContent;)
-
         const auto = '{{ auto|lower }}' === 'true';
         const timer = document.getElementById('timer');
         const pageStartTime = new Date(document.getElementById('pageStartTime').textContent.trim());
@@ -441,38 +480,7 @@
             $("#textarea-container").toggle();
         });
 
-        // Intro.js initialization
-    introJs().setOptions({
-        steps: [
-            {
-                element: '#documentText',
-                intro: 'This is where the document text is displayed.',
-                position: 'right'
-            },
-            {
-                element: '#suggestedLabels',
-                intro: 'Here are the suggested labels. You can choose one or add your own.',
-                position: 'left'
-            },
-            {
-                element: '#manualLabelInput',
-                intro: 'You can manually enter or select a label from here.',
-                position: 'top'
-            },
-            {
-                element: '#manualLabelSubmit',
-                intro: 'Once you are satisfied with your label choice, click here to submit.',
-                position: 'left'
-            },
-            {
-                element: '#toggleExplanationBtn',
-                intro: 'Click here for a summary of the document.',
-                position: 'left'
-            }
-        ]
-    }).start();
     });
-
 </script>
 
 {% endblock %}

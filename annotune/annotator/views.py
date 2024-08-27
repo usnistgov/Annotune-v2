@@ -55,7 +55,8 @@ def sign_up(request):
                                 "pageTimes": [],
                                 "hoverTimes":[],
                                 "pretest":[],
-                                "postTest":[]
+                                "postTest":[],
+    
                                 }
             information[email]=user_information
 
@@ -322,14 +323,14 @@ def skip_document(request):
     return JsonResponse({"document_id":response["document_id"]})
 
  
-def labeled(request):
+# def labeled(request):
 
-    data = {
+#     data = {
 
-        'status':"200: SUCCESS",
-        "data": "data"
-    }
-    return JsonResponse(data)
+#         'status':"200: SUCCESS",
+#         "data": "data"
+#     }
+#     return JsonResponse(data)
 
 
 
@@ -354,23 +355,39 @@ def logout_view(request):
     return redirect('login')  
 
 
-def display(request, user_id):
+def display(request, user_id, recommendation):
 
     # response = requests.post(url+"/display", json={
     # "user_id":request.session["user_id"]}).json()
+ 
+    # response = { "between the": {
+    #                 "documents" : [1, 2, 3, 4, 5, 6, 7],
+    #                 "description" : "drawing relations between mathematical concepts.This is the description"
+    #             },
+    #             "label2": {
+    #             "documents" : [11, 21, 31, 41, 51, 61, 71],
+    #             "description" : "This is the description"
+    #         }
+    #     }
+    
+    # Sanitize the response keys to replace spaces with underscores
+    
 
-    response = { "label1": {
+    
+    response = { "drawing relations between mathematical concepts": {
                     "documents" : [1, 2, 3, 4, 5, 6, 7],
-                    "description" : "This is the description"
+                    "description" : "drawing relations between mathematical concepts.This is the description"
                 },
-                "label2": {
+                "classroom management teaching": {
                 "documents" : [11, 21, 31, 41, 51, 61, 71],
-                "description" : "This is the description"
+                "description" : "classroom management teaching.This is the description"
             }
         }
-
     # print(response.keys())
+    
 
+
+    response = {label.replace(' ', '_'): value for label, value in response.items()}
     all_items1 = []
 
     for id, items in response.items():
@@ -403,12 +420,14 @@ def display(request, user_id):
     # print(all_labelled_data.keys())
 
 
+
     data = {
         "all_texts":all_text1,
         "labels": response,
         "user_id": request.session["user_id"],
         "start_time": request.session["start_time"],
         "document_id":document_id,
+        "recommendation":recommendation
     }
 
     # return render(request, 'labeled.html', context=data)
