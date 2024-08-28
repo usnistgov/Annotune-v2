@@ -3,6 +3,9 @@
 {% block extra_head %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/document.css' %}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/4.2.2/introjs.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/4.2.2/intro.min.js"></script>
+
 <style>
         html, body {
             height: 100%;
@@ -15,54 +18,81 @@
 
 <div class="container-fluids">
     <div class="col-12 d-flex justify-content-between mb-3">
-        
-    
         <div id="pageStartTime" hidden>{{pageStart}}</div>
         <div id="pageName" hidden>ManualDocuments</div>
         <div id="isManual" hidden>true</div>
-        <div id="pageName" hidden>manualDocumentsList</div>
-        
-
-        
-    
-        
-    
     </div>
 
-        <div class="col-md-12">
-            <div style="display: flex; justify-content: space-between; width: 95%;">
-                <h4 class="mb-2">Texts</h4>
-                <h4 class="mb-2"  id="timer"></h4>
-                <div class="float-end">
-                    <a href="{% url 'manualLabeledList' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
-                        labeled_docs <i class="fas fa-arrow-right"></i>
-                    </a>
-        
-                    <div id="selectedLabel"></div>
-        
-                </div>
-            
-            </div>
-            
-            <div class="table-responsive" style="width: 95%;">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Text Description</th>
-                        </tr>
-                    </thead>
-                    <tbody id="text-table-body">
-                        {% for doc_id, text in all_texts.items %}
-                        <tr data-id="{{ doc_id }}">
-                            <td>{{ doc_id }}</td>
-                            <td id="textLink" class="text-truncate"><a href="{% url 'manualLabel' user_id doc_id %}" class="text-link">{{text }}</a> </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <div class="col-md-12">
+        <div style="display: flex; justify-content: space-between; width: 95%;">
+            <h4 class="mb-2">Texts</h4>
+            <h4 class="mb-2" id="timer"></h4>
+            <div class="float-end">
+                <a href="{% url 'manualLabeledList' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
+                    labeled_docs <i class="fas fa-arrow-right"></i>
+                </a>
+                <div id="selectedLabel"></div>
             </div>
         </div>
+
+        <div class="table-responsive" style="width: 95%;">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Text Description</th>
+                    </tr>
+                </thead>
+                <tbody id="text-table-body">
+                    {% for doc_id, text in all_texts.items %}
+                    <tr data-id="{{ doc_id }}">
+                        <td>{{ doc_id }}</td>
+                        <td id="textLink" class="text-truncate"><a href="{% url 'manualLabel' user_id doc_id %}" class="text-link">{{text }}</a> </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to show the demo tutorial
+        function showDemoTutorial() {
+            introJs().setOptions({
+                steps: [
+                    {
+                        element: '#documents',
+                        intro: 'Click here to view the labeled documents.',
+                        position: 'left'
+                    },
+                    {
+                        element: '#timer',
+                        intro: 'This timer shows how much time you have spent on this page.',
+                        position: 'bottom'
+                    }
+                ]
+            }).start();
+        }
+        // Check if the demo has been shown before
+        function checkAndShowDemo() {
+            const demoSeen = localStorage.getItem('labeledPageDemoSeen');
+            if (!demoSeen) {
+                showDemoTutorial();
+                localStorage.setItem('labeledPageDemoSeen', 'true');
+            }
+        }
+
+        // Initial check to see if the demo should be shown
+        checkAndShowDemo();
+
+        // Listen for clicks on the demo button
+        document.getElementById('demoButton').addEventListener('click', function () {
+            showDemoTutorial();
+        });
+
+    });
+</script>
 
 {% endblock %}

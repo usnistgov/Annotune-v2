@@ -4,10 +4,8 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/document.css' %}">
 <style>
-
     #timer {
         font-size: 2rem;
-        /* font-weight: bold; */
     }
     .timer-container {
         display: flex;
@@ -15,39 +13,29 @@
         justify-content: center;
         flex-direction: column;
         padding: 5px;
-    
     }
-
 </style>
-
 {% endblock %}
 
 {% block content %}
 <br>
 
-<div class="container-fluids"  style="margin-left: 3%;">
+<div class="container-fluids" style="margin-left: 3%;">
     <div class="col-12 d-flex justify-content-between mb-3">
         <div class="d-flex">
             <h5>Labeled Documents </h5>
         </div>
         <div class="timer-container">
             <div id="timer"></div>
-            <!-- <div id="timers" hidden>{{start_time}}</div> -->
         </div>
-    
         <div id="pageStartTime" hidden>{{pageStart}}</div>
         <div id="pageName" hidden>labeled</div>
-        
-    
         <div class="float-end">
             <a href="{% url 'manualList' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
                 remaining_docs <i class="fas fa-arrow-right"></i>
             </a>
-
             <div id="selectedLabel"></div>
-
         </div>
-    
     </div>
     <div class="row">
         <!-- Left Column for Keywords (Accordion) -->
@@ -68,7 +56,6 @@
                                     <div class="topic_ids"> 
                                         <span>{{ id }}</span>
                                     </div>
-                                        
                                 {% endfor %}
                             </div>
                         </div>
@@ -105,6 +92,9 @@
 
 {% block footercontent %}
 {% endblock %}
+
+<!-- Include the Demo Button -->
+<button id="demoButton" class="btn btn-info" style="position: fixed; bottom: 20px; right: 20px;">Demo</button>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -168,6 +158,46 @@
                 const topicIds = Array.from(topicIdsDivs).map(span => span.textContent.trim());
                 filterTable(topicIds);
             });
+        });
+
+        // Function to show the demo tutorial
+        function showDemoTutorial() {
+            introJs().setOptions({
+                steps: [
+                    {
+                        element: '#keywordsAccordion',
+                        intro: 'This section displays the labels related to the documents.',
+                        position: 'right'
+                    },
+                    {
+                        element: '#text-table-body',
+                        intro: 'This section shows the text descriptions. Click on a text link to view more details.',
+                        position: 'left'
+                    },
+                    {
+                        element: '#timer',
+                        intro: 'Here is the timer showing how long you have spent on this page.',
+                        position: 'bottom'
+                    }
+                ]
+            }).start();
+        }
+
+        // Check if the demo has been shown before
+        function checkAndShowDemo() {
+            const demoSeen = localStorage.getItem('labeledPageDemoSeen');
+            if (!demoSeen) {
+                showDemoTutorial();
+                localStorage.setItem('labeledPageDemoSeen', 'true');
+            }
+        }
+
+        // Initial check to see if the demo should be shown
+        checkAndShowDemo();
+
+        // Listen for clicks on the demo button
+        document.getElementById('demoButton').addEventListener('click', function () {
+            showDemoTutorial();
         });
     });
 </script>

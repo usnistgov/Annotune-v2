@@ -154,7 +154,6 @@
 
 {% block content %}
 
-
 <div class="container-lg my-5">
     <div class="row">
         <!-- Navigation Icons -->
@@ -196,7 +195,6 @@
                 <div style="display: inline-flex; align-items: center;">
                     <h5 class="document-id">Text:</h5>
                     <h5 id="document_id" class="document-id" style="padding-left: 10%;">{{ document_id }}</h5>
-                    <!-- {recommended_doc_id}} -->
                 </div>
             </div>
 
@@ -223,8 +221,6 @@
         <div class="col-md-6 my-3 labels-section d-flex flex-column" style="height:70vh; overflow-y: scroll;">
             <span id="confidenceText" class="section-title">Kindly provide a suitable label for this text</span>
             
-            
-
             <div class="mt-2" id="manualLabelDiv">
                 <div class="container mt-4">
                     <div id="inputContainer" class="mb-3">
@@ -256,16 +252,13 @@
                     {% load static %}
                     <img id="greenArrow" class="arrow" src="{% static 'images/submit.png' %}" alt="Green Arrow" style="margin-left: 30%; width: 40%; height: 40%;">
                 </div>
-                <!-- <div class="">
-                    <h4 id="labelEnter" style="margin-left: 40%;">Enter a label</h4>
-                    <h4 id="submitEnter" style="margin-left: 40%">Submit label</h4>
-                </div> -->
                 <div id="confText" class="confidence"></div>
                 <div id="pageName" hidden>manualLabel</div>
                 <div id="pageStartTime" hidden>{{time}}</div>
                 <div id="user_id" hidden>{{ user_id }}</div>
                 <div id="isManual" hidden>true</div>
             </div>
+        </div>
     </div>
 </div>
 
@@ -323,9 +316,47 @@
         $("#description").click(function(){
             $("#textarea-container").toggle();
         });
+
+        // Function to show the demo tutorial
+        function showDemoTutorial() {
+            introJs().setOptions({
+                steps: [
+                    {
+                        element: '#documentText',
+                        intro: 'This is where the document text is displayed. Review it before labeling.',
+                        position: 'right'
+                    },
+                    {
+                        element: '#manualLabelDiv',
+                        intro: 'Here, you can enter or select labels for the document.',
+                        position: 'left'
+                    },
+                    {
+                        element: '#manualLabelSubmit',
+                        intro: 'Once you are satisfied with the label, click submit.',
+                        position: 'left'
+                    }
+                ]
+            }).start();
+        }
+
+        // Check if the demo has been shown before
+        function checkAndShowDemo() {
+            const demoSeen = localStorage.getItem('manualLabelPageDemoSeen');
+            if (!demoSeen) {
+                showDemoTutorial();
+                localStorage.setItem('manualLabelPageDemoSeen', 'true');
+            }
+        }
+
+        // Initial check to see if the demo should be shown
+        checkAndShowDemo();
+
+        // Listen for clicks on the demo button
+        document.getElementById('demoButton').addEventListener('click', function () {
+            showDemoTutorial();
+        });
     });
-
 </script>
-
 
 {% endblock %}

@@ -226,6 +226,61 @@
 
         addTextTruncateListeners();
 
+        // Tutorial functionality
+        function showTutorialOnce() {
+            const tutorialSeen = localStorage.getItem('labeledPageTutorialSeen');
+
+            if (!tutorialSeen) {
+                introJs().setOptions({
+                    steps: [
+                        {
+                            element: '#keywordsAccordion',
+                            intro: 'This is where you can find keywords related to your documents.',
+                            position: 'right'
+                        },
+                        {
+                            element: '#text-table-body',
+                            intro: 'This table displays the documents related to the selected keyword.',
+                            position: 'top'
+                        },
+                        {
+                            element: '#timer',
+                            intro: 'Here is the timer showing how long you have spent on this page.',
+                            position: 'bottom'
+                        }
+                    ]
+                }).start();
+
+                // Mark tutorial as seen
+                localStorage.setItem('labeledPageTutorialSeen', 'true');
+            }
+        }
+
+        showTutorialOnce();
+
+        // Add event listener to the Demo button to manually trigger the tutorial
+        document.getElementById('demoButton').addEventListener('click', function () {
+            introJs().setOptions({
+                steps: [
+                    {
+                        element: '#keywordsAccordion',
+                        intro: 'This is where you can find keywords related to your documents.',
+                        position: 'right'
+                    },
+                    {
+                        element: '#text-table-body',
+                        intro: 'This table displays the documents related to the selected keyword.',
+                        position: 'top'
+                    },
+                    {
+                        element: '#timer',
+                        intro: 'Here is the timer showing how long you have spent on this page.',
+                        position: 'bottom'
+                    }
+                ]
+            }).start();
+        });
+
     });
 </script>
 

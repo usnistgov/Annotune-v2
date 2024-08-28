@@ -61,10 +61,6 @@
         <div id="pageStartTime" hidden>{{pageStart}}</div>
         <div id="pageName" hidden>Documents</div>
         <div id="isManual" hidden>false</div>
-        <!-- <div class="form-check form-switch float-end">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-            <label class="form-check-label" for="flexSwitchCheckDefault">Recommendations</label>
-        </div> -->
     </div>
     <div class="row">
         <!-- Left Column for Keywords (Accordion) -->
@@ -142,28 +138,47 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Other existing JavaScript code here...
 
-        // Intro.js initialization
-        introJs().setOptions({
-            steps: [
-                {
-                    element: '.col-md-4',
-                    intro: 'This section displays the keywords related to the documents.',
-                    position: 'right'
-                },
-                {
-                    element: '.col-md-8',
-                    intro: 'This section shows the text descriptions. Click on a text link to view more details.',
-                    position: 'left'
-                },
-                {
-                    element: '.loader-overlay',
-                    intro: 'This loader indicates when the system is processing your input.',
-                    position: 'top'
-                }
-            ]
-        }).start();
+        // Function to show the demo tutorial
+        function showDemoTutorial() {
+            introJs().setOptions({
+                steps: [
+                    {
+                        element: '.col-md-4',
+                        intro: 'This section displays the keywords related to the documents.',
+                        position: 'right'
+                    },
+                    {
+                        element: '.col-md-8',
+                        intro: 'This section shows the text descriptions. Click on a text link to view more details.',
+                        position: 'left'
+                    },
+                    {
+                        element: '.loader-overlay',
+                        intro: 'This loader indicates when the system is processing your input.',
+                        position: 'top'
+                    }
+                ]
+            }).start();
+        }
 
-        // Your existing JavaScript functions and logic can go here
+        // Check if the demo has been shown before
+        function checkAndShowDemo() {
+            const demoSeen = localStorage.getItem('documentsPageDemoSeen');
+            if (!demoSeen) {
+                showDemoTutorial();
+                localStorage.setItem('documentsPageDemoSeen', 'true');
+            }
+        }
+
+        // Initial check to see if the demo should be shown
+        checkAndShowDemo();
+
+        // Listen for clicks on the demo button
+        document.getElementById('demoButton').addEventListener('click', function () {
+            showDemoTutorial();
+        });
+
+        // Existing code to handle loader and other functions
         const recommendedDocId = '{{ recommended_doc_id }}';
         const accordionItems = document.querySelectorAll('.accordion-item');
         const accordionContainer = document.getElementById('keywordsAccordion');
@@ -179,7 +194,7 @@
                 const docId = row.querySelector('td:first-child').textContent.trim();
                 if (docId === recommendedDocId) {
                     recommendedRow = row;
-                    if (recommendation=="true") {
+                    if (recommendation == "true") {
                         row.style.backgroundColor = '#ffffcc';  // Highlight the recommended document
                     }
                 }
@@ -217,7 +232,7 @@
 
         const accordionButtons = document.querySelectorAll('.accordion-button');
         accordionButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const accordionItem = this.closest('.accordion-item');
                 const topicIdsDivs = accordionItem.querySelectorAll('.topic_ids span');
                 const topicIds = Array.from(topicIdsDivs).map(span => span.textContent.trim());
@@ -232,13 +247,12 @@
 
         function showLoader() {
             const loaderOverlay = document.getElementById('loaderOverlay');
-            loaderOverlay.style.display = 'flex'; 
+            loaderOverlay.style.display = 'flex';
         }
 
         window.addEventListener('load', hideLoader);
         hideLoader();
     });
 </script>
-
 
 {% endblock %}

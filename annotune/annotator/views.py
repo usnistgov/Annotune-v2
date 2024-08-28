@@ -351,8 +351,11 @@ def logout_view(request):
     information[request.session["email"]]["logoutTime"] = datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")
 
     
-    logout(request)
-    return redirect('login')  
+    # logout(request)
+
+
+
+    return redirect('post-test')  
 
 
 def display(request, user_id, recommendation):
@@ -374,17 +377,17 @@ def display(request, user_id, recommendation):
     
 
     
-    response = { "drawing relations between mathematical concepts": {
-                    "documents" : [1, 2, 3, 4, 5, 6, 7],
-                    "description" : "drawing relations between mathematical concepts.This is the description"
-                },
+    response = { "med arithmetic concepts": {'description': 'Dummy description', 'documents': [24, 60, 191, 193, 212, 263]}, 
                 "classroom management teaching": {
                 "documents" : [11, 21, 31, 41, 51, 61, 71],
                 "description" : "classroom management teaching.This is the description"
             }
         }
     # print(response.keys())
-    
+    # response = {'med:_arithmetic_concepts': {'description': 'Dummy description', 'documents': [24, 60, 191, 193, 212, 263]}, 
+    #             'med:_comparing_and_ordering_decimals': {'description': 'Dummy description', 'documents': [8, 9, 10, 14, 26, 30, 40, 42, 45, 47, 56, 57, 59, 62, 71, 76, 92, 98, 99, 100, 101, 112, 118, 130, 131, 155, 157, 158, 164, 167, 175, 179, 181, 202, 205, 206, 207, 208, 210, 211, 218, 225, 226, 227, 230, 241, 242, 243, 247, 249, 257, 267, 271, 276, 279, 281, 291, 292, 293, 295, 297]}, 
+    #             'med:_mathematical_concepts': {'description': 'Dummy description', 'documents': [3, 61, 83, 90, 96, 125, 176, 200, 221, 253, 261, 265, 270, 282]}, 
+    #             'pos:_interactive_problemsolving_in_math': {'description': 'Dummy description', 'documents': [34, 70, 79, 91]}}
 
 
     response = {label.replace(' ', '_'): value for label, value in response.items()}
@@ -685,6 +688,31 @@ def post_text(request):
     dashboard_json = json.dumps(dashboard_data)
 
     # Print or return the JSON structure (you might pass this to your template)
-    # print(dashboard_json)
+    if request.method == 'POST':
+        # Get form data
+        question1 = request.POST['question1']
+        question2 = request.POST['question2']
+        # Add other questions if there are more
+
+        # Structure the data as a dictionary
+        user_data = {
+            "responses": {
+                "question1": question1,
+                "question2": question2,
+                # Add other questions if necessary
+            }
+        }
+
+        with open(env("USERS_PATH"), "r") as user_file:
+            name_string = user_file.read()
+            information = json.loads(name_string)
+            information[request.session["email"]]["postTest"]=user_data
+
+        logout(request)
+
+        return redirect("login")
+
+
+
 
     return render(request, "post_test.html", {'dashboard_json': dashboard_json})
