@@ -1,114 +1,179 @@
 {% extends "base.html" %}
+
 {% block extra_head %}
 {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Review and Response</title>
-    <!-- Include Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom CSS -->
+<style>
+    /* Set background color for the entire page */
+    body {
+        background-color: #f0f4f8; /* Soft, modern background color */
+        font-family: 'Helvetica Neue', sans-serif; /* Clean font for modern look */
+    }
+
+    /* Centering the form and making it responsive */
+    .form-container {
+        min-width: 360px;
+        max-width: 800px;
+        background-color: #ffffff; /* White background for the form */
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+        margin: 0 auto;
+    }
+
+    /* Form section style */
+    .content-box {
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    /* Form header */
+    h3 {
+        font-size: 1.8rem;
+        color: #333;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    /* Form labels */
+    label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    /* Form input and textarea */
+    textarea, input[type="radio"] {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 10px;
+        transition: border-color 0.3s;
+    }
+
+    textarea:focus, input[type="radio"]:focus {
+        border-color: #007bff; /* Bootstrap primary color */
+        outline: none;
+    }
+
+    /* Likert scale alignment */
+    .likert-scale {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+
+    /* Likert labels */
+    .likert-scale label {
+        font-weight: 600;
+        margin: 0 10px;
+        transition: color 0.3s;
+    }
+
+    /* Button styling */
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        width: 180px;
+        padding: 12px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+
+    /* Disabled button style */
+    .btn-primary:disabled {
+        background-color: #cccccc;
+        border-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+    /* Hover effects for button */
+    .btn-primary:hover:enabled {
+        background-color: #0056b3;
+        transform: translateY(-2px); /* Subtle lift effect */
+    }
+
+    /* Responsive text area adjustments */
+    @media (max-width: 576px) {
+        textarea {
+            font-size: 14px;
+            padding: 8px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+    }
+
+    /* Form margin for vertical centering */
+    .form-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; /* Full viewport height */
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center">Document Review and Response</h1>
-        <p class="text-center">Please answer the questions below.</p>
-        <div style="display: flex; align-items: center;">
-            <h4 class="mb-2" id="timer"></h4>
-        </div>
-        <div id="user_id" hidden>{{ user_id }}</div>
-        <div id="pageStartTime" hidden>{{time}}</div>
-        <div id="pageName" hidden>pretext</div>
-
-        <!-- Document Links -->
-        <!-- <div class="text-center">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#document1Modal">View Document 1</button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#document2Modal">View Document 2</button>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#document3Modal">View Document 3</button>
-        </div> -->
-
-        <!-- Document 1 Modal -->
-        <div class="modal fade" id="document1Modal" tabindex="-1" aria-labelledby="document1ModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="document1ModalLabel">Document 1</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Embed or Display Document 1 Content Here -->
-                        <iframe src="path/to/document1.pdf" width="100%" height="500px"></iframe>
+<div class="form-wrapper">
+    <div class="form-container">
+        <div class="content-box">
+            <h3>Document Review and Response</h3>
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Question 1 -->
+                <div class="form-group">
+                    <label for="question1" class="font-weight-bold">Question 1: Based on the documents you reviewed, what do you now think are the key steps (up to 10) in a community planning process? Consider how the labels or corresponding documents might help identify steps specific for planning for resilience or sustainability and provide examples or explanations as needed. [Text response; steps separated by semicolons]</label>
+                    <textarea name="question1" class="form-control" id="question1" rows="6" placeholder="Enter your response..."></textarea>
+                </div>
+                
+                <!-- Likert Scale for Confidence -->
+                <div class="form-group">
+                    <label for="likert" class="font-weight-bold">Question 2: Please rate your level of confidence in your response.</label>
+                    <div class="likert-scale" id="likert-scale">
+                        <label><input type="radio" name="likert" value="1" class="mr-2"> 1</label>
+                        <label><input type="radio" name="likert" value="2" class="mr-2"> 2</label>
+                        <label><input type="radio" name="likert" value="3" class="mr-2"> 3</label>
+                        <label><input type="radio" name="likert" value="4" class="mr-2"> 4</label>
+                        <label><input type="radio" name="likert" value="5" class="mr-2"> 5</label>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Document 2 Modal -->
-        <div class="modal fade" id="document2Modal" tabindex="-1" aria-labelledby="document2ModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="document2ModalLabel">Document 2</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Embed or Display Document 2 Content Here -->
-                        <iframe src="path/to/document2.pdf" width="100%" height="500px"></iframe>
-                    </div>
+                
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit</button>
                 </div>
-            </div>
+            </form>
         </div>
-
-        <!-- Document 3 Modal -->
-        <div class="modal fade" id="document3Modal" tabindex="-1" aria-labelledby="document3ModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="document3ModalLabel">Document 3</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Embed or Display Document 3 Content Here -->
-                        <iframe src="path/to/document3.pdf" width="100%" height="500px"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <form class="mt-4 p-4 border rounded shadow-sm bg-light" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="question1" class="font-weight-bold">Question 1: What do you think are the key steps (no more than 10) in this planning process?</label>
-                <textarea name="question1" class="form-control" id="question1" rows="4" placeholder="Enter your response..."></textarea>
-            </div>
-            <div class="form-group mt-3">
-                <label for="question2" class="font-weight-bold">Question 2: Do you think there are any differences between planning for resilience and planning for sustainability?</label>
-                <textarea name="question2" class="form-control" id="question2" rows="4" placeholder="Enter your response..."></textarea>
-            </div>
-            <!-- <div class="form-group mt-3">
-                <label for="question3" class="font-weight-bold">Question 3:</label>
-                <textarea class="form-control" id="question3" rows="4" placeholder="Enter your response..."></textarea>
-            </div> -->
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary" style="width: 150px;">Submit</button>
-            </div>
-        </form>
-        
-        
     </div>
+</div>
 
-    <!-- Include Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+<!-- Add JavaScript to handle form validation -->
+<script>
+    // Get form elements
+    const question1 = document.getElementById('question1');
+    const likertRadios = document.querySelectorAll('input[name="likert"]');
+    const submitBtn = document.getElementById('submitBtn');
 
+    // Function to check if both the textarea and one radio button are filled/selected
+    function validateForm() {
+        // Check if textarea has value and if any radio is checked
+        const isTextareaFilled = question1.value.trim() !== '';
+        const isRadioSelected = Array.from(likertRadios).some(radio => radio.checked);
+        
+        // Enable or disable the submit button based on the checks
+        if (isTextareaFilled && isRadioSelected) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    }
+
+    // Add event listeners to textarea and radios to trigger validation on change
+    question1.addEventListener('input', validateForm);
+    likertRadios.forEach(radio => radio.addEventListener('change', validateForm));
+</script>
 {% endblock %}

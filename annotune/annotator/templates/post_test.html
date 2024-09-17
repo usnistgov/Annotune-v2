@@ -3,214 +3,631 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Document Review and Dashboard</title>
+    <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
-        .dashboard-container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        .form-section, .dashboard-section {
-            padding: 20px;
-            overflow-y: auto;
-            border-radius: 5px;
-        }
-        .dashboard-section {
-            background-color: #f8f9fa;
-        }
-        .form-section {
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        @media (min-width: 992px) {
-            .dashboard-container {
-                flex-direction: row;
-            }
-            .form-section {
-                width: 60%;
-                height: 100vh;
-                overflow-y: auto;
-            }
-            .dashboard-section {
-                width: 40%;
-                height: 100vh;
-                overflow-y: auto;
-            }
-        }
-        #barChart {
-            max-height: 300px;
-        }
-        .table-responsive {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .table td {
-            max-width: 150px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-    </style>
     
+    .container-fluid {
+    max-width: 1600px;
+    margin-top: 10px;
+}
+
+.content-box {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.table td {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scrollable-table {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.dashboard-box,
+.labels-box {
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-container input {
+    flex: 1;
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+}
+
+.search-container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Horizontal Likert scale styling */
+.likert-scale {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.likert-scale label {
+    margin-right: 10px;
+}
+
+/* Note styling */
+.note {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Simple label table styles */
+.labels-box {
+    width: 100%;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.label-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 25px;
+    color: #333;
+}
+
+.label-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.label-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.label-list li:last-child {
+    border-bottom: none;
+}
+
+.label-list li:hover {
+    background-color: #ddd;
+    color: #ffffff;
+}
+
+.selected-row {
+    background-color: #ddd;
+    color: #ffffff;
+}
+
+.label-name {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+}
+
+.label-count {
+    /* background-color: #007bff; */
+    padding: 5px 10px;
+    border-radius: 12px;
+    color: #0f0e0e;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Scrollbar styling for label list */
+.label-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.label-list::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+}
+
+.label-list::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Table Row Hover Effect */
+.table-striped tbody tr:hover {
+    background-color: #f2f2f2;
+}
+    </style>
 </head>
 <body>
 
-<div class="container-fluid dashboard-container">
-    <!-- Left Side: Feedback Form -->
-    <div class="col-lg-6 form-section mb-4 mb-lg-0">
-        <h2 class="text-center mb-4">Your Feedback</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="question1" class="font-weight-bold">Question 1: Based on the documents you labeled, what do you think are the key steps in the planning process?</label>
-                <textarea class="form-control" id="question1" name="question1" rows="4" placeholder="Enter your response..."></textarea>
-            </div>
-            <div class="form-group mt-3">
-                <label for="question2" class="font-weight-bold">Do you think there are any differences between planning for resilience and planning for sustainability?</label>
-                <textarea class="form-control" id="question2" name="question2" rows="4" placeholder="Enter your response..."></textarea>
-            </div>
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </div>
-        </form>
-    </div>
+    <div class="container-fluid">
+        <h1 class="text-center mb-4">Document Review and Dashboard</h1>
 
-    <!-- Right Side: Dashboard -->
-    <div class="col-lg-6 dashboard-section">
-        <h3 class="text-center mb-4">Documents Overview</h3>
-
-        <!-- Bar Chart -->
-        <div class="mb-4">
-            <canvas id="barChart"></canvas>
-        </div>
-
-        <!-- Search and Reset Button -->
-        <div class="form-group mt-4">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search by label or text...">
-        </div>
+        <!-- Toggle Buttons for Table and Dashboard Views -->
         <div class="text-center mb-3">
-            <button id="resetButton" class="btn btn-secondary">Reset Filters</button>
+            <button id="showDashboardButton" class="btn btn-primary btn-custom">Show Graph</button>
+            <button id="showTableButton" class="btn btn-secondary btn-custom">Show Table View</button>
         </div>
 
-        <div class="table-responsive mt-3">
-            <table class="table table-striped table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Document ID</th>
-                        <th>Text</th>
-                        <th>Label</th>
-                    </tr>
-                </thead>
-                <tbody id="documentTableBody">
-                    <!-- Table content will be generated by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Bootstrap Modal for the Pop-up -->
-<div class="modal fade" id="textModal" tabindex="-1" aria-labelledby="textModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="textModalLabel">Full Text</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Dashboard and Table List Container -->
+        <div class="dashboard-container">
+            <!-- Dashboard Section -->
+            <div class="dashboard-box content-box" id="barChartContainer">
+                <!-- <h3 class="text-center">Dashboard</h3> -->
+                <canvas id="barChart" width="400" height="100"></canvas>
+               
             </div>
-            <div class="modal-body" id="modalTextContent" style="white-space: pre-wrap;"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            <!-- Label Table Section (Initially Hidden) -->
+            <div class="labels-box content-box hidden" id="labelTableContainer">
+                <!-- <h4 class="text-center">Labels</h4> -->
+                <div class="label-list-header">
+                    <span>Label</span>
+                    <span>Number of Documents</span>
+                </div>
+                <ul class="label-list" id="labelList">
+                    <!-- Labels will be dynamically generated -->
+                </ul>
             </div>
         </div>
+
+        <!-- Label Description Modal -->
+        <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="descriptionModalLabel">Label Description</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="descriptionModalBody">
+                        <!-- Description content will be inserted dynamically -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Table and Questionnaire side by side (Swapped Positions) -->
+        <div class="row mt-1">
+            <!-- Document Table (Swapped to the Left) -->
+            <div class="col-lg-6" >
+                <div class="content-box">
+                    <h3 class="text-center">Document Table</h3>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Search by label or text...">
+                        <button id="resetButton">Reset</button>
+                    </div>
+                     <div class="note" id="noteLabel" style="display: none;"></div>
+                    <div class="scrollable-table mt-3">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Text</th>
+                                    <th scope="col" id="labelHeader">Label</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documentTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questionnaire (Swapped to the Right) -->
+            <div class="col-lg-6">
+                <div class="content-box">
+                    <h3 class="text-center">Document Review and Response</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="question1" class="font-weight-bold">Question 1: Based on the documents you reviewed, what do you now think are the key steps (up to 10) in a community planning process? Consider how the labels or corresponding documents might help identify steps specific for planning for resilience or sustainability and provide examples or explanations as needed. [Text response; steps separated by semicolons]</label>
+                            <textarea name="question1" class="form-control" id="question1" rows="6" placeholder="Enter your response..."></textarea>
+                        </div>
+                        
+                        <!-- Likert Scale for Confidence -->
+                        <div class="form-group">
+                            <label for="likert" class="font-weight-bold">Question 2: Please rate your level of confidence in your response.</label>
+                            <div class="likert-scale" id="likert-scale">
+                                <label><input type="radio" name="likert" value="1" class="mr-2"> 1</label>
+                                <label><input type="radio" name="likert" value="2" class="mr-2"> 2</label>
+                                <label><input type="radio" name="likert" value="3" class="mr-2"> 3</label>
+                                <label><input type="radio" name="likert" value="4" class="mr-2"> 4</label>
+                                <label><input type="radio" name="likert" value="5" class="mr-2"> 5</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit</button>
+                        </div>
+                    </form>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<script type="text/javascript">
-    // Retrieve the JSON data passed from the view
-    var dashboardData = JSON.parse('{{ dashboard_json|escapejs }}');
+    <div id="pageName" hidden>dashboard</div>
 
-    // Creating the bar chart
-    const ctx = document.getElementById('barChart').getContext('2d');
-    const barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(dashboardData.labels_counts),
-            datasets: [{
-                label: '# of Documents',
-                data: Object.values(dashboardData.labels_counts),
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+    <!-- Modal for displaying full text -->
+    <div class="modal fade" id="textModal" tabindex="-1" aria-labelledby="textModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="textModalLabel">Full Text</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalTextContent"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        var dashboardData = JSON.parse('{{ dashboard_json|safe|escapejs }}');
+        var tfidfData = JSON.parse('{{ tfidf_json|safe|escapejs }}');
+        var descriptions = JSON.parse('{{ descriptions|safe|escapejs }}'); // Descriptions with labels as keys
+        let previousSelectedItem = null; // Track the previously selected label
+
+
+
+        // Function to toggle between Dashboard (Graph) and Table (Label List)
+        function toggleView(showDashboard) {
+            if (showDashboard) {
+                document.getElementById('barChartContainer').classList.remove('hidden');
+                document.getElementById('labelTableContainer').classList.add('hidden');
+            } else {
+                document.getElementById('barChartContainer').classList.add('hidden');
+                document.getElementById('labelTableContainer').classList.remove('hidden');
             }
         }
-    });
 
-    // Populate the table with the filtered data
-    function populateTable(filteredData) {
-        const tableBody = document.getElementById('documentTableBody');
-        tableBody.innerHTML = '';  // Clear existing table content
-
-        filteredData.forEach(function(doc) {
-            var row = `<tr>
-                        <td>${doc.document_id}</td>
-                        <td class="text-cell" data-fulltext="${doc.text}">${doc.text}</td>
-                        <td>${doc.labels}</td>
-                       </tr>`;
-            tableBody.innerHTML += row;
+        // Toggle Dashboard and Table on button clicks
+        document.getElementById('showDashboardButton').addEventListener('click', function() {
+            toggleView(true);
         });
 
-        // Add event listeners to show full text in modal when clicking on text cells
-        document.querySelectorAll('.text-cell').forEach(cell => {
-            cell.addEventListener('click', function() {
-                document.getElementById('modalTextContent').textContent = this.dataset.fulltext;
-                var myModal = new bootstrap.Modal(document.getElementById('textModal'), {});
-                myModal.show();
+        document.getElementById('showTableButton').addEventListener('click', function() {
+            toggleView(false);
+        });
+
+        // Function to generate label data from dashboardData
+        function generateLabelData(dashboardData) {
+            const labelCounts = {};
+            Object.values(dashboardData).forEach(doc => {
+                const label = doc.label;
+                labelCounts[label] = (labelCounts[label] || 0) + 1;
             });
-        });
-    }
-
-    // Initial table population with all data
-    populateTable(dashboardData.documents);
-
-    // Filter the table based on the bar chart selection
-    document.getElementById('barChart').onclick = function(evt) {
-        const activePoints = barChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
-        if (activePoints.length > 0) {
-            const categoryIndex = activePoints[0].index;
-            const selectedLabel = barChart.data.labels[categoryIndex];
-            const filteredData = dashboardData.documents.filter(doc => doc.labels === selectedLabel);
-            populateTable(filteredData);
+            const sortedLabels = Object.keys(labelCounts).sort((a, b) => labelCounts[b] - labelCounts[a]);
+            const sortedCounts = sortedLabels.map(label => labelCounts[label]);
+            return { labels: sortedLabels, counts: sortedCounts, descriptions: descriptions };
         }
-    };
 
-    // Search functionality to filter the table by label and text
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        const filter = this.value.toLowerCase();
-        const filteredData = dashboardData.documents.filter(doc => 
-            doc.labels.toLowerCase().includes(filter) || 
-            doc.text.toLowerCase().includes(filter)
-        );
-        populateTable(filteredData);
-    });
+        const labelData = generateLabelData(dashboardData);
+        populateLabelList();
 
-    // Reset button functionality to clear all filters and reset the table
-    document.getElementById('resetButton').addEventListener('click', function() {
-        document.getElementById('searchInput').value = '';  // Clear the search input
-        populateTable(dashboardData.documents);  // Repopulate the table with all data
-    });
-</script>
 
+        // Populate Label List with Headers
+        // Populate Label List with Headers
+        function populateLabelList() {
+            const labelList = document.getElementById('labelList');
+            labelList.innerHTML = ''; // Clear existing content
+
+            let previousSelectedItem = null; // Variable to keep track of the previously selected item
+
+            labelData.labels.forEach((label, index) => {
+                const count = labelData.counts[index]; // Get the count for the label
+                const listItem = document.createElement('li');
+                
+                // Create label list item with label name and document count
+                listItem.innerHTML = `
+                    <span class="label-name">${label}</span>
+                    <span class="label-count">${count}</span>
+                `;
+                
+                // Add click event to filter the table by clicked label, change color, and hide the label column
+                listItem.addEventListener('click', function() {
+                    clearSelectedRow();
+
+                    const description = labelData.descriptions[label]; // Get description
+
+                    // Show the description in the modal
+                    document.getElementById('descriptionModalLabel').textContent = `Label: ${label}`;
+                    document.getElementById('descriptionModalBody').textContent = description;
+                    $('#descriptionModal').modal('show');
+
+                    // Filter the table by the clicked label and hide the label column
+                    const filteredData = Object.entries(dashboardData).filter(([docId, docData]) => docData.label === label);
+                    populateTable(filteredData, true); // Hide the label column when filtering
+
+                    // Display note showing the filtered label
+                    const note = document.getElementById('noteLabel');
+                    note.textContent = `Displaying data for label: ${label}`;
+                    note.style.display = 'block';
+                    // Set this row as selected
+                    listItem.classList.add('selected-row');
+
+
+
+                    // Optional: Update the chart to highlight the corresponding bar
+                    selectedBarIndex = labelData.labels.indexOf(label); // Find index of the clicked label
+                    barChart.data.datasets[0].backgroundColor = labelData.labels.map((_, index) => selectedBarIndex === index ? '#ff6384' : 'rgba(54, 162, 235, 0.2)');
+                    barChart.update();
+                });
+
+                labelList.appendChild(listItem);
+            });
+        }
+
+        // TF-IDF Search functionality using the precomputed tfidfData
+        function tfidfSearch(query) {
+            const tokens = tokenize(query);
+            const relevanceScores = {};
+
+            // Calculate the relevance scores based on TF-IDF
+            Object.keys(tfidfData).forEach(docId => {
+                const docTfidf = tfidfData[docId];
+                let score = 0;
+                tokens.forEach(token => {
+                    if (docTfidf[token]) {
+                        score += docTfidf[token];
+                    }
+                });
+                if (score > 0) {
+                    relevanceScores[docId] = score;
+                }
+            });
+
+            // Sort documents by relevance score in descending order
+            const sortedDocuments = Object.keys(relevanceScores).sort((a, b) => relevanceScores[b] - relevanceScores[a]);
+
+            // Map sorted documents back to dashboardData
+            const rankedDocuments = sortedDocuments.map(docId => [docId, dashboardData[docId]]);
+
+            return rankedDocuments;
+        }
+
+        // Function to tokenize text input for the search
+        function tokenize(text) {
+            return text.toLowerCase().split(/\W+/).filter(Boolean);
+        }
+
+        // Populate the document table (Document Table View)
+        function populateTable(data, hideLabelColumn = false) {
+            const tableBody = document.getElementById('documentTableBody');
+            tableBody.innerHTML = ''; // Clear the table before populating
+
+            data.forEach(([docId]) => {
+                const row = `
+                    <tr>
+                        <td class="text-cell" data-fulltext="${dashboardData[docId].text}">${dashboardData[docId].text}</td>
+                        ${hideLabelColumn ? '' : `<td>${dashboardData[docId].label}</td>`}
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+
+            // Add event listener to pop up text on click
+            document.querySelectorAll('.text-cell').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const fullText = this.getAttribute('data-fulltext');
+                    document.getElementById('modalTextContent').textContent = fullText;
+                    $('#textModal').modal('show');
+                });
+            });
+
+            // Hide label column if requested
+            const labelHeader = document.getElementById('labelHeader');
+            labelHeader.style.display = hideLabelColumn ? 'none' : '';
+        }
+
+        // Initial population of document table
+        populateTable(Object.entries(dashboardData));
+
+        // Search functionality using TF-IDF
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const query = this.value.trim();
+            if (query) {
+                const searchResults = tfidfSearch(query);
+                populateTable(searchResults, false);  // Show label column during search
+            } else {
+                populateTable(Object.entries(dashboardData), false);  // Reset to full data
+            }
+        });
+
+            document.getElementById('resetButton').addEventListener('click', function() {
+            // Reset the search input field
+            document.getElementById('searchInput').value = '';
+
+            // Reset the selected bar index (deselect any bar)
+            selectedBarIndex = null;
+
+            // Reset the bar chart colors to the original color
+            barChart.data.datasets[0].backgroundColor = labelData.labels.map(() => 'rgba(54, 162, 235, 0.2)');
+            barChart.update();
+
+            // Reset the table with the full dataset and show the label column
+            populateTable(Object.entries(dashboardData), false);
+
+            // Reset the label list to its original state (no selection)
+            populateLabelList();
+
+            clearSelectedRow();
+
+            // Hide the filtered label note
+            document.getElementById('noteLabel').style.display = 'none';
+        });
+
+
+                // Chart.js implementation
+                const ctx = document.getElementById('barChart').getContext('2d');
+        let selectedBarIndex = null; // Track the selected bar index
+
+        // Function to calculate the bar thickness based on the number of labels
+        function calculateBarThickness(labelCount) {
+            const maxBarThickness = 50;  // Maximum bar thickness
+            const minBarThickness = 15;  // Minimum bar thickness
+            const totalWidth = 400;  // Total width of the chart
+            const barWidth = totalWidth / labelCount;  // Calculate width based on label count
+
+            // Ensure the bar thickness is between the min and max limits
+            return Math.max(minBarThickness, Math.min(maxBarThickness, barWidth));
+        }
+
+        const barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labelData.labels, // Display all labels
+                datasets: [{
+                    label: 'Document Count',
+                    data: labelData.counts,
+                    backgroundColor: labelData.labels.map((_, index) => selectedBarIndex === index ? '#ff6384' : 'rgba(54, 162, 235, 0.2)'),
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    barThickness: calculateBarThickness(labelData.labels.length)  // Dynamically set the bar thickness
+                }]
+            },
+            options: {
+                indexAxis: 'x', // Vertical bar chart
+                scales: {
+                    y: { beginAtZero: true } // Start y-axis at 0
+                },
+                plugins: {
+                    legend: {
+                        display: false  // Hide the legend if it's not needed
+                    }
+                },
+                // Add barPercentage and categoryPercentage to reduce space between bars
+                barPercentage: 1.0,  // Increase this value to make bars wider
+                categoryPercentage: 0.8,  // Increase this value to reduce space between categories
+                onClick: function(evt, elements) {
+                    if (elements.length > 0) {
+                        const clickedIndex = elements[0].index;
+                        selectedBarIndex = clickedIndex; // Update selected bar index
+
+                        // Update chart with new colors
+                        barChart.data.datasets[0].backgroundColor = labelData.labels.map((_, index) => selectedBarIndex === index ? '#ff6384' : 'rgba(54, 162, 235, 0.2)');
+                        barChart.update();
+
+                        const selectedLabel = labelData.labels[clickedIndex];
+
+                        // Filter document table by selected label
+                        const filteredData = Object.entries(dashboardData).filter(([docId, docData]) => docData.label === selectedLabel);
+                        populateTable(filteredData, true); // Hide label column when filtered
+
+                        // Show description modal
+                        const description = labelData.descriptions[selectedLabel];
+                        document.getElementById('descriptionModalLabel').textContent = `Label: ${selectedLabel}`;
+                        document.getElementById('descriptionModalBody').textContent = description;
+                        $('#descriptionModal').modal('show');
+
+                        // Display note showing the filtered label
+                        const note = document.getElementById('noteLabel');
+                        note.textContent = `Displaying data for label: ${selectedLabel}`;
+                        note.style.display = 'block';
+                    }
+                }
+            }
+        });
+        function clearSelectedRow() {
+            const selectedRow = document.querySelector('.selected-row');
+            if (selectedRow) {
+                selectedRow.classList.remove('selected-row');
+            }
+        }
+
+        // Get form elements
+            const question1 = document.getElementById('question1');
+            const likertRadios = document.querySelectorAll('input[name="likert"]');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Function to check if both the textarea and one radio button are filled/selected
+            function validateForm() {
+                // Check if textarea has value and if any radio is checked
+                const isTextareaFilled = question1.value.trim() !== '';
+                const isRadioSelected = Array.from(likertRadios).some(radio => radio.checked);
+                
+                // Enable or disable the submit button based on the checks
+                if (isTextareaFilled && isRadioSelected) {
+                    submitBtn.disabled = false;
+                } else {
+                    submitBtn.disabled = true;
+                }
+            }
+
+            // Add event listeners to textarea and radios to trigger validation on change
+            question1.addEventListener('input', validateForm);
+            likertRadios.forEach(radio => radio.addEventListener('change', validateForm));
+
+
+
+
+    </script>
 </body>
 </html>

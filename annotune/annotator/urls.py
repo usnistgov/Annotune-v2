@@ -23,6 +23,7 @@ urlpatterns = [
     path("manualLabel/<int:user_id>/<int:document_id>/", views.manualLabel, name="manualLabel"),
     path("manualLabeledList/<int:user_id>/", views.manualLabeledList, name="manualLabeledList"),
     path("pretext/<int:user_id>/", views.pre_text, name="pretext"),
-    path("post-test", views.post_text, name="post-test")
+    path("post-test", views.post_text, name="post-test"),
+    path("thankyou", views.thankYou, name="thankYou")
 ]
  

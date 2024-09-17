@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 import requests
 import json
 from .utils import *
@@ -11,6 +11,10 @@ from pytz import timezone
 eastern = timezone('US/Eastern')
 import environ
 from collections import defaultdict
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
 
 
 
@@ -95,8 +99,8 @@ def login(request):
             request.session["document_ids"]= information[email]["document_id"]
             request.session["start_time"]= information[email]["start_time"]
 
-            return redirect("pretext", user_id=information[email]["user_id"] )
-
+            return redirect("homepage", user_id=information[email]["user_id"])
+    
 
          
     return render(request, "login.html")
@@ -610,7 +614,7 @@ def pre_text(request, user_id):
     if request.method == 'POST':
         # Get form data
         question1 = request.POST['question1']
-        question2 = request.POST['question2']
+        question2 = request.POST['likert']
         # Add other questions if there are more
 
         # Structure the data as a dictionary
@@ -651,68 +655,261 @@ def pre_text(request, user_id):
     return render(request, "questions.html", context={"user_id": user_id})
 
 
+
+import json
+from sklearn.feature_extraction.text import TfidfVectorizer
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+
 def post_text(request):
-    with open(env("USERS_PATH"), "r") as user_file:
-        name_string = user_file.read()
-        information = json.loads(name_string)
-
-    # print(all_texts)
-
-    data = information[request.session["email"]]["labels"]
-
-        # Preparing data structure for the dashboard
-    dashboard_data = {
-        "labels_counts": defaultdict(int),  # To count occurrences of each label
-        "documents": []  # To hold document details
+    response = {
+    "first label": {
+        "documents": [45, 123, 67, 512, 298],
+        "description": "My name is Sara Elizabeth Porter. I can recite the periodic table from memory and can play 4 musical instruments."
+    },
+    "second label": {
+        "documents": [312, 199, 87, 405, 678, 223, 501],
+        "description": "My name is Jacob Alexander Lee. I can solve a Rubik's cube in under 30 seconds and have visited 23 countries."
+    },
+    "third label": {
+        "documents": [59, 376, 287, 13, 105, 498, 42, 610],
+        "description": "My name is Emily Grace Thompson. I am fluent in 3 languages and have a black belt in Taekwondo."
+    },
+    "fourth label": {
+        "documents": [92, 201, 64, 321],
+        "description": "My name is Matthew Oliver Davis. I have completed 5 marathons and I’m an expert in wildlife photography."
+    },
+    "fifth label": {
+        "documents": [152, 89, 403, 56, 487, 310, 641],
+        "description": "My name is Abigail Charlotte Evans. I know all the flags of the world and can bake 50 different types of cakes."
+    },
+    "sixth label": {
+        "documents": [304, 75, 17, 423, 401, 214],
+        "description": "My name is Ethan Michael Harris. I can code in 7 programming languages and have published 3 research papers."
+    },
+    "seventh label": {
+        "documents": [12, 207, 333, 441, 561],
+        "description": "My name is Sophia Isabella King. I’ve visited 30 national parks and I’m an amateur astronomer with my own telescope."
+    },
+    "eighth label": {
+        "documents": [77, 213, 487, 134, 256, 361, 488, 105, 699],
+        "description": "My name is Lucas Benjamin Wright. I have a collection of over 500 comic books and can play chess blindfolded."
+    },
+    "ninth label": {
+        "documents": [122, 400, 502, 623],
+        "description": "My name is Ava Sophia Carter. I’m a certified scuba diver and know the history of all major world civilizations."
+    },
+    "tenth label": {
+        "documents": [321, 210, 157, 441, 97, 510],
+        "description": "My name is James William Clark. I can juggle 5 balls and have hiked the tallest peaks on 4 different continents."
+    },
+    "eleventh label": {
+        "documents": [333, 198, 246, 411, 500, 321, 590],
+        "description": "My name is Olivia Grace Johnson. I can solve complex math problems in my head and I’ve painted over 100 portraits."
+    },
+    "twelfth label": {
+        "documents": [17, 250, 92, 105, 367, 199, 43, 120, 552],
+        "description": "My name is Alexander Noah Parker. I have memorized every Shakespeare play and I can run a mile in under 6 minutes."
+    },
+    "thirteenth label": {
+        "documents": [301, 412, 58, 92, 612, 241],
+        "description": "My name is Emily Claire Bennett. I have a pilot’s license and I can write backwards with both hands."
+    },
+    "fourteenth label": {
+        "documents": [52, 321, 299, 450, 89, 313],
+        "description": "My name is Benjamin David Moore. I’ve competed in international chess tournaments and can make pottery."
+    },
+    "fifteenth label": {
+        "documents": [201, 177, 98, 301, 505, 476],
+        "description": "My name is Charlotte Rose Foster. I’ve worked as a lifeguard and I can draw hyperrealistic portraits."
+    },
+    "sixteenth label": {
+        "documents": [95, 134, 217, 378, 523],
+        "description": "My name is Jackson Daniel Miller. I can surf big waves and have studied marine biology."
+    },
+    "seventeenth label": {
+        "documents": [210, 431, 56, 194, 87, 642],
+        "description": "My name is Grace Olivia Ward. I’m an experienced mountain climber and know sign language."
+    },
+    "eighteenth label": {
+        "documents": [77, 256, 341, 411],
+        "description": "My name is Noah Samuel Stewart. I can solve complex physics problems and know advanced origami."
+    },
+    "nineteenth label": {
+        "documents": [399, 125, 78, 503],
+        "description": "My name is Mia Scarlett Turner. I’ve performed on Broadway and I’m a certified yoga instructor."
+    },
+    "twentieth label": {
+        "documents": [134, 231, 487, 310, 650],
+        "description": "My name is William Michael Carter. I can play 5 different sports and have written a novel."
+    },
+    "twenty-first label": {
+        "documents": [204, 98, 51, 354],
+        "description": "My name is Isabella Evelyn Adams. I’m a skilled photographer and have backpacked across 10 countries."
+    },
+    "twenty-second label": {
+        "documents": [389, 47, 205, 660],
+        "description": "My name is Henry Jacob Brooks. I’ve built my own computer and I’m a professional video game player."
+    },
+    "twenty-third label": {
+        "documents": [309, 156, 99, 413, 589],
+        "description": "My name is Amelia Rose Bailey. I’ve competed in national debates and I’m an expert on ancient mythology."
+    },
+    "twenty-fourth label": {
+        "documents": [201, 78, 432, 513],
+        "description": "My name is Mason Alexander Ross. I can play 6 musical instruments and have published a poetry book."
+    },
+    "twenty-fifth label": {
+        "documents": [412, 222, 134, 508],
+        "description": "My name is Harper Lily Cooper. I’ve studied neuroscience and can sculpt miniature figures."
+    },
+    "twenty-sixth label": {
+        "documents": [312, 199, 451, 603, 243],
+        "description": "My name is Samuel Ryan Lee. I have a black belt in Karate and I’m a professional photographer."
+    },
+    "twenty-seventh label": {
+        "documents": [99, 304, 157, 641],
+        "description": "My name is Ella Claire Kelly. I can play chess at a national level and have won photography contests."
+    },
+    "twenty-eighth label": {
+        "documents": [400, 213, 98, 540],
+        "description": "My name is Lucas Oliver Phillips. I’m an expert drone pilot and have traveled to 18 countries."
+    },
+    "twenty-ninth label": {
+        "documents": [256, 103, 87, 604, 399],
+        "description": "My name is Avery Sophia Murphy. I’m a certified scuba diver and I’ve run 3 marathons."
+    },
+    "thirtieth label": {
+        "documents": [321, 189, 210, 556],
+        "description": "My name is Logan Alexander Scott. I can play 4 musical instruments and am a professional skateboarder."
+    },
+    "thirty-first label": {
+        "documents": [134, 258, 99, 500, 621],
+        "description": "My name is Chloe Grace Richardson. I’ve studied paleontology and I’m an expert in 3D modeling."
+    },
+    "thirty-second label": {
+        "documents": [450, 210, 57, 611, 442],
+        "description": "My name is Elijah Michael Mitchell. I’ve completed 3 triathlons and have designed my own clothing line."
+    },
+    "thirty-third label": {
+        "documents": [388, 187, 42, 521],
+        "description": "My name is Sophie Elizabeth Hernandez. I can speak 4 languages and I’m a skilled equestrian."
+    },
+    "thirty-fourth label": {
+        "documents": [223, 459, 176, 606],
+        "description": "My name is Jackson William Foster. I’ve competed in fencing tournaments and am a robotics enthusiast."
+    },
+    "thirty-fifth label": {
+        "documents": [321, 148, 70, 509, 666],
+        "description": "My name is Ella Mia Lopez. I’m a professional ballet dancer and have written a book on nutrition."
+    },
+    "thirty-sixth label": {
+        "documents": [125, 299, 458, 511],
+        "description": "My name is Ethan Andrew Howard. I’ve built a 3D printer and have won national science competitions."
+    },
+    "thirty-seventh label": {
+        "documents": [201, 77, 389, 564],
+        "description": "My name is Lillian Grace Young. I’m a professional violinist and I’ve studied ancient Greek history."
+    },
+    "thirty-eighth label": {
+        "documents": [451, 243, 310, 642, 215],
+        "description": "My name is Lucas James Sullivan. I’m an avid rock climber and have trained as a stunt performer."
+    },
+    "thirty-ninth label": {
+        "documents": [129, 501, 220, 334],
+        "description": "My name is Avery Lily Edwards. I’m an expert cook and I’ve traveled to 15 different national parks."
+    },
+    "fortieth label": {
+        "documents": [504, 156, 602, 78],
+        "description": "My name is Olivia Sophie Carter. I’ve painted over 50 landscapes and can knit intricate patterns."
     }
+}
 
-    for doc_key, details in data.items():
-        doc_id = details["document_id"]
-        label = details["labels"]
-        text = all_texts["text"].get(str(doc_id), "Text not available")  # Retrieve the text or default to a placeholder
-        
-        # Update label counts for the bar chart
-        dashboard_data["labels_counts"][label] += 1
-        
-        # Add document details for the table
-        dashboard_data["documents"].append({
-            "document_id": doc_id,
-            "labels": label,
-            "text": text
-        })
 
-    # Convert the defaultdict to a regular dict before passing to JSON
-    dashboard_data["labels_counts"] = dict(dashboard_data["labels_counts"])
 
-    # Convert to JSON format to pass to JavaScript
-    dashboard_json = json.dumps(dashboard_data)
+    # Load all texts (document data from the file)
+    all_texts = json.load(open(env("DATAPATH")))
 
-    # Print or return the JSON structure (you might pass this to your template)
-    if request.method == 'POST':
-        # Get form data
-        question1 = request.POST['question1']
-        question2 = request.POST['question2']
-        # Add other questions if there are more
+    # Filter documents from the all_texts using the document ids from response
+    combined_documents = [str(doc) for item in response.values() for doc in item['documents']]
+    filtered_texts = {doc_id: all_texts["text"][doc_id] for doc_id in combined_documents if doc_id in all_texts["text"]}
 
-        # Structure the data as a dictionary
-        user_data = {
-            "responses": {
-                "question1": question1,
-                "question2": question2,
-                # Add other questions if necessary
+    # Prepare structured data with labels, texts, and descriptions
+    structured_data = {}
+    descriptions = {}
+    for label, details in response.items():
+        description = details.get('description', 'No description available')
+
+        descriptions[label]=description
+        for doc_id in details['documents']:
+            doc_id_str = str(doc_id)
+            text = filtered_texts.get(doc_id_str, "Text not available")
+            structured_data[doc_id_str] = {
+                "text": text,
+                "label": label,
             }
-        }
 
+
+    # Prepare texts for TF-IDF vectorization
+    document_ids = list(filtered_texts.keys())
+    document_texts = list(filtered_texts.values())
+
+    # Perform TF-IDF vectorization using scikit-learn
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(document_texts)
+    feature_names = vectorizer.get_feature_names_out()
+
+    # Convert TF-IDF matrix to dictionary structure for frontend
+    tfidf_data = {}
+    for i, doc_id in enumerate(document_ids):
+        tfidf_data[doc_id] = {feature_names[j]: tfidf_matrix[i, j] for j in range(len(feature_names)) if tfidf_matrix[i, j] > 0}
+
+    # Convert the structured data and TF-IDF data to JSON format
+    dashboard_data = json.dumps(structured_data, indent=4)
+    tfidf_json = json.dumps(tfidf_data, indent=4)
+    
+
+    if request.method == 'POST':
+        # Handle form submission
+        question1 = request.POST["question1"]
+        question2 = request.POST["likert"]
+
+        # Simulate storing user data (adjust as per your logic)
+        user_data = {"responses": {"question1": question1, "question2": question2}}
+        print(user_data)
+        
+        # Save data (adjust the path and method as needed)
         with open(env("USERS_PATH"), "r") as user_file:
-            name_string = user_file.read()
-            information = json.loads(name_string)
-            information[request.session["email"]]["postTest"]=user_data
+            information = json.load(user_file)
+            information[request.session["email"]]["postTest"] = user_data
 
+        # Logout and redirect after submission
         logout(request)
+        return redirect("thankYou")
 
-        return redirect("login")
+    # Pass structured data and TF-IDF to the template
+    return render(request, "post_test.html", {
+        'dashboard_json': dashboard_data,
+        'tfidf_json': tfidf_json,
+        "user_id": request.session.get("user_id"),
+        "descriptions": json.dumps(descriptions, indent=4)
+    })
+
+
+def thankYou(request):
+    logout(request)
+    
+    # Clear the session explicitly
+    # request.session.flush()
+
+    return render(request, "thankYou.html")
 
 
 
 
-    return render(request, "post_test.html", {'dashboard_json': dashboard_json})
+
+
+    # return render(request, "post_test.html",context=context)
+
+    # return HttpResponse("amen")
+
