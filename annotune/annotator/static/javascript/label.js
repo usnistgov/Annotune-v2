@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 documentsData = data.document_ids.map((id, index) => ({ id, label: data.labels[index] }));
-
+                console.log(documentsData)
                 if (currentIndex < documentsData.length - 1) {
                     currentIndex++;
                     loadDocument(currentIndex);
@@ -215,15 +215,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(response => response.json())
                 .then(data => {
                     currentIndex = -1;
-                    const url = `/fetch_data/${userId}/${data.document_id}/`;
 
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            updatePage(data);
-                            showAlert('You skipped the previous document');
-                        })
-                        .catch(error => console.error('Error fetching document:', error));
+                    showLoader()
+
+
+                    window.location.href = `/label/${data.user_id}/${data.document_id}/${data.recommendation}/`;
+
+                    // const url = `/fetch_data/${userId}/${data.document_id}/`;
+
+
+
+                    // fetch(url)
+                    //     .then(response => response.json())
+                    //     .then(data => {
+                    //         updatePage(data);
+                    //         showAlert('You skipped the previous document');
+                    //     })
+                    //     .catch(error => console.error('Error fetching document:', error));
                 });
         }
     });

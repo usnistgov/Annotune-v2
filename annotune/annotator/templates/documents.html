@@ -135,6 +135,33 @@
 {% endblock %}
 
 <script>
+
+
+// Function to check if the tutorial has been shown before
+function hasTutorialBeenShown() {
+            return localStorage.getItem('tutorialShown') === 'true';
+        }
+
+        // Function to mark the tutorial as shown
+        function markTutorialAsShown() {
+            localStorage.setItem('tutorialShown', 'true');
+        }
+
+        // Check if the tutorial has been shown before
+        if (!hasTutorialBeenShown()) {
+            // Intro.js initialization
+            introJs().setOptions({
+               
+            }).oncomplete(function() {
+                // Mark the tutorial as shown after it completes
+                markTutorialAsShown();
+            }).start();
+        }
+
+
+
+
+
     document.addEventListener('DOMContentLoaded', function () {
         // Other existing JavaScript code here...
 
@@ -240,6 +267,23 @@
             });
         });
 
+        const textLinkCell = document.getElementById('textLink');
+
+        // Function to show the loader when clicking the table cell
+    textLinkCell.addEventListener('click', function (event) {
+        // Call the showLoader function to display the loader
+        showLoader();
+
+        // Allow the link to work as usual (make sure you are targeting the <a> tag, not the <td>)
+        const link = textLinkCell.querySelector('a');
+        if (link) {
+            window.location.href = link.href; // Redirect to the URL
+        }
+
+        // Prevent the default behavior (like double loading, etc.)
+        event.preventDefault();
+    });
+
         function hideLoader() {
             const loaderOverlay = document.getElementById('loaderOverlay');
             loaderOverlay.style.display = 'none';
@@ -250,8 +294,18 @@
             loaderOverlay.style.display = 'flex';
         }
 
-        window.addEventListener('load', hideLoader);
+         // Hide the loader when the user navigates back to the page (to prevent perpetual loading)
+        window.addEventListener('pageshow', function (event) {
+            // The loader should be hidden when returning to the page via the back button
+            hideLoader();
+        });
+
+        window.addEventListener('load', function () {
         hideLoader();
+    });
+
+
+        
     });
 </script>
 

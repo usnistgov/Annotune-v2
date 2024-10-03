@@ -9,6 +9,61 @@
 
     {% endblock %}
     <!-- <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}"> -->
+    <style>
+    /* Styling for the modal content */
+    #finishModal .modal-content {
+        background-color: #f8f9fa; /* Light background */
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Soft shadow for elevation */
+    }
+
+    /* Modal title styling */
+    #finishModal .modal-title {
+        font-weight: bold;
+        font-size: 1.75rem;
+        color: #007bff; /* Bootstrap primary blue */
+    }
+
+    /* Custom styling for modal body */
+    #finishModal .modal-body {
+        font-size: 1.2rem;
+        padding: 20px;
+        line-height: 1.6;
+    }
+
+    /* Styling the footer buttons */
+    #finishModal .modal-footer {
+        border-top: 0; /* Remove border on footer */
+    }
+
+    /* Custom button styling */
+    #finishModal .btn-primary {
+        background-color: #007bff; /* Primary blue button */
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+    }
+
+    #finishModal .btn-secondary {
+        background-color: #6c757d; /* Secondary gray button */
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+    }
+
+    /* Hover effects for buttons */
+    #finishModal .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    #finishModal .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+</style>
+
     
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,7 +80,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <!-- Brand Logo / Home Link on the left -->
-            <a class="navbar-brand" href="{% url 'homepage' user_id %}">Home</a>
+            <!-- <a class="navbar-brand" href="{% url 'homepage' user_id %}">Home</a> -->
+
+            <a  id="instructions" href="#" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructionsModal">
+                Instructions
+            </a>
     
             <!-- Toggler for Mobile View -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,10 +99,106 @@
             <!-- Right-aligned Buttons -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <button id="demoButton" class="btn btn-outline-info me-3">Demo</button>
-                <a href="{% url 'logout' %}" class="btn btn-outline-danger">Finish</a>
+                <a id="finish" href="" class="btn btn-outline-danger">Finish</a>
             </div>
         </div>
     </nav>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="instructionsModalLabel">Congressional Bills Policy Study Instructions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- Introduction Section -->
+                <h1 class="text-center mb-4">Congressional Bills Policy Study</h1>
+                <p>
+                    In this study, we have a set of US congressional bills that cover policies on various topics. We want to understand the various policy topics the government aims to implement. We will first ask you some questions to test your knowledge about the subject before you have access to the data. Then you will label these documents into different topics with the help of an AI tool. The labels will help you and us understand the distribution of policy topics that Congress cares about. You will then use what you have learned from the dataset to answer the questions again. Afterwards, you will be directed to a survey and complete the study.
+                </p>
+
+                <!-- Important Note Section -->
+                <div class="alert alert-info">
+                    <strong>Note:</strong> 
+                    <p>
+                        You will start with a base pay of $8 for your participation. Additionally, we offer a performance-based incentive for the quality of your contributions. For EACH question you answer that is closely aligned with the actual dataset and meets our standards for high quality, you will earn an additional $2. This performance bonus aims to reward accurate responses that demonstrate a good understanding of the dataset.
+                    </p>
+                    <p>
+                        It's important to keep in mind that AI-assisted tools may sometimes generate false or inaccurate information. As such, the information provided by the tool should be treated as a starting point for further analysis and verification.
+                    </p>
+                </div>
+
+                <!-- AI-Assisted Tool Explanation -->
+                <h2>The AI-Assistant will automatically help you:</h2>
+                <ol class="instruction-list">
+                    <li>Automatically picks paper abstracts sequentially to show you to label.</li>
+                    <li>Generate a list of label suggestions and summary for the abstract.</li>
+                </ol>
+
+                <!-- Task List -->
+                <h2>Tasks:</h2>
+                <ol class="instruction-list">
+                    <li>Use the AI label suggestions to help you identify the topic within the selected abstract that addresses the questions we asked.</li>
+                    <li>Think about the pre-test questions while labeling documents.</li>
+                    <li>Either assign an existing label you made to a document or create a new label.</li>
+                    <li>Use the labels you created to assist you in answering the pre-test questions we asked.</li>
+                </ol>
+
+                <!-- Guidelines for Labeling -->
+                <h2>Guidelines for Labeling:</h2>
+                <div class="alert alert-warning">
+                    <p>
+                        Each label should be a short phrase (a label) rather than a long description. For example, <strong>Healthcare Insurance</strong> is a general category, while <strong>Healthcare Act of 2013 to promote accessible healthcare resources for veterans</strong> would be a description explaining the label, not the label itself. Label the topic associated with the documents.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="finishModal" tabindex="-1" aria-labelledby="finishModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <!-- Modal size set to large (modal-lg) -->
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="finishModalLabel">🎉 Thank You!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <p class="lead text-center">Thank you for going through this process! 🎉</p>
+                <p class="text-center">
+                    You will now be redirected to the post-test survey where you will answer the same questions asked in the pre-test survey.
+                </p>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="proceedSurvey" class="btn btn-primary">Proceed to Survey</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
     
     
     
@@ -121,6 +276,14 @@
 
         // Initialize the timeout on page load
         // resetTimeout();
+
+        // When the "Finish" button is clicked
+    document.getElementById('finish').addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent the default link behavior
+        var finishModal = new bootstrap.Modal(document.getElementById('finishModal'));
+        finishModal.show();
+        window.location.href = '/logout/';  // Show the modal
+    });
     
 
     </script>

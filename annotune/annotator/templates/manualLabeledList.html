@@ -3,18 +3,7 @@
 {% block extra_head %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/document.css' %}">
-<style>
-    #timer {
-        font-size: 2rem;
-    }
-    .timer-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        padding: 5px;
-    }
-</style>
+
 {% endblock %}
 
 {% block content %}
@@ -93,8 +82,6 @@
 {% block footercontent %}
 {% endblock %}
 
-<!-- Include the Demo Button -->
-<button id="demoButton" class="btn btn-info" style="position: fixed; bottom: 20px; right: 20px;">Demo</button>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

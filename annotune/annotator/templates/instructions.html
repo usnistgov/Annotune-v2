@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block extra_head %}
+{% load static %}
+<style>
+   
+</style>
+{% endblock %}
+
+{% block content %}
+<div>
+    instructionswill go here, It can be a bit long, telling users about what they have to do
+</div>
+
+            <div class="mt-4">
+                <a href="{% url 'documents' user_id 'true'%}" class="btn btn-success btn-lg">Start Labeling</a>
+                <!-- <a href="{% url 'manualList' user_id %}" class="btn btn-primary btn-lg">Manual</a>
+                <a href="{% url 'documents' user_id 'false' %}" class="btn btn-danger btn-lg">rec_off</a> New rec_off button -->
+            </div>
+            <div hidden id="pageName">Instructions</div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

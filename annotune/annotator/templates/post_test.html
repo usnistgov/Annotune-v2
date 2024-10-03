@@ -8,10 +8,44 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+
+        /* .slider-container {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+        .slider-label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .slider-value {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #007bff;
+        } */
+        .form-range {
+            width: 100%;
+            background: linear-gradient(90deg, #007bff 0%, #007bff var(--value, 50%), #ddd var(--value, 50%), #ddd 100%);
+        }
     
     .container-fluid {
-    max-width: 1600px;
+    max-width: 1700px;
     margin-top: 10px;
+}
+
+.text-area{
+    display: block;
+    width: 100%;
+    height: 10px;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
 }
 
 .content-box {
@@ -42,7 +76,7 @@
 .dashboard-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
 }
 
 .dashboard-box,
@@ -57,7 +91,7 @@
 .search-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .search-container input {
@@ -80,19 +114,6 @@
     background-color: #0056b3;
 }
 
-/* Horizontal Likert scale styling */
-.likert-scale {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-}
-
-.likert-scale label {
-    margin-right: 10px;
-}
-
-/* Note styling */
 .note {
     margin-top: 15px;
     padding: 10px;
@@ -195,10 +216,10 @@
 <body>
 
     <div class="container-fluid">
-        <h1 class="text-center mb-4">Document Review and Dashboard</h1>
+        <h3 class="text-center mb-2">Document Review Dashboard</h3>
 
         <!-- Toggle Buttons for Table and Dashboard Views -->
-        <div class="text-center mb-3">
+        <div class="text-center mb-1">
             <button id="showDashboardButton" class="btn btn-primary btn-custom">Show Graph</button>
             <button id="showTableButton" class="btn btn-secondary btn-custom">Show Table View</button>
         </div>
@@ -248,15 +269,15 @@
         <!-- Document Table and Questionnaire side by side (Swapped Positions) -->
         <div class="row mt-1">
             <!-- Document Table (Swapped to the Left) -->
-            <div class="col-lg-6" >
+            <div class="col-lg-5" >
                 <div class="content-box">
-                    <h3 class="text-center">Document Table</h3>
+                    <h5 class="text-center">Document Table</h5>
                     <div class="search-container">
                         <input type="text" id="searchInput" placeholder="Search by label or text...">
                         <button id="resetButton">Reset</button>
                     </div>
                      <div class="note" id="noteLabel" style="display: none;"></div>
-                    <div class="scrollable-table mt-3">
+                    <div class="scrollable-table mt-2">
                         <table class="table table-striped table-hover table-bordered">
                             <thead class="thead-dark">
                                 <tr>
@@ -271,36 +292,61 @@
             </div>
 
             <!-- Questionnaire (Swapped to the Right) -->
-            <div class="col-lg-6">
-                <div class="content-box">
-                    <h3 class="text-center">Document Review and Response</h3>
+            <div class="col-lg-7">
+                <div class="content-box p-3 shadow rounded bg-light" style="max-width: 1000px; margin: auto;">
+                    <h5 class="text-center mb-2">Response</h5>
                     <form method="post">
                         {% csrf_token %}
-                        <div class="form-group">
-                            <label for="question1" class="font-weight-bold">Question 1: Based on the documents you reviewed, what do you now think are the key steps (up to 10) in a community planning process? Consider how the labels or corresponding documents might help identify steps specific for planning for resilience or sustainability and provide examples or explanations as needed. [Text response; steps separated by semicolons]</label>
-                            <textarea name="question1" class="form-control" id="question1" rows="6" placeholder="Enter your response..."></textarea>
+                        <div class="form-group mb-2">
+                            <label for="question1" class="font-weight-bold" style="font-size: 0.9rem;">Question 1a: Based on the documents you reviewed, summarize the planning process for community resilience and sustainability as described in the documents. Highlight any key themes or strategies you find significant. Please provide examples or explanations as needed.</label>
+                            <textarea name="question1" class="form-control" id="question1" rows="3" placeholder="Enter your response..." style="font-size: 0.85rem; padding: 8px;"></textarea>
                         </div>
                         
                         <!-- Likert Scale for Confidence -->
-                        <div class="form-group">
-                            <label for="likert" class="font-weight-bold">Question 2: Please rate your level of confidence in your response.</label>
-                            <div class="likert-scale" id="likert-scale">
-                                <label><input type="radio" name="likert" value="1" class="mr-2"> 1</label>
-                                <label><input type="radio" name="likert" value="2" class="mr-2"> 2</label>
-                                <label><input type="radio" name="likert" value="3" class="mr-2"> 3</label>
-                                <label><input type="radio" name="likert" value="4" class="mr-2"> 4</label>
-                                <label><input type="radio" name="likert" value="5" class="mr-2"> 5</label>
+                        <div class="form-group mb-3">
+                            <label for="customRange" class="font-weight-bold" style="font-size: 0.9rem;">Question 1b: Please rate your level of confidence in your response.</label>
+                            <div class="d-flex justify-content-between" style="font-size: 0.8rem;">
+                                <span>1 (Low)</span>
+                                <span>10 (High)</span>
+                            </div>
+                            <div class="slider-container position-relative">
+                                <input type="range" class="form-range" min="1" max="10" step="1" id="customRange" value="5">
+                                <div class="range-markers d-flex justify-content-between position-absolute w-100" style="top: 22px; font-size: 0.75rem;">
+                                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                                </div>
                             </div>
                         </div>
-                        
-                        <!-- Submit Button -->
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit</button>
+            
+                        <div class="form-group mb-3">
+                            <label for="question2" class="font-weight-bold" style="font-size: 0.9rem;">Question 2a: What specific methods for sharing adaptation plans with stakeholders are highlighted in the documents you reviewed? Provide one or more examples from the document set as needed.</label>
+                            <textarea name="question2" class="form-control" id="question2" rows="3" placeholder="Enter your response..." style="font-size: 0.85rem; padding: 8px;"></textarea>
                         </div>
-                    </form>
+                        
+                        <!-- Likert Scale for Confidence -->
+                        <div class="form-group mb-3">
+                            <label for="customRange2" class="font-weight-bold" style="font-size: 0.9rem;">Question 2b: Please rate your level of confidence in your response.</label>
+                            <div class="d-flex justify-content-between" style="font-size: 0.8rem;">
+                                <span>1 (Low)</span>
+                                <span>10 (High)</span>
+                            </div>
+                            <div class="slider-container position-relative">
+                                <input type="range" class="form-range" min="1" max="10" step="1" id="customRange2" value="5">
+                                <div class="range-markers d-flex justify-content-between position-absolute w-100" style="top: 22px; font-size: 0.75rem;">
+                                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <!-- Submit Button -->
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-primary" id="submitBtn" disabled style="padding: 6px 12px; font-size: 0.85rem;">Submit</button>
+                        </div>
                     </form>
                 </div>
             </div>
+            
+
+            
         </div>
     </div>
 
@@ -623,7 +669,22 @@
 
             // Add event listeners to textarea and radios to trigger validation on change
             question1.addEventListener('input', validateForm);
-            likertRadios.forEach(radio => radio.addEventListener('change', validateForm));
+            // likertRadios.forEach(radio => radio.addEventListener('change', validateForm));
+            
+
+            const rangeInput = document.getElementById('customRange');
+            const sliderValue = document.getElementById('sliderValue');
+            // const submitBtn = document.getElementById('submitBtn');
+            const textarea = document.getElementById('question1');
+            
+            rangeInput.addEventListener('input', function() {
+                // sliderValue.textContent = this.value;
+                this.style.setProperty('--value', (this.value - this.min) / (this.max - this.min) * 100 + '%');
+            });
+
+            textarea.addEventListener('input', function() {
+                submitBtn.disabled = textarea.value.trim() === "";
+            });
 
 
 

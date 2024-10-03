@@ -347,51 +347,67 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Function to check if the tutorial has been shown before
-        function hasTutorialBeenShown() {
-            return localStorage.getItem('tutorialShown') === 'true';
-        }
+    function hasTutorialBeenShown() {
+        return localStorage.getItem('tutorialShown') === 'true';
+    }
 
-        // Function to mark the tutorial as shown
-        function markTutorialAsShown() {
-            localStorage.setItem('tutorialShown', 'true');
-        }
+    // Function to mark the tutorial as shown
+    function markTutorialAsShown() {
+        localStorage.setItem('tutorialShown', 'true');
+    }
 
-        // Check if the tutorial has been shown before
-        if (!hasTutorialBeenShown()) {
-            // Intro.js initialization
-            introJs().setOptions({
-                steps: [
-                    {
-                        element: '#documentText',
-                        intro: 'This is where the document text is displayed.',
-                        position: 'right'
-                    },
-                    {
-                        element: '#suggestedLabels',
-                        intro: 'Here are the suggested labels. You can choose one or add your own.',
-                        position: 'left'
-                    },
-                    {
-                        element: '#manualLabelInput',
-                        intro: 'You can manually enter or select a label from here.',
-                        position: 'top'
-                    },
-                    {
-                        element: '#manualLabelSubmit',
-                        intro: 'Once you are satisfied with your label choice, click here to submit.',
-                        position: 'left'
-                    },
-                    {
-                        element: '#toggleExplanationBtn',
-                        intro: 'Click here for a summary of the document.',
-                        position: 'left'
-                    }
-                ]
-            }).oncomplete(function() {
-                // Mark the tutorial as shown after it completes
-                markTutorialAsShown();
-            }).start();
-        }
+    // Function to show the tutorial (Demo tutorial)
+    function showDemoTutorial() {
+        // Initialize Intro.js tutorial
+        introJs().setOptions({
+            steps: [
+                {
+                    element: '#documentText',
+                    intro: 'This is where the document text is displayed.',
+                    position: 'right'
+                },
+                {
+                    element: '#suggestedLabels',
+                    intro: 'Here are the suggested labels. You can choose one or add your own.',
+                    position: 'left'
+                },
+                {
+                    element: '#manualLabelInput',
+                    intro: 'You can manually enter or select a label from here.',
+                    position: 'top'
+                },
+                {
+                    element: '#manualLabelSubmit',
+                    intro: 'Once you are satisfied with your label choice, click here to submit.',
+                    position: 'left'
+                },
+                {
+                    element: '#toggleExplanationBtn',
+                    intro: 'Click here for a summary of the document.',
+                    position: 'left'
+                }
+            ]
+        }).oncomplete(function() {
+            // Mark the tutorial as shown after the user completes it
+            markTutorialAsShown();
+        }).onexit(function() {
+            // Mark the tutorial as shown if the user exits early
+            markTutorialAsShown();
+        }).start();
+    }
+
+    // Run the tutorial if it hasn't been shown yet
+    if (!hasTutorialBeenShown()) {
+        showDemoTutorial(); // Call the showDemoTutorial function
+    }
+
+
+
+        // Listen for clicks on the demo button
+        document.getElementById('demoButton').addEventListener('click', function () {
+            showDemoTutorial();
+        });
+
 
         const recommendation = '{{recommendation|lower}}'
         const auto = '{{ auto|lower }}' === 'true';

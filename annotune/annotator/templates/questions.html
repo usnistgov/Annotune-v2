@@ -1,179 +1,207 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Review and Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-{% block extra_head %}
-{% load static %}
-<!-- Bootstrap CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<!-- Custom CSS -->
-<style>
-    /* Set background color for the entire page */
-    body {
-        background-color: #f0f4f8; /* Soft, modern background color */
-        font-family: 'Helvetica Neue', sans-serif; /* Clean font for modern look */
-    }
-
-    /* Centering the form and making it responsive */
-    .form-container {
-        min-width: 360px;
-        max-width: 800px;
-        background-color: #ffffff; /* White background for the form */
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
-        margin: 0 auto;
-    }
-
-    /* Form section style */
-    .content-box {
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    /* Form header */
-    h3 {
-        font-size: 1.8rem;
-        color: #333;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    /* Form labels */
-    label {
-        font-weight: 600;
-        color: #555;
-    }
-
-    /* Form input and textarea */
-    textarea, input[type="radio"] {
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 10px;
-        transition: border-color 0.3s;
-    }
-
-    textarea:focus, input[type="radio"]:focus {
-        border-color: #007bff; /* Bootstrap primary color */
-        outline: none;
-    }
-
-    /* Likert scale alignment */
-    .likert-scale {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-    }
-
-    /* Likert labels */
-    .likert-scale label {
-        font-weight: 600;
-        margin: 0 10px;
-        transition: color 0.3s;
-    }
-
-    /* Button styling */
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        width: 180px;
-        padding: 12px;
-        border-radius: 25px;
-        font-weight: 600;
-        transition: background-color 0.3s, transform 0.3s;
-    }
-
-    /* Disabled button style */
-    .btn-primary:disabled {
-        background-color: #cccccc;
-        border-color: #cccccc;
-        cursor: not-allowed;
-    }
-
-    /* Hover effects for button */
-    .btn-primary:hover:enabled {
-        background-color: #0056b3;
-        transform: translateY(-2px); /* Subtle lift effect */
-    }
-
-    /* Responsive text area adjustments */
-    @media (max-width: 576px) {
-        textarea {
-            font-size: 14px;
-            padding: 8px;
+    <style>
+        /* Set background color for the entire page */
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Helvetica Neue', sans-serif;
         }
-        .btn-primary {
+
+        /* Centering the form and making it responsive */
+        .form-container {
+            min-width: 300px;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+        }
+
+        /* Form section style */
+        .content-box {
+            margin: 0 auto;
             width: 100%;
         }
-    }
 
-    /* Form margin for vertical centering */
-    .form-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh; /* Full viewport height */
-    }
-</style>
-{% endblock %}
+        /* Form header */
+        h3 {
+            font-size: 1.5rem;
+            color: #007bff;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-{% block content %}
-<div class="form-wrapper">
-    <div class="form-container">
-        <div class="content-box">
-            <h3>Document Review and Response</h3>
-            <form method="post">
-                {% csrf_token %}
-                
-                <!-- Question 1 -->
-                <div class="form-group">
-                    <label for="question1" class="font-weight-bold">Question 1: Based on the documents you reviewed, what do you now think are the key steps (up to 10) in a community planning process? Consider how the labels or corresponding documents might help identify steps specific for planning for resilience or sustainability and provide examples or explanations as needed. [Text response; steps separated by semicolons]</label>
-                    <textarea name="question1" class="form-control" id="question1" rows="6" placeholder="Enter your response..."></textarea>
+        /* Form instructions */
+        .instructions {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            text-align: justify;
+        }
+
+        /* Form labels */
+        label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* Form input and textarea */
+        textarea {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* Slider adjustments */
+        .form-range {
+            width: 100%;
+            background: linear-gradient(90deg, #007bff 0%, #007bff var(--value, 50%), #ddd var(--value, 50%), #ddd 100%);
+        }
+
+        /* Button styling */
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            padding: 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        /* Disabled button style */
+        .btn-primary:disabled {
+            background-color: #cccccc;
+            border-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        /* Hover effects for button */
+        .btn-primary:hover:enabled {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive text area adjustments */
+        @media (max-width: 576px) {
+            textarea {
+                font-size: 0.8rem;
+                padding: 6px;
+            }
+            .btn-primary {
+                width: 100%;
+            }
+        }
+
+        /* Form margin for vertical centering */
+        .form-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Adjust spacing between elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-wrapper">
+        <div class="form-container">
+            <div class="content-box">
+                <h3>Assessment</h3>
+                <div id="pageName" hidden>pretest</div>
+                <div id="pageStartTime" hidden>{{time}}</div>
+
+                <div class="instructions">
+                    Your community has frequently faced natural disasters, such as floods and hurricanes, and extreme weather events like heatwaves and severe storms. You believe a proactive planning process, similar to those used for economic development, is essential for increasing resilience, sustainability, and climate adaptation. Imagine you are advocating for this change to your city council. Currently, the community employs organized planning for economic and infrastructure challenges, which involves identifying issues, setting goals, and developing action plans. 
+                    You propose adopting a similar approach to enhance the community's resilience—ensuring better preparedness and response to these specific challenges—and to improve sustainability through energy-saving measures, waste reduction, and climate adaptation strategies to address changing environmental conditions.
+
                 </div>
-                
-                <!-- Likert Scale for Confidence -->
-                <div class="form-group">
-                    <label for="likert" class="font-weight-bold">Question 2: Please rate your level of confidence in your response.</label>
-                    <div class="likert-scale" id="likert-scale">
-                        <label><input type="radio" name="likert" value="1" class="mr-2"> 1</label>
-                        <label><input type="radio" name="likert" value="2" class="mr-2"> 2</label>
-                        <label><input type="radio" name="likert" value="3" class="mr-2"> 3</label>
-                        <label><input type="radio" name="likert" value="4" class="mr-2"> 4</label>
-                        <label><input type="radio" name="likert" value="5" class="mr-2"> 5</label>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Question 1 -->
+                    <div class="form-group">
+                        <label for="question1" class="font-weight-bold">Question 1a: What is your current understanding of the process for planning community resilience and sustainability? Include any key themes or strategies you consider important.</label>
+                        <textarea name="question1" class="form-control" id="question1" rows="4" placeholder="Enter your response..."></textarea>
                     </div>
-                </div>
-                
-                <!-- Submit Button -->
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit</button>
-                </div>
-            </form>
+                    
+                    <!-- Slider for Confidence Level -->
+                    <div class="form-group mb-3">
+                        <label for="customRange" class="font-weight-bold">Question 1b: Please rate your level of confidence in your response.</label>
+                        <div class="d-flex justify-content-between">
+                            <span>1 (Low)</span>
+                            <span>10 (High)</span>
+                        </div>
+                        <div class="slider-container position-relative">
+                            <input type="range" class="form-range" min="1" max="10" step="1" id="customRange" value="5" name="likert">
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="form-group">
+                        <label for="question2" class="font-weight-bold">Question 2a: What are some common methods communities might use to share plans with their stakeholders? </label>
+                        <textarea name="question2" class="form-control" id="question2" rows="4" placeholder="Enter your response..."></textarea>
+                    </div>
+                    
+                    <!-- Slider for Confidence Level -->
+                    <div class="form-group mb-3">
+                        <label for="customRange2" class="font-weight-bold">Question 2b: Please rate your level of confidence in your response.</label>
+                        <div class="d-flex justify-content-between">
+                            <span>1 (Low)</span>
+                            <span>10 (High)</span>
+                        </div>
+                        <div class="slider-container position-relative">
+                            <input type="range" class="form-range" min="1" max="10" step="1" id="customRange2" value="5" name="likert2">
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Add JavaScript to handle form validation -->
-<script>
-    // Get form elements
-    const question1 = document.getElementById('question1');
-    const likertRadios = document.querySelectorAll('input[name="likert"]');
-    const submitBtn = document.getElementById('submitBtn');
+    <script>
+        // Get form elements
+        const question1 = document.getElementById('question1');
+        const question2 = document.getElementById('question2');
+        const submitBtn = document.getElementById('submitBtn');
 
-    // Function to check if both the textarea and one radio button are filled/selected
-    function validateForm() {
-        // Check if textarea has value and if any radio is checked
-        const isTextareaFilled = question1.value.trim() !== '';
-        const isRadioSelected = Array.from(likertRadios).some(radio => radio.checked);
-        
-        // Enable or disable the submit button based on the checks
-        if (isTextareaFilled && isRadioSelected) {
-            submitBtn.disabled = false;
-        } else {
-            submitBtn.disabled = true;
+        // Function to check if textareas have input
+        function validateForm() {
+            const isTextareaFilled = question1.value.trim() !== '' && question2.value.trim() !== '';
+            submitBtn.disabled = !isTextareaFilled;
         }
-    }
 
-    // Add event listeners to textarea and radios to trigger validation on change
-    question1.addEventListener('input', validateForm);
-    likertRadios.forEach(radio => radio.addEventListener('change', validateForm));
-</script>
-{% endblock %}
+        // Add event listeners for textarea input
+        question1.addEventListener('input', validateForm);
+        question2.addEventListener('input', validateForm);
+    </script>
+</body>
+</html>

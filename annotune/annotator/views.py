@@ -14,6 +14,7 @@ from collections import defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from django.views.decorators.cache import cache_control
 
 
 
@@ -43,7 +44,7 @@ def sign_up(request):
             last_name = request.POST['last_name']
             email = request.POST['email']
             password = request.POST['password']
-            time = datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S")
+            time = str(datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S"))
             print(time)
 
             user_information =  {"first_name": first_name,
@@ -72,8 +73,9 @@ def sign_up(request):
             request.session["labels"] = information[email]["label"],
             request.session["document_ids"]= information[email]["document_id"]
             request.session["start_time"]= information[email]["start_time"]
+            request.session["has_access"]=True
 
-            return redirect("pretext", user_id=information[email]["user_id"] )
+            return redirect("homepage", user_id=user_id)
 
         return redirect("login", {"time":datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S")})
             
@@ -98,6 +100,7 @@ def login(request):
             request.session["labels"] = information[email]["label"],
             request.session["document_ids"]= information[email]["document_id"]
             request.session["start_time"]= information[email]["start_time"]
+            request.session["has_access"]=True
 
             return redirect("homepage", user_id=information[email]["user_id"])
     
@@ -108,6 +111,7 @@ def login(request):
 
 def homepage(request, user_id):
     print(request.session["start_time"])
+    # return redirect("pretext", user_id=information[email]["user_id"] )
     return render(request, "homepage.html", {"user_id": request.session["user_id"], "start_time":request.session["start_time"]})
 
 def list_documents(request, user_id, recommendation):
@@ -209,10 +213,10 @@ def label (request,user_id, document_id, recommendation):
 
 
 
-def skip_document(request):
-    current_doc_id = request.POST.get('current_doc_id')
+# def skip_document(request):
+#     current_doc_id = request.POST.get('current_doc_id')
 
-    return redirect('document_view')
+#     return redirect('document_view')
 
 
 
@@ -324,7 +328,12 @@ def skip_document(request):
                             "user_id": request.session["user_id"]
                             }).json()
     
-    return JsonResponse({"document_id":response["document_id"]})
+    document_id=response["document_id"]
+    user_id=request.session["user_id"]
+    recommendation = "true"
+
+    
+    return JsonResponse({"document_id":response["document_id"], "user_id":user_id, "recommendation":recommendation})
 
  
 # def labeled(request):
@@ -340,9 +349,15 @@ def skip_document(request):
 
 
 def get_all_documents(request ):
+
+    with open(env('USERS_PATH'), "r") as user_file:
+            name_string = user_file.read()
+            information = json.loads(name_string)
+
+    
  
-    data = {"document_ids": request.session["document_ids"][::-1],
-            "labels": request.session["labels"][0][::-1]}
+    data = {"document_ids": list(set(information[request.session["email"]]["document_id"]))[::-1],
+            "labels":  list(set(information[request.session["email"]]["label"]))[::-1]}
     print(data["document_ids"])
 
     return JsonResponse(data)
@@ -606,7 +621,7 @@ def manualLabel(request, user_id, document_id):
 
     return render(request, "manualLabel.html", context=data)
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def pre_text(request, user_id):
     # Define the path to the JSON file
     json_file_path = '/Users/danielstephens/Desktop/Annotune-v2/user_data/try.json'
@@ -649,10 +664,16 @@ def pre_text(request, user_id):
         #     json.dump(existing_data, file, indent=4)
 
         # Redirect or render a success page if needed
-        return render(request, "homepage.html", context={"user_id": user_id, "start_time": request.session["start_time"]})
+                
+        return redirect('manualList', user_id=user_id)
+        # return redirect('documents', user_id=user_id, recommendation="true")
+            
+            # <a href="{% url 'documents' user_id 'true'%}" class="btn btn-success btn-lg">Start Labeling</a>)
+        # return render(request, "homepage.ht
+        # ml", context={"user_id": user_id, "start_time": request.session["start_time"]})
 
     # If the request method is GET, simply render the form
-    return render(request, "questions.html", context={"user_id": user_id})
+    return render(request, "questions.html", context={"user_id": user_id, "start_time": request.session["start_time"]})
 
 
 

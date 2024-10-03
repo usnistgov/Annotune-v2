@@ -204,6 +204,11 @@
             });
         });
 
+        function showLoader() {
+        loaderOverlay.style.display = 'flex';
+        window.addEventListener('load', hideLoader);
+    }
+
         function hideLoader() {
             const loaderOverlay = document.getElementById('loaderOverlay');
             loaderOverlay.style.display = 'none';
