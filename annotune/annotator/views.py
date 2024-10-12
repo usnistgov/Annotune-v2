@@ -10,11 +10,10 @@ import random
 from pytz import timezone
 eastern = timezone('US/Eastern')
 import environ
-from collections import defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-from django.views.decorators.cache import cache_control
+
 
 
 
@@ -23,8 +22,11 @@ env = environ.Env()
 
 
 
- 
-all_texts = json.load(open(env("DATAPATH")))
+data = env("DATA")
+if data=="bills":
+    all_texts = json.load(open(env("DATAPATH")))
+
+
 url =  env("URL")
  
  
@@ -74,6 +76,7 @@ def sign_up(request):
             request.session["document_ids"]= information[email]["document_id"]
             request.session["start_time"]= information[email]["start_time"]
             request.session["has_access"]=True
+            
 
             return redirect("homepage", user_id=user_id)
 
@@ -112,7 +115,7 @@ def login(request):
 def homepage(request, user_id):
     print(request.session["start_time"])
     # return redirect("pretext", user_id=information[email]["user_id"] )
-    return render(request, "homepage.html", {"user_id": request.session["user_id"], "start_time":request.session["start_time"]})
+    return render(request, "homepage.html", {"user_id": request.session["user_id"], "start_time":request.session["start_time"], "email":request.session["email"]})
 
 def list_documents(request, user_id, recommendation):
     request.session["isManual"]=False
@@ -129,7 +132,7 @@ def list_documents(request, user_id, recommendation):
     print(type(request.session["user_id"]))
   
 
-    return render(request, "documents.html", {"all_texts": a, "clusters": d, "keywords":b, "recommended_doc_id" :c, "user_id":request.session["user_id"], "start_time":request.session["start_time"], "recommendation": recommendation})
+    return render(request, "documents.html", {"email":request.session['email'], "all_texts": a, "clusters": d, "keywords":b, "recommended_doc_id" :c, "user_id":request.session["user_id"], "start_time":request.session["start_time"], "recommendation": recommendation})
 
 
 def label (request,user_id, document_id, recommendation):
@@ -205,7 +208,8 @@ def label (request,user_id, document_id, recommendation):
         "all_old_labels": past_labels,
         "auto":None,
         "start_time":request.session["start_time"],
-        "recommendation": recommendation
+        "recommendation": recommendation,
+        "email":request.session["email"]
         
         }
 
@@ -449,7 +453,8 @@ def display(request, user_id, recommendation):
         "user_id": request.session["user_id"],
         "start_time": request.session["start_time"],
         "document_id":document_id,
-        "recommendation":recommendation
+        "recommendation":recommendation,
+        "email":request.session["email"]
     }
 
     # return render(request, 'labeled.html', context=data)
@@ -533,8 +538,8 @@ def relabel(request, document_id, given_label):
         "auto":"true",
         "start_time":request.session["start_time"],
         "label":given_label,
-        "relabel": "true"
-        
+        "relabel": "true",
+        "email":request.session["email"]
         }
 
     return render(request, "label.html", context=data)
@@ -567,8 +572,13 @@ def manualDocumentsList(request, user_id):
     
     remaining_texts = {k: v for k, v in remaining_texts.items() if int(k) not in labeledDocuments}
 
-    return render(request, "manualText.html", context={"all_texts":remaining_texts, "user_id": user_id, "start_time": str(request.session["start_time"])})
-
+    return render(request, "manualText.html", context={"all_texts":remaining_texts, "user_id": user_id, 
+                                                       "start_time": str(request.session["start_time"]), 
+                                                       "email":request.session["email"],
+                                                       "question1a":request.session["question1a"], 
+                                                       "question1b":request.session["question1b"],
+                                                       "question2a":request.session["question2a"],
+                                                       "question2b":request.session["question2b"],})
 
 def manualLabeledList(request, user_id):
     request.session["isManual"]=True
@@ -588,6 +598,7 @@ def manualLabeledList(request, user_id):
         "labels":all_labelled_data,
         "user_id": request.session["user_id"],
         "start_time": request.session["start_time"],
+        "email":request.session["email"]
     }
 
     return render(request, 'manualLabeledList.html', context=data)
@@ -613,67 +624,67 @@ def manualLabel(request, user_id, document_id):
         "document_id":document_id,
         "time":request.session["start_time"],
         "all_old_labels": past_labels,
-        "start_time":request.session["start_time"]
-        
+        "start_time":request.session["start_time"],
+        "email":request.session["email"]
         }
     
 
 
     return render(request, "manualLabel.html", context=data)
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def pre_text(request, user_id):
     # Define the path to the JSON file
-    json_file_path = '/Users/danielstephens/Desktop/Annotune-v2/user_data/try.json'
+   
 
     if request.method == 'POST':
-        # Get form data
-        question1 = request.POST['question1']
-        question2 = request.POST['likert']
-        # Add other questions if there are more
 
-        # Structure the data as a dictionary
-        user_data = {
-            "responses": {
-                "question1": question1,
-                "question2": question2,
-                # Add other questions if necessary
+        if data == 'community':
+            pass
+
+        elif data == 'education':
+            pass
+
+        else:
+        # Get form data
+            question1a = request.POST["question1a"]
+            question1b = request.POST["question1b"]
+            question2a = request.POST["question2a"]
+            question2b = request.POST["question2b"]
+            request.session["question1a"]=question1a
+            request.session["question1b"]=question1b
+            request.session["question2a"]=question2a
+            request.session["question2b"]=question2b
+
+            print(question1b, question1a, question2a, question2b)
+            # Add other questions if there are more
+
+            # Structure the data as a dictionary
+            user_data = {
+                "responses": {
+                    "question1": {"a":question1a,
+                                "b":question1b},
+                    "question2": {"a":question2a,
+                                "b":question2b},
+                    "time": str(datetime.datetime.now(eastern).strftime("%d/%m/%y %H:%M:%S"))
+                    # Add other questions if necessary
+
+                }
             }
-        }
 
         with open(env("USERS_PATH"), "r") as user_file:
             name_string = user_file.read()
             information = json.loads(name_string)
-            information[request.session["email"]]["pretest"]=user_data
+            print(information[request.session["email"]]["pretest"])
+            information[request.session["email"]]["pretest"].append(user_data)
         
+
         with open(env("USERS_PATH"), "w") as user_file:
                 json.dump(information, user_file, indent=4)
-        # # Check if the file exists, and if it does, read the existing data
-        # if os.path.exists(json_file_path):
-        #     with open(json_file_path, 'r') as file:
-        #         existing_data = json.load(file)
-        # print(user_data)
-        # else:
-        #     existing_data = {}
-
-        # Update the existing data with the new user's data
-        # existing_data[user_id] = user_data
-
-        # # Write the updated data back to the JSON file
-        # with open(json_file_path, 'w') as file:
-        #     json.dump(existing_data, file, indent=4)
-
-        # Redirect or render a success page if needed
                 
         return redirect('manualList', user_id=user_id)
-        # return redirect('documents', user_id=user_id, recommendation="true")
-            
-            # <a href="{% url 'documents' user_id 'true'%}" class="btn btn-success btn-lg">Start Labeling</a>)
-        # return render(request, "homepage.ht
-        # ml", context={"user_id": user_id, "start_time": request.session["start_time"]})
-
-    # If the request method is GET, simply render the form
-    return render(request, "questions.html", context={"user_id": user_id, "start_time": request.session["start_time"]})
+   
+    return render(request, "questions.html", context={"user_id": user_id, "start_time": request.session["start_time"], "data":data, "email":request.session["email"]})
 
 
 
@@ -892,11 +903,14 @@ def post_text(request):
 
     if request.method == 'POST':
         # Handle form submission
-        question1 = request.POST["question1"]
-        question2 = request.POST["likert"]
+        question1a = request.POST["question1a"]
+        question1b = request.POST["question1b"]
+        question2a = request.POST["question2a"]
+        question2b = request.POST["question2b"]
+
 
         # Simulate storing user data (adjust as per your logic)
-        user_data = {"responses": {"question1": question1, "question2": question2}}
+        user_data = {"responses": {"question1a": question1a,"question1b": question1b, "question2a": question2a,  "question2b": question2b}}
         print(user_data)
         
         # Save data (adjust the path and method as needed)

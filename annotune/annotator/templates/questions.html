@@ -126,13 +126,17 @@
     </style>
 </head>
 <body>
+
+    <div id="data" hidden>{{data}}</div>
+
+    
     <div class="form-wrapper">
         <div class="form-container">
             <div class="content-box">
                 <h3>Assessment</h3>
                 <div id="pageName" hidden>pretest</div>
                 <div id="pageStartTime" hidden>{{time}}</div>
-
+                {%if data == 'bills' %}
                 <div class="instructions">
                     Your community has frequently faced natural disasters, such as floods and hurricanes, and extreme weather events like heatwaves and severe storms. You believe a proactive planning process, similar to those used for economic development, is essential for increasing resilience, sustainability, and climate adaptation. Imagine you are advocating for this change to your city council. Currently, the community employs organized planning for economic and infrastructure challenges, which involves identifying issues, setting goals, and developing action plans. 
                     You propose adopting a similar approach to enhance the community's resilience—ensuring better preparedness and response to these specific challenges—and to improve sustainability through energy-saving measures, waste reduction, and climate adaptation strategies to address changing environmental conditions.
@@ -144,39 +148,40 @@
                     
                     <!-- Question 1 -->
                     <div class="form-group">
-                        <label for="question1" class="font-weight-bold">Question 1a: What is your current understanding of the process for planning community resilience and sustainability? Include any key themes or strategies you consider important.</label>
-                        <textarea name="question1" class="form-control" id="question1" rows="4" placeholder="Enter your response..."></textarea>
+                        <label for="question1a" class="font-weight-bold">Question 1a: What is your current understanding of the process for planning community resilience and sustainability? Include any key themes or strategies you consider important.</label>
+                        <textarea name="question1a" class="form-control" id="question1a" rows="4" placeholder="Enter your response..."></textarea>
                     </div>
                     
                     <!-- Slider for Confidence Level -->
                     <div class="form-group mb-3">
-                        <label for="customRange" class="font-weight-bold">Question 1b: Please rate your level of confidence in your response.</label>
+                        <label for="question1b" class="font-weight-bold">Question 1b: Please rate your level of confidence in your response.</label>
                         <div class="d-flex justify-content-between">
                             <span>1 (Low)</span>
                             <span>10 (High)</span>
                         </div>
                         <div class="slider-container position-relative">
-                            <input type="range" class="form-range" min="1" max="10" step="1" id="customRange" value="5" name="likert">
+                            <input type="range" class="form-range" min="1" max="10" step="1" id="question1b" value="5" name="question1b">
                         </div>
                     </div>
                     
                     <!-- Question 2 -->
                     <div class="form-group">
-                        <label for="question2" class="font-weight-bold">Question 2a: What are some common methods communities might use to share plans with their stakeholders? </label>
-                        <textarea name="question2" class="form-control" id="question2" rows="4" placeholder="Enter your response..."></textarea>
+                        <label for="question2a" class="font-weight-bold">Question 2a: What are some common methods communities might use to share plans with their stakeholders? </label>
+                        <textarea name="question2a" class="form-control" id="question2a" rows="4" placeholder="Enter your response..."></textarea>
                     </div>
                     
                     <!-- Slider for Confidence Level -->
                     <div class="form-group mb-3">
-                        <label for="customRange2" class="font-weight-bold">Question 2b: Please rate your level of confidence in your response.</label>
+                        <label for="question2b" class="font-weight-bold">Question 2b: Please rate your level of confidence in your response.</label>
                         <div class="d-flex justify-content-between">
                             <span>1 (Low)</span>
                             <span>10 (High)</span>
                         </div>
                         <div class="slider-container position-relative">
-                            <input type="range" class="form-range" min="1" max="10" step="1" id="customRange2" value="5" name="likert2">
+                            <input type="range" class="form-range" min="1" max="10" step="1" id="question2b" value="5" name="question2b">
                         </div>
                     </div>
+                    {% endif%}
                     
                     <!-- Submit Button -->
                     <div class="text-center mt-3">
@@ -187,21 +192,41 @@
         </div>
     </div>
 
+    
+
+    
+
     <script>
-        // Get form elements
-        const question1 = document.getElementById('question1');
-        const question2 = document.getElementById('question2');
-        const submitBtn = document.getElementById('submitBtn');
+        const data = document.getElementById("data")
 
-        // Function to check if textareas have input
-        function validateForm() {
-            const isTextareaFilled = question1.value.trim() !== '' && question2.value.trim() !== '';
-            submitBtn.disabled = !isTextareaFilled;
-        }
+if (data.textContent === 'bills') { // Use textContent or value depending on the element type
+    // Get form elements
+    const question1a = document.getElementById('question1a');
+    const question1b = document.getElementById('question1b');
+    const question2a = document.getElementById('question2a');
+    const question2b = document.getElementById('question2b');
+    const submitBtn = document.getElementById('submitBtn');
 
-        // Add event listeners for textarea input
-        question1.addEventListener('input', validateForm);
-        question2.addEventListener('input', validateForm);
+    // Function to check if textareas have input
+    function validateForm() {
+        const isTextareaFilled = question1a.value.trim() !== '' &&
+                                 question1b.value.trim() !== '' && // Corrected this part
+                                 question2a.value.trim() !== '' &&
+                                 question2b.value.trim() !== '';
+        submitBtn.disabled = !isTextareaFilled; // Enable button if all textareas are filled
+        console.log("Submit button validation: ", isTextareaFilled);
+    }
+
+    // Add event listeners for textarea input
+    question1a.addEventListener('input', validateForm);
+    question1b.addEventListener('input', validateForm); // Add correct event listener
+    question2a.addEventListener('input', validateForm);
+    question2b.addEventListener('input', validateForm);
+}
+
+
+            
+        
     </script>
 </body>
 </html>

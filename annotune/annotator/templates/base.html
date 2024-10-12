@@ -81,21 +81,26 @@
         <div class="container-fluid">
             <!-- Brand Logo / Home Link on the left -->
             <!-- <a class="navbar-brand" href="{% url 'homepage' user_id %}">Home</a> -->
-
-            <a  id="instructions" href="#" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructionsModal">
+    
+            <a id="instructions" href="#" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#instructionsModal">
                 Instructions
             </a>
     
+            <!-- Placeholder block for the "Response" button -->
+            {% block response_button %}
+            <!-- This block will be replaced or extended in specific templates -->
+            {% endblock %}
+        
             <!-- Toggler for Mobile View -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-    
+        
             <!-- Centered Timer -->
             <div class="d-flex justify-content-center flex-grow-1">
                 <h4 class="text-white mb-0" id="timer"></h4>
             </div>
-    
+        
             <!-- Right-aligned Buttons -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <button id="demoButton" class="btn btn-outline-info me-3">Demo</button>
@@ -103,6 +108,10 @@
             </div>
         </div>
     </nav>
+
+    <div id="email" hidden>{{email}}</div>
+    
+    
 
 
 <!-- The Modal -->
@@ -195,6 +204,28 @@
     </div>
 </div>
 
+<!-- Response Modal -->
+<!-- Response Modal -->
+<div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="responseModalLabel">Your Responses</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Container for dynamically inserted responses -->
+                <div id="response-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 
 
@@ -284,6 +315,52 @@
         finishModal.show();
         window.location.href = '/logout/';  // Show the modal
     });
+
+    // Extract responses from the template context
+   
+    const email = document.getElementById("email").textContent;
+    let responseData;
+    console.log(email)
+    // Fetch JSON file using Django's static files
+    fetch("{% static 'data/users.json' %}")
+    .then(response => response.json())  // Parse the JSON
+    .then(data => {
+       responseData = data[email].pretest[0]
+
+
+        // Summarized questions
+        const questions = [
+            { title: 'Question 1a', text: 'Understanding of resilience planning', response: responseData.responses.question1.a },
+            { title: 'Question 1b', text: 'Confidence in your response', response: `Confidence Level: ${responseData.responses.question1.b}` },
+            { title: 'Question 2a', text: 'Methods to share plans with stakeholders', response: responseData.responses.question2.a },
+            { title: 'Question 2b', text: 'Confidence in your response', response: `Confidence Level: ${responseData.responses.question2.b}` }
+        ];
+
+        // Get the container where the content will be inserted
+        const responseContent = document.getElementById('response-content');
+
+        responseContent.innerHTML += questions.map(q => `
+            <div class="card mb-2" style="border-radius: 10px; border: 1px solid #ddd;">
+                <div class="card-header bg-dark text-white py-2" style="border-radius: 10px 10px 0 0; font-size: 1rem;"> <!-- Smaller header font -->
+                    <strong>${q.title}</strong>
+                </div>
+                <div class="card-body p-3" style="font-size: 1.1rem;"> <!-- Larger text for question and answer -->
+                    <p style="font-size: 1.2rem;"><em>${q.text}:</em></p> <!-- Larger question text -->
+                    <p style="font-size: 1.2rem;">${q.response}</p> <!-- Larger response text -->
+                </div>
+            </div>
+        `).join('');
+
+
+        
+    })
+    .catch(error => console.error('Error loading JSON:', error));
+
+    // console.log(firstResponse)
+    
+    
+
+    
     
 
     </script>

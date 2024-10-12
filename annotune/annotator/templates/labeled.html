@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% block response_button %}
+<a id="Response" href="#" class="btn btn-outline-info ms-3" data-bs-toggle="modal" data-bs-target="#responseModal">
+    Response
+</a>
+{% endblock %}
 
 {% block extra_head %}
 {% load static %}
@@ -67,73 +72,91 @@
 </div>
 <br>
 
+
+
 <div class="container-fluids" style="margin-left: 3%;">
-    <div class="col-12 d-flex justify-content-between mb-3">
-        <div class="d-flex">
-            <h5>Labeled Documents </h5>
+    {% if labels %}
+        <!-- Main content when labels exist -->
+        <div class="col-12 d-flex justify-content-between mb-3">
+            <div class="d-flex">
+                <h5>Labeled Documents</h5>
+            </div>
+            <div class="timer-container">
+                <div id="timer"></div>
+            </div>
+            <div id="pageStartTime" hidden>{{ pageStart }}</div>
+            <div id="pageName" hidden>labeled</div>
+            <div class="float-end">
+                <a href="{% url 'documents' user_id recommendation %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
+                    View-by-topics <i class="fas fa-arrow-right"></i>
+                </a>
+                <div hidden id="selectedLabel"></div>
+            </div>
         </div>
-        <div class="timer-container">
-            <div id="timer"></div>
-        </div>
-        <div id="pageStartTime" hidden>{{pageStart}}</div>
-        <div id="pageName" hidden>labeled</div>
-        <div class="float-end">
-            <a href="{% url 'documents' user_id recommendation%}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
-                View-by-topics <i class="fas fa-arrow-right"></i>
-            </a>
-            <div hidden id="selectedLabel"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <h4 class="mb-2">Keywords</h4>
-            <div class="accordion scrollable-accordion" id="keywordsAccordion" style="max-height: calc(100vh - 120px); overflow-y: auto;">
-                {% for label, other_lists in labels.items %}
-                <div class="accordion-item" data-id="{{ label }}">
-                    <h2 class="accordion-header" id="heading{{ label }}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ label }}" aria-expanded="false" aria-controls="collapse{{ id }}">
-                            {{ label }}
-                        </button>
-                    </h2>
-                    <div id="collapse{{ label }}" class="accordion-collapse collapse" aria-labelledby="heading{{ label }}" data-bs-parent="#keywordsAccordion">
-                        <div class="accordion-body">
-                            <div>{{ other_lists.description }}</div>
-                            <div id="text_keys" style="display: none;">
-                                {% for id in other_lists.documents %}
-                                <div class="topic_ids">
-                                    <span>{{ id }}</span>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h4 class="mb-2">Keywords</h4>
+                <div class="accordion scrollable-accordion" id="keywordsAccordion" style="max-height: calc(100vh - 120px); overflow-y: auto;">
+                    {% for label, other_lists in labels.items %}
+                    <div class="accordion-item" data-id="{{ label }}">
+                        <h2 class="accordion-header" id="heading{{ label }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ label }}" aria-expanded="false" aria-controls="collapse{{ label }}">
+                                {{ label }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ label }}" class="accordion-collapse collapse" aria-labelledby="heading{{ label }}" data-bs-parent="#keywordsAccordion">
+                            <div class="accordion-body">
+                                <div>{{ other_lists.description }}</div>
+                                <div id="text_keys" style="display: none;">
+                                    {% for id in other_lists.documents %}
+                                    <div class="topic_ids">
+                                        <span>{{ id }}</span>
+                                    </div>
+                                    {% endfor %}
                                 </div>
-                                {% endfor %}
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+            </div>
+
+            <div class="col-md-8" style="min-height: 70vh;">
+                <h4 class="mb-2">Texts</h4>
+                <div class="table-responsive" style="width: 95%; min-height: 70%;">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Text Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="text-table-body">
+                            {% for doc_id, text in all_texts.items %}
+                            <tr data-id="{{ doc_id }}">
+                                <td>{{ doc_id }}</td>
+                                <td class="text-truncate"><a href="{% url 'label' user_id doc_id recommendation %}" class="text-link">{{ text }}</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="col-md-8" style="min-height: 70vh;">
-            <h4 class="mb-2">Texts</h4>
-            <div class="table-responsive" style="width: 95%; min-height: 70%;">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Text Description</th>
-                        </tr>
-                    </thead>
-                    <tbody id="text-table-body">
-                        {% for doc_id, text in all_texts.items %}
-                        <tr data-id="{{ doc_id }}">
-                            <td>{{ doc_id }}</td>
-                            <td class="text-truncate"><a href="{% url 'label' user_id doc_id recommendation %}" class="text-link">{{ text }}</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    {% else %}
+        <!-- Message if no labeled documents are available -->
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="alert alert-warning mt-5">
+                    <h4>No Labeled Documents Available</h4>
+                    <p>Please check back later or label documents to view them here.</p>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 </div>
+
 
 {% block footercontent %}
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block extra_head %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/document.css' %}">
@@ -32,6 +33,12 @@
         margin: 0;
     }
 </style>
+{% endblock %}
+
+{% block response_button %}
+<a id="Response" href="#" class="btn btn-outline-info ms-3" data-bs-toggle="modal" data-bs-target="#responseModal">
+    Response
+</a>
 {% endblock %}
 
 {% block content %}

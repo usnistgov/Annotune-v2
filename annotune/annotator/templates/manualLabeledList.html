@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% block response_button %}
+<a id="Response" href="#" class="btn btn-outline-info ms-3" data-bs-toggle="modal" data-bs-target="#responseModal">
+    Response
+</a>
+{% endblock %}
 
 {% block extra_head %}
 {% load static %}
@@ -8,17 +13,18 @@
 
 {% block content %}
 <br>
+<div class="timer-container">
+    <div id="timer"></div>
+</div>
+<div id="pageStartTime" hidden>{{pageStart}}</div>
+<div id="pageName" hidden>labeled</div>
 
 <div class="container-fluids" style="margin-left: 3%;">
     <div class="col-12 d-flex justify-content-between mb-3">
         <div class="d-flex">
             <h5>Labeled Documents </h5>
         </div>
-        <div class="timer-container">
-            <div id="timer"></div>
-        </div>
-        <div id="pageStartTime" hidden>{{pageStart}}</div>
-        <div id="pageName" hidden>labeled</div>
+       
         <div class="float-end">
             <a href="{% url 'manualList' user_id %}" id="documents" class="btn btn-outline-secondary btn-lg nav-icon m-1">
                 remaining_docs <i class="fas fa-arrow-right"></i>
@@ -26,6 +32,8 @@
             <div id="selectedLabel"></div>
         </div>
     </div>
+
+    {% if labels %}
     <div class="row">
         <!-- Left Column for Keywords (Accordion) -->
         <div class="col-md-4">
@@ -78,6 +86,19 @@
         </div>
     </div>
 </div>
+
+{% else %}
+<!-- Message if no labeled documents are available -->
+<div class="row">
+    <div class="col-12 text-center">
+        <div class="alert alert-warning mt-5">
+            <h4>No Labeled Documents Available</h4>
+            <p>Please documents to view them here.</p>
+        </div>
+    </div>
+</div>
+
+{% endif %}
 
 {% block footercontent %}
 {% endblock %}
