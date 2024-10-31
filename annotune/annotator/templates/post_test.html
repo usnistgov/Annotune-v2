@@ -298,13 +298,13 @@
                     <form method="post">
                         {% csrf_token %}
                         <div class="form-group mb-2">
-                            <label for="question1" class="font-weight-bold" style="font-size: 0.9rem;">Question 1a: Based on the documents you reviewed, summarize the planning process for community resilience and sustainability as described in the documents. Highlight any key themes or strategies you find significant. Please provide examples or explanations as needed.</label>
+                            <label for="question1" class="font-weight-bold" style="font-size: 0.9rem;">Question 1: Based on the documents you reviewed, summarize the planning process for community resilience and sustainability as described in the documents. Highlight any key themes or strategies you find significant. Please provide examples or explanations as needed.</label>
                             <textarea name="question1" class="form-control" id="question1" rows="3" placeholder="Enter your response..." style="font-size: 0.85rem; padding: 8px;"></textarea>
                         </div>
                         
                         <!-- Likert Scale for Confidence -->
                         <div class="form-group mb-3">
-                            <label for="customRange" class="font-weight-bold" style="font-size: 0.9rem;">Question 1b: Please rate your level of confidence in your response.</label>
+                            <label for="customRange" class="font-weight-bold" style="font-size: 0.9rem;">Question 2: Please rate your level of confidence in your response.</label>
                             <div class="d-flex justify-content-between" style="font-size: 0.8rem;">
                                 <span>1 (Low)</span>
                                 <span>10 (High)</span>
@@ -318,13 +318,13 @@
                         </div>
             
                         <div class="form-group mb-3">
-                            <label for="question2" class="font-weight-bold" style="font-size: 0.9rem;">Question 2a: What specific methods for sharing adaptation plans with stakeholders are highlighted in the documents you reviewed? Provide one or more examples from the document set as needed.</label>
+                            <label for="question2" class="font-weight-bold" style="font-size: 0.9rem;">Question 3: What specific methods for sharing adaptation plans with stakeholders are highlighted in the documents you reviewed? Provide one or more examples from the document set as needed.</label>
                             <textarea name="question2" class="form-control" id="question2" rows="3" placeholder="Enter your response..." style="font-size: 0.85rem; padding: 8px;"></textarea>
                         </div>
                         
                         <!-- Likert Scale for Confidence -->
                         <div class="form-group mb-3">
-                            <label for="customRange2" class="font-weight-bold" style="font-size: 0.9rem;">Question 2b: Please rate your level of confidence in your response.</label>
+                            <label for="customRange2" class="font-weight-bold" style="font-size: 0.9rem;">Question 4: Please rate your level of confidence in your response.</label>
                             <div class="d-flex justify-content-between" style="font-size: 0.8rem;">
                                 <span>1 (Low)</span>
                                 <span>10 (High)</span>
@@ -685,6 +685,73 @@
             textarea.addEventListener('input', function() {
                 submitBtn.disabled = textarea.value.trim() === "";
             });
+            
+
+            let documentStartTime = null;
+            let viewedDocuments = [];
+
+            // Add event listener to each document text cell
+            document.querySelectorAll('.text-cell').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const fullText = this.getAttribute('data-fulltext'); // Get the full text of the document
+                    document.getElementById('modalTextContent').textContent = fullText;
+
+                    $('#textModal').modal('show'); // Show the modal with the full text
+
+                    // Record the start time when the document is viewed
+                    documentStartTime = new Date().getTime();
+
+                    // Log the full text of the document when clicked
+                    console.log(`Document Text: "${fullText}" clicked at ${new Date(documentStartTime)}`);
+
+                    // Store the document text and start time in the array
+                    viewedDocuments.push({ documentText: fullText, startTime: documentStartTime });
+                });
+            });
+
+
+            $('#textModal').on('hidden.bs.modal', function () {
+            const endTime = new Date().getTime();
+
+            if (documentStartTime !== null) {
+                // Calculate the time spent on the document
+                const timeSpent = endTime - documentStartTime;
+                const lastViewedDoc = viewedDocuments[viewedDocuments.length - 1];
+
+                // Log the document text and time spent viewing it
+                console.log(`Document Text: "${lastViewedDoc.documentText}", Time Spent: ${timeSpent} ms`);
+
+                // Send the data to the server using fetch
+                fetch('/log_document_view/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token if needed
+                    },
+                    body: JSON.stringify({
+                        documentText: lastViewedDoc.documentText,
+                        timeSpent: timeSpent
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Document view logged successfully');
+                    } else {
+                        console.error('Error logging document view:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error logging document view:', error);
+                });
+
+                // Reset start time for the next document view
+                documentStartTime = null;
+            }
+        });
+
+
+
 
 
 

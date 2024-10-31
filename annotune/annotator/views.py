@@ -63,6 +63,7 @@ def sign_up(request):
                                 "hoverTimes":[],
                                 "pretest":[],
                                 "postTest":[],
+                                "postTesttimes":[]
     
                                 }
             information[email]=user_information
@@ -941,10 +942,35 @@ def thankYou(request):
 
 
 
+def log_document_view(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body)
+            
+            # Extract the document text and time spent
+            document_text = data.get('documentText')
+            time_spent = data.get('timeSpent')
 
+            # Log the data (you can later save it to a database if needed)
+            print(f"Document Text: {document_text}")
+            print(f"Time Spent: {time_spent} ms")
+            with open(env("USERS_PATH"), "r") as user_file:
+                name_string = user_file.read()
+                information = json.loads(name_string)
+            information[request.session["email"]]["postTesttimes"].append({"document": document_text, 
+                                                                "time_spent": time_spent})
+    
+            with open(env("USERS_PATH"), "w") as user_file:
+                    json.dump(information, user_file, indent=4)
 
+            # Return a JSON response indicating success
+            return JsonResponse({"status": "success", "message": "Document view data logged successfully"})
+        
+        except Exception as e:
+            # If there's any error, return a failure response
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
-    # return render(request, "post_test.html",context=context)
-
-    # return HttpResponse("amen")
+    # If the request is not a POST request, return a method not allowed response
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
