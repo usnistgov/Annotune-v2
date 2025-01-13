@@ -380,6 +380,57 @@
         var tfidfData = JSON.parse('{{ tfidf_json|safe|escapejs }}');
         var descriptions = JSON.parse('{{ descriptions|safe|escapejs }}'); // Descriptions with labels as keys
         let previousSelectedItem = null; // Track the previously selected label
+        let timeT
+        const searchInput = document.getElementById("searchInput");
+        let typingTimer; // Timer identifier
+        const typingDelay = 1000; // 1 second delay
+
+
+        // Event listener for the input field
+        searchInput.addEventListener("input", () => {
+                clearTimeout(typingTimer); // Clear the timer if there's new input
+                typingTimer = setTimeout(() => {
+                    logSearch(searchInput.value.trim());
+                }, typingDelay);
+            });
+
+            // Function to log the search term
+        function logSearch(searchTerm) {
+            if (searchTerm) {
+                console.log(`Search logged: ${searchTerm}`);
+                timeT = new Date().toString() // Convert to ISO string for easier handling
+
+                // Send the data to the server using fetch
+                fetch('/log_search/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token if applicable
+                    },
+                    body: JSON.stringify({
+                        searchText: searchTerm,
+                        timeSpent: timeT
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Search logged successfully');
+                    } else {
+                        console.error('Server error while logging search:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error logging search:', error);
+                });
+            }
+        }
+
 
 
 
@@ -508,13 +559,14 @@
         function populateTable(data, hideLabelColumn = false) {
             const tableBody = document.getElementById('documentTableBody');
             tableBody.innerHTML = ''; // Clear the table before populating
-
+            console.log(data)
             data.forEach(([docId]) => {
                 const row = `
-                    <tr>
-                        <td class="text-cell" data-fulltext="${dashboardData[docId].text}">${dashboardData[docId].text}</td>
-                        ${hideLabelColumn ? '' : `<td>${dashboardData[docId].label}</td>`}
-                    </tr>
+                <tr>
+                    <td class="text-cell" data-fulltext="${dashboardData[docId].text}">${dashboardData[docId].text}</td>
+                    ${hideLabelColumn ? '' : `<td>${dashboardData[docId].label}</td>`}
+                    <td class="hidden-doc-id" style="display: none;">${docId}</td>
+                </tr>
                 `;
                 tableBody.innerHTML += row;
             });
@@ -571,8 +623,8 @@
         });
 
 
-                // Chart.js implementation
-                const ctx = document.getElementById('barChart').getContext('2d');
+        // Chart.js implementation
+        const ctx = document.getElementById('barChart').getContext('2d');
         let selectedBarIndex = null; // Track the selected bar index
 
         // Function to calculate the bar thickness based on the number of labels
@@ -615,6 +667,7 @@
                 onClick: function(evt, elements) {
                     if (elements.length > 0) {
                         const clickedIndex = elements[0].index;
+                        
                         selectedBarIndex = clickedIndex; // Update selected bar index
 
                         // Update chart with new colors
@@ -622,10 +675,42 @@
                         barChart.update();
 
                         const selectedLabel = labelData.labels[clickedIndex];
-
+                        console.log(selectedLabel)
                         // Filter document table by selected label
                         const filteredData = Object.entries(dashboardData).filter(([docId, docData]) => docData.label === selectedLabel);
                         populateTable(filteredData, true); // Hide label column when filtered
+                        
+                        timeT = new Date().toString() // Convert to ISO string for easier handling
+
+                        // Send the data to the server using fetch
+                        fetch('/log_label_filter/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token if applicable
+                            },
+                            body: JSON.stringify({
+                                labelText: selectedLabel,
+                                timeSpent: timeT
+                            })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.status === 'success') {
+                                console.log('Search logged successfully');
+                            } else {
+                                console.error('Server error while logging filtered labeled:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error logging filtered label:', error);
+                        });
+
 
                         // Show description modal
                         const description = labelData.descriptions[selectedLabel];
@@ -702,7 +787,7 @@
                     documentStartTime = new Date().getTime();
 
                     // Log the full text of the document when clicked
-                    console.log(`Document Text: "${fullText}" clicked at ${new Date(documentStartTime)}`);
+                    console.log(`clicked at ${new Date(documentStartTime)}`);
 
                     // Store the document text and start time in the array
                     viewedDocuments.push({ documentText: fullText, startTime: documentStartTime });
@@ -748,6 +833,11 @@
                 // Reset start time for the next document view
                 documentStartTime = null;
             }
+
+
+            
+
+            
         });
 
 

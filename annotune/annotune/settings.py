@@ -31,7 +31,6 @@ SECRET_KEY = 'django-insecure-@-qo_5m50rs^5_cw#@bjix)$2%fzb1hg4hd!slarqa_9vhsx9-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # AUTH_USER_MODEL = 'annotator.CustomUser'

@@ -117,6 +117,6 @@ if __name__ == "__main__":
     
     input_directory = "/Users/danielstephens/Desktop/Annotune-v2/annotune/savedFiles"
     output_directory = "/Users/danielstephens/Desktop/Annotune-v2/annotune/newSaved"
-    full_data = JsonProcessor.read_jsonl("/Users/danielstephens/Desktop/Annotune-v2/annotune/synthetic-first-contact-plot-summaries-20241030-182950.jsonl")
+    full_data = JsonProcessor.read_jsonl("/Users/danielstephens/Desktop/Annotune-v2/synthetic-first-contact-plot-summaries-20241030-182950.jsonl")
     processor = JsonProcessor(input_directory, output_directory, full_data)
     processor.process_files()

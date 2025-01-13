@@ -4,53 +4,25 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-class SemanticTextGrouper:
-    def __init__(self, model_name='all-MiniLM-L6-v2', threshold=0.8, min_document_length=300):
+class TextGrouper:
+    def __init__(self, model_name='all-MiniLM-L6-v2', threshold=0.8, min_document_length=50):
         """
-        Initialize the SemanticTextGrouper with a pre-trained SentenceTransformer model,
-        similarity threshold, and minimum document length.
+        Initialize the grouper with a pre-trained SentenceTransformer model, similarity threshold, and minimum document length.
         """
         self.model = SentenceTransformer(model_name)
         self.threshold = threshold
         self.data = []  # Store the loaded data with questions, answers, and documents
         self.min_document_length = min_document_length
 
-    def standardize_json(self, data):
-        """
-        Standardize the format of the input JSON data.
-        """
-        standardized = []
-        if isinstance(data, list):
-            for entry in data:
-                if "question" in entry and "answer" in entry and "documents" in entry:
-                    standardized.append({
-                        "question": entry["question"],
-                        "answer": entry["answer"],
-                        "documents": entry["documents"]
-                    })
-        elif isinstance(data, dict) and "questions" in data:
-            for entry in data["questions"]:
-                if "question" in entry and "answer" in entry and "documents" in entry:
-                    standardized.append({
-                        "question": entry["question"],
-                        "answer": entry["answer"],
-                        "documents": entry["documents"]
-                    })
-        return standardized
-
     def load_data(self, folder, starts):
         """
         Load question-answer data and associated documents from files matching a specific pattern.
         """
-        for start in starts:
+        for start in starts:  # Loop through each prefix in the starts list
             files = glob.glob(folder + start + "*")
             for file in files:
-                try:
-                    with open(file, "r") as f:
-                        raw_data = json.load(f)
-                        self.data.extend(self.standardize_json(raw_data))
-                except Exception as e:
-                    print(f"Error reading {file}: {e}")
+                with open(file, "r") as f:
+                    self.data.extend(json.load(f))
 
     def filter_and_deduplicate_documents(self, documents):
         """
@@ -59,7 +31,7 @@ class SemanticTextGrouper:
         unique_documents = {}
         for doc in documents:
             stripped_doc = doc.strip()
-            if len(stripped_doc) >= self.min_document_length:
+            if len(stripped_doc) >= self.min_document_length:  # Exclude shorter documents
                 if stripped_doc not in unique_documents or len(doc) > len(unique_documents[stripped_doc]):
                     unique_documents[stripped_doc] = doc
         return list(unique_documents.values())
@@ -71,8 +43,13 @@ class SemanticTextGrouper:
         if not texts:
             return []
 
+        # Encode the texts into embeddings
         embeddings = self.model.encode(texts)
+
+        # Calculate pairwise cosine similarity
         similarity_matrix = cosine_similarity(embeddings)
+
+        # Group texts based on the similarity threshold
         groups = []
         visited = set()
 
@@ -94,12 +71,15 @@ class SemanticTextGrouper:
         Group questions, answers, and relevant documents together.
         """
         grouped_data = []
+
+        # Group questions and answers
         questions = [item["question"] for item in self.data]
         answers = [item["answer"] for item in self.data]
 
         grouped_questions = self.group_texts(questions)
         grouped_answers = self.group_texts(answers)
 
+        # Map questions and answers back to their relevant documents
         for q_group, a_group in zip(grouped_questions, grouped_answers):
             relevant_docs = set()
 
@@ -107,6 +87,7 @@ class SemanticTextGrouper:
                 if item["question"] in q_group or item["answer"] in a_group:
                     relevant_docs.update(item["documents"].values())
 
+            # Filter and deduplicate relevant documents
             filtered_docs = self.filter_and_deduplicate_documents(relevant_docs)
 
             grouped_data.append({
@@ -126,26 +107,16 @@ class SemanticTextGrouper:
 
 
 if __name__ == "__main__":
-    folder = "/Users/danielstephens/Desktop/Annotune-v2/annotune/newSave/"
-    starts = [
-        'Communica', 'Cultural', 'Ethics an', 'Humanity', 'The Other', 
-        'The impac', 'The unkno'
-    ]
+    folder = "/Users/danielstephens/Desktop/Annotune-v2/annotune/total_saved/"
+    starts = ['Communica', 'Cultural', 'Ethics an', 'Humanity', 'The Other', 'The impac', 'The unkno']  # List of prefixes
 
-    grouper = SemanticTextGrouper(min_document_length=300)  # Set minimum document length to 300 characters
+    grouper = TextGrouper(min_document_length=430)  # Set minimum document length to 100 characters
 
-    # Load and process data
-    print("Loading data...")
+    # Load data
     grouper.load_data(folder, starts)
-    print(f"Loaded {len(grouper.data)} entries.")
 
-    # Group questions, answers, and documents
-    print("Grouping data...")
+    # Group questions, answers, and documents together
     grouped_data = grouper.group_questions_answers_documents()
-    print(f"Grouped data into {len(grouped_data)} groups.")
 
     # Save grouped data to a JSON file
-    output_path = "/Users/danielstephens/Desktop/Annotune-v2/annotune/grouped/grouped_questions_answers_documentsss.json"
-    print(f"Saving grouped data to {output_path}...")
-    grouper.save_grouped_data(grouped_data, output_path)
-    print("Grouped data saved successfully!")
+    grouper.save_grouped_data(grouped_data, "/Users/danielstephens/Desktop/Annotune-v2/annotune/grouped/grouped_questions_answers_documentsss.json")

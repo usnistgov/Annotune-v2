@@ -26,5 +26,7 @@ urlpatterns = [
     path("post-test", views.post_text, name="post-test"),
     path("thankyou", views.thankYou, name="thankYou"),
     path('log_document_view/', views.log_document_view, name='log_document_view'),
+    path('log_search/', views.log_search, name='log_search'),
+    path('log_label_filter/', views.log_label_filter, name='log_label_filter'),
 ]
  

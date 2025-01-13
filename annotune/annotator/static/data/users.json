@@ -8,48 +8,20 @@
         "document_id": [],
         "label": [],
         "labels": {},
-        "start_time": "12/10/24 15:04:28",
-        "date": "12/10/24",
+        "start_time": "12/01/25 15:52:40",
+        "date": "12/01/25",
         "pageTimes": [
             {
                 "page": "Instructions",
-                "time": "12/10/24 15:04:28"
+                "time": "12/01/25 15:52:40"
             },
             {
                 "page": "ManualDocuments",
-                "time": "12/10/24 15:05:34"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "12/10/24 15:06:04"
-            },
-            {
-                "page": "labeled",
-                "time": "12/10/24 15:07:00"
+                "time": "12/01/25 15:53:11"
             },
             {
                 "page": "manualLabel",
-                "time": "12/10/24 15:07:06"
-            },
-            {
-                "page": "labeled",
-                "time": "12/10/24 15:07:13"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "12/10/24 15:07:20"
-            },
-            {
-                "page": "Instructions",
-                "time": "15/10/24 14:52:35"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "15/10/24 14:53:05"
-            },
-            {
-                "page": "Instructions",
-                "time": "17/10/24 08:10:53"
+                "time": "12/01/25 15:53:17"
             }
         ],
         "hoverTimes": [],
@@ -57,27 +29,14 @@
             {
                 "responses": {
                     "question1": {
-                        "a": "This is the assessment",
+                        "a": "We are here",
                         "b": "5"
                     },
                     "question2": {
-                        "a": "Scond question has been answered",
+                        "a": "We are here",
                         "b": "5"
                     },
-                    "time": "12/10/24 15:05:28"
-                }
-            },
-            {
-                "responses": {
-                    "question1": {
-                        "a": "dtyjdtyjd",
-                        "b": "6"
-                    },
-                    "question2": {
-                        "a": "tyjrtyjsrjj",
-                        "b": "5"
-                    },
-                    "time": "15/10/24 14:52:59"
+                    "time": "12/01/25 15:53:06"
                 }
             }
         ],
@@ -85,7 +44,71 @@
         "postTesttimes": [
             {
                 "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
-                "time_spent": 2134
+                "time_spent": 2055
+            },
+            {
+                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
+                "time_spent": 2819
+            },
+            {
+                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
+                "time_spent": 2319
+            },
+            {
+                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
+                "time_spent": 2024
+            },
+            {
+                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
+                "time_spent": 3821
+            },
+            {
+                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
+                "time_spent": 3288
+            },
+            {
+                "document": "Amends the Harmonized Tariff Schedule of the United States to extend the temporary suspension of duty on certain acrylic staple fibers.",
+                "time_spent": 3574
+            }
+        ],
+        "Search": [
+            {
+                "document": "chrch",
+                "time_spent": "2025-01-12T22:03:20.173Z"
+            },
+            {
+                "document": "church",
+                "time_spent": "Sun Jan 12 2025 17:20:59 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "document": "thirty-second label",
+                "time_spent": "Sun Jan 12 2025 17:48:05 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "thirty-seventh label",
+                "time_spent": "Sun Jan 12 2025 17:52:29 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "thirty-ninth label",
+                "time_spent": "Sun Jan 12 2025 17:52:41 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "third label",
+                "time_spent": "Sun Jan 12 2025 17:52:50 GMT-0500 (Eastern Standard Time)"
+            }
+        ],
+        "labelFilter": [
+            {
+                "label_filtered": "thirty-seventh label",
+                "time_spent": "Sun Jan 12 2025 17:53:58 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "thirty-seventh label",
+                "time_spent": "Sun Jan 12 2025 18:19:00 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "eleventh label",
+                "time_spent": "Mon Jan 13 2025 11:44:20 GMT-0500 (Eastern Standard Time)"
             }
         ]
     }
