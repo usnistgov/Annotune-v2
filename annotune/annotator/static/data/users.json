@@ -1,207 +1,50 @@
 {
     "danystevo@gmail.com": {
-        "first_name": "jjjjjj",
-        "last_name": "jhhkfjkf",
+        "first_name": "Daniel Kofi",
+        "last_name": "Stephens",
         "user_id": 0,
         "email": "danystevo@gmail.com",
         "password": "STpass23",
-        "document_id": [],
-        "label": [],
-        "labels": {},
-        "start_time": "11/10/24 19:36:00",
-        "date": "11/10/24",
+        "document_id": [
+            0
+        ],
+        "label": [
+            "west"
+        ],
+        "labels": {
+            "0": {
+                "labels": "west",
+                "time": "16/01/25 14:05:52",
+                "document_id": 0,
+                "pageTime": "26"
+            }
+        },
+        "start_time": "16/01/25 09:05:26",
+        "date": "16/01/25",
         "pageTimes": [
             {
                 "page": "Instructions",
-                "time": "11/10/24 19:36:01"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 19:36:59"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 19:37:03"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 19:37:22"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 19:37:24"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 19:39:04"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 19:39:17"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 20:58:19"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 20:59:14"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 20:59:15"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:00:27"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:01:28"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:01:49"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:03:03"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:03:32"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:03:56"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:03:58"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:04:10"
-            },
-            {
-                "page": "Instructions",
-                "time": "11/10/24 21:04:27"
+                "time": "16/01/25 09:05:26"
             },
             {
                 "page": "ManualDocuments",
-                "time": "11/10/24 21:04:57"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:06:46"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:07:21"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:07:52"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:12:25"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:15:36"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:15:59"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:16:23"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 21:20:10"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:05:03"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:12:35"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:16:00"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:18:17"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:19:20"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:25:38"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:29:25"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:32:19"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:35:30"
-            },
-            {
-                "page": "ManualDocuments",
-                "time": "11/10/24 22:36:01"
+                "time": "16/01/25 09:05:49"
             },
             {
                 "page": "manualLabel",
-                "time": "11/10/24 22:36:13"
+                "time": "16/01/25 09:05:49"
             },
             {
                 "page": "labeled",
-                "time": "11/10/24 22:36:25"
+                "time": "16/01/25 09:05:57"
             },
             {
-                "page": "labeled",
-                "time": "11/10/24 22:57:13"
-            },
-            {
-                "page": "labeled",
-                "time": "11/10/24 22:59:45"
-            },
-            {
-                "page": "labeled",
-                "time": "11/10/24 23:00:50"
-            },
-            {
-                "page": "labeled",
-                "time": "11/10/24 23:00:51"
-            },
-            {
-                "page": "labeled",
-                "time": "11/10/24 23:04:54"
-            },
-            {
-                "page": "labeled",
-                "time": "11/10/24 23:05:17"
-            },
-            {
-                "page": "labeled",
-                "time": "11/10/24 23:06:35"
+                "page": "Instructions",
+                "time": "16/01/25 09:41:47"
             },
             {
                 "page": "ManualDocuments",
-                "time": "11/10/24 23:06:42"
+                "time": "16/01/25 09:42:04"
             }
         ],
         "hoverTimes": [],
@@ -209,17 +52,62 @@
             {
                 "responses": {
                     "question1": {
-                        "a": "we are going yo yo yo yo",
+                        "a": "DA",
+                        "b": "8"
+                    },
+                    "question2": {
+                        "a": "ads",
+                        "b": "9"
+                    },
+                    "time": "16/01/25 09:05:43"
+                }
+            },
+            {
+                "responses": {
+                    "question1": {
+                        "a": "et",
                         "b": "5"
                     },
                     "question2": {
-                        "a": "We are coming ya ya ya yaa",
+                        "a": "trstr",
                         "b": "5"
                     },
-                    "time": "11/10/24 22:25:33"
+                    "time": "16/01/25 09:41:59"
                 }
             }
         ],
-        "postTest": []
+        "postTest": {
+            "responses": {
+                "question1a": "rdy5di566f5",
+                "question1b": "6",
+                "question2a": "oud75di65di675di",
+                "question2b": "8"
+            }
+        },
+        "postTesttimes": [],
+        "Search": [
+            {
+                "document": "Justice",
+                "time_spent": "Thu Jan 16 2025 09:06:40 GMT-0500 (Eastern Standard Time)"
+            }
+        ],
+        "labelFilter": [
+            {
+                "label_filtered": "twelfth label",
+                "time_spent": "Thu Jan 16 2025 09:06:15 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "sixth label",
+                "time_spent": "Thu Jan 16 2025 09:06:23 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "fifteenth label",
+                "time_spent": "Thu Jan 16 2025 09:06:27 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "thirty-sixth label",
+                "time_spent": "Thu Jan 16 2025 09:13:58 GMT-0500 (Eastern Standard Time)"
+            }
+        ]
     }
 }

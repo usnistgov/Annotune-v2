@@ -63,6 +63,9 @@ def sign_up(request):
                                 "hoverTimes":[],
                                 "pretest":[],
                                 "postTest":[],
+                                "postTesttimes":[],
+                                "Search":[],
+                                "labelFilter":[]
     
                                 }
             information[email]=user_information
@@ -903,9 +906,9 @@ def post_text(request):
 
     if request.method == 'POST':
         # Handle form submission
-        question1a = request.POST["question1a"]
+        question1a = request.POST["question1"]
         question1b = request.POST["question1b"]
-        question2a = request.POST["question2a"]
+        question2a = request.POST["question2"]
         question2b = request.POST["question2b"]
 
 
@@ -917,6 +920,9 @@ def post_text(request):
         with open(env("USERS_PATH"), "r") as user_file:
             information = json.load(user_file)
             information[request.session["email"]]["postTest"] = user_data
+
+        with open(env("USERS_PATH"), "w") as user_file:
+                json.dump(information, user_file, indent=4)
 
         # Logout and redirect after submission
         logout(request)
@@ -941,10 +947,99 @@ def thankYou(request):
 
 
 
+def log_document_view(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body)
+            
+            # Extract the document text and time spent
+            document_text = data.get('documentText')
+            time_spent = data.get('timeSpent')
+
+            # Log the data (you can later save it to a database if needed)
+            print(f"Document Text: {document_text}")
+            print(f"Time Spent: {time_spent} ms")
+            with open(env("USERS_PATH"), "r") as user_file:
+                name_string = user_file.read()
+                information = json.loads(name_string)
+            information[request.session["email"]]["postTesttimes"].append({"document": document_text, 
+                                                                "time_spent": time_spent})
+    
+            with open(env("USERS_PATH"), "w") as user_file:
+                    json.dump(information, user_file, indent=4)
+
+            # Return a JSON response indicating success
+            return JsonResponse({"status": "success", "message": "Document view data logged successfully"})
+        
+        except Exception as e:
+            # If there's any error, return a failure response
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
+    # If the request is not a POST request, return a method not allowed response
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
+
+def log_search(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body)
+            
+            # Extract the document text and time spent
+            search_text = data.get('searchText')
+            time_spent = data.get('timeSpent')
+
+            # Log the data (you can later save it to a database if needed)
+            print(f"Search Text: {search_text}")
+            
+            with open(env("USERS_PATH"), "r") as user_file:
+                name_string = user_file.read()
+                information = json.loads(name_string)
+            information[request.session["email"]]["Search"].append({"document": search_text, 
+                                                                "time_spent": time_spent})
+    
+            with open(env("USERS_PATH"), "w") as user_file:
+                    json.dump(information, user_file, indent=4)
+
+            # Return a JSON response indicating success
+            return JsonResponse({"status": "success", "message": "Document view data logged successfully"})
+        
+        except Exception as e:
+            # If there's any error, return a failure response
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
+    # If the request is not a POST request, return a method not allowed response
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
 
 
+def log_label_filter(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from the request body
+            data = json.loads(request.body)
+            
+            # Extract the document text and time spent
+            label_text = data.get('labelText')
+            time_spent = data.get('timeSpent')
 
-    # return render(request, "post_test.html",context=context)
+            # Log the data (you can later save it to a database if needed)
+            print(f"Label Text: {label_text}")
+            
+            with open(env("USERS_PATH"), "r") as user_file:
+                name_string = user_file.read()
+                information = json.loads(name_string)
+            information[request.session["email"]]["labelFilter"].append({"label_filtered": label_text, 
+                                                                "time_spent": time_spent})
+    
+            with open(env("USERS_PATH"), "w") as user_file:
+                    json.dump(information, user_file, indent=4)
 
-    # return HttpResponse("amen")
+            # Return a JSON response indicating success
+            return JsonResponse({"status": "success", "message": "Document view data logged successfully"})
+        
+        except Exception as e:
+            # If there's any error, return a failure response
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
+    # If the request is not a POST request, return a method not allowed response
+    return JsonResponse({"status": "error", "message": "Method not allowed"}, status=405)
