@@ -5,23 +5,46 @@
         "user_id": 0,
         "email": "danystevo@gmail.com",
         "password": "STpass23",
-        "document_id": [],
-        "label": [],
-        "labels": {},
-        "start_time": "12/01/25 15:52:40",
-        "date": "12/01/25",
+        "document_id": [
+            0
+        ],
+        "label": [
+            "west"
+        ],
+        "labels": {
+            "0": {
+                "labels": "west",
+                "time": "16/01/25 14:05:52",
+                "document_id": 0,
+                "pageTime": "26"
+            }
+        },
+        "start_time": "16/01/25 09:05:26",
+        "date": "16/01/25",
         "pageTimes": [
             {
                 "page": "Instructions",
-                "time": "12/01/25 15:52:40"
+                "time": "16/01/25 09:05:26"
             },
             {
                 "page": "ManualDocuments",
-                "time": "12/01/25 15:53:11"
+                "time": "16/01/25 09:05:49"
             },
             {
                 "page": "manualLabel",
-                "time": "12/01/25 15:53:17"
+                "time": "16/01/25 09:05:49"
+            },
+            {
+                "page": "labeled",
+                "time": "16/01/25 09:05:57"
+            },
+            {
+                "page": "Instructions",
+                "time": "16/01/25 09:41:47"
+            },
+            {
+                "page": "ManualDocuments",
+                "time": "16/01/25 09:42:04"
             }
         ],
         "hoverTimes": [],
@@ -29,86 +52,61 @@
             {
                 "responses": {
                     "question1": {
-                        "a": "We are here",
+                        "a": "DA",
+                        "b": "8"
+                    },
+                    "question2": {
+                        "a": "ads",
+                        "b": "9"
+                    },
+                    "time": "16/01/25 09:05:43"
+                }
+            },
+            {
+                "responses": {
+                    "question1": {
+                        "a": "et",
                         "b": "5"
                     },
                     "question2": {
-                        "a": "We are here",
+                        "a": "trstr",
                         "b": "5"
                     },
-                    "time": "12/01/25 15:53:06"
+                    "time": "16/01/25 09:41:59"
                 }
             }
         ],
-        "postTest": [],
-        "postTesttimes": [
-            {
-                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
-                "time_spent": 2055
-            },
-            {
-                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
-                "time_spent": 2819
-            },
-            {
-                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
-                "time_spent": 2319
-            },
-            {
-                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
-                "time_spent": 2024
-            },
-            {
-                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
-                "time_spent": 3821
-            },
-            {
-                "document": "Directs U.S. Customs and Border Protection to liquidate or reliquidate certain entries of top-of-the-stove stainless steel cooking ware from the Republic of Korea.",
-                "time_spent": 3288
-            },
-            {
-                "document": "Amends the Harmonized Tariff Schedule of the United States to extend the temporary suspension of duty on certain acrylic staple fibers.",
-                "time_spent": 3574
+        "postTest": {
+            "responses": {
+                "question1a": "rdy5di566f5",
+                "question1b": "6",
+                "question2a": "oud75di65di675di",
+                "question2b": "8"
             }
-        ],
+        },
+        "postTesttimes": [],
         "Search": [
             {
-                "document": "chrch",
-                "time_spent": "2025-01-12T22:03:20.173Z"
-            },
-            {
-                "document": "church",
-                "time_spent": "Sun Jan 12 2025 17:20:59 GMT-0500 (Eastern Standard Time)"
-            },
-            {
-                "document": "thirty-second label",
-                "time_spent": "Sun Jan 12 2025 17:48:05 GMT-0500 (Eastern Standard Time)"
-            },
-            {
-                "label_filtered": "thirty-seventh label",
-                "time_spent": "Sun Jan 12 2025 17:52:29 GMT-0500 (Eastern Standard Time)"
-            },
-            {
-                "label_filtered": "thirty-ninth label",
-                "time_spent": "Sun Jan 12 2025 17:52:41 GMT-0500 (Eastern Standard Time)"
-            },
-            {
-                "label_filtered": "third label",
-                "time_spent": "Sun Jan 12 2025 17:52:50 GMT-0500 (Eastern Standard Time)"
+                "document": "Justice",
+                "time_spent": "Thu Jan 16 2025 09:06:40 GMT-0500 (Eastern Standard Time)"
             }
         ],
         "labelFilter": [
             {
-                "label_filtered": "thirty-seventh label",
-                "time_spent": "Sun Jan 12 2025 17:53:58 GMT-0500 (Eastern Standard Time)"
+                "label_filtered": "twelfth label",
+                "time_spent": "Thu Jan 16 2025 09:06:15 GMT-0500 (Eastern Standard Time)"
             },
             {
-                "label_filtered": "thirty-seventh label",
-                "time_spent": "Sun Jan 12 2025 18:19:00 GMT-0500 (Eastern Standard Time)"
+                "label_filtered": "sixth label",
+                "time_spent": "Thu Jan 16 2025 09:06:23 GMT-0500 (Eastern Standard Time)"
             },
             {
-                "label_filtered": "eleventh label",
-                "time_spent": "Mon Jan 13 2025 11:44:20 GMT-0500 (Eastern Standard Time)"
+                "label_filtered": "fifteenth label",
+                "time_spent": "Thu Jan 16 2025 09:06:27 GMT-0500 (Eastern Standard Time)"
+            },
+            {
+                "label_filtered": "thirty-sixth label",
+                "time_spent": "Thu Jan 16 2025 09:13:58 GMT-0500 (Eastern Standard Time)"
             }
         ]
     }

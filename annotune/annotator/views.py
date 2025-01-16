@@ -906,9 +906,9 @@ def post_text(request):
 
     if request.method == 'POST':
         # Handle form submission
-        question1a = request.POST["question1a"]
+        question1a = request.POST["question1"]
         question1b = request.POST["question1b"]
-        question2a = request.POST["question2a"]
+        question2a = request.POST["question2"]
         question2b = request.POST["question2b"]
 
 
@@ -920,6 +920,9 @@ def post_text(request):
         with open(env("USERS_PATH"), "r") as user_file:
             information = json.load(user_file)
             information[request.session["email"]]["postTest"] = user_data
+
+        with open(env("USERS_PATH"), "w") as user_file:
+                json.dump(information, user_file, indent=4)
 
         # Logout and redirect after submission
         logout(request)
